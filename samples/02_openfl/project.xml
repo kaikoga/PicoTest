@@ -10,10 +10,6 @@
 	<haxelib name="openfl" />
 	<haxelib name="hamcrest" />
 	<haxeflag name="-D" value="picotest_report=json" />
-	<haxeflag name="--macro" value="picotest.use.LimeJsBrowserSpawner.toSpawn('html5','Firefox')" if="html5" />
-	<haxeflag name="--macro" value="picotest.use.LimeSpawner.toSpawn('neko')" if="neko" />
-	<haxeflag name="--macro" value="picotest.use.LimeSpawner.toSpawn('mac')" if="mac" />
-	<haxeflag name="--macro" value="picotest.use.LimeFlashSpawner.toSpawn()" if="flash" />
 	
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="Assets/openfl.svg" />

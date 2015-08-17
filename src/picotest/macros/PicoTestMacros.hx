@@ -1,6 +1,8 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import picotest.use.LimeFlashSpawner;
+import picotest.use.LimeJsBrowserSpawner;
 import picotest.use.NekoSpawner;
 import picotest.use.PythonSpawner;
 import picotest.use.PhpSpawner;
@@ -78,7 +80,23 @@ class PicoTestMacros {
 		runner.run();
 	}
 
-	private static function guessSpawner():TestSpawner {
+	private static function guessLimeSpawner():TestSpawner {
+		switch (testTarget) {
+			case TestTarget.Flash:
+				return new LimeFlashSpawner();
+			case TestTarget.Js:
+				return new LimeJsBrowserSpawner('html5','Firefox');
+			case TestTarget.Neko:
+				return new LimeSpawner(Sys.systemName().toLowerCase());
+			case TestTarget.Cpp:
+				return new LimeSpawner(Sys.systemName().toLowerCase());
+			default:
+				return null;
+		}
+
+	}
+
+	private static function guessHaxeSpawner():TestSpawner {
 		var spawnerType:Array<String> = [testTarget.toString(), null];
 		switch (testTarget) {
 			case TestTarget.Flash:
@@ -95,6 +113,7 @@ class PicoTestMacros {
 			default:
 				throw 'target ${testTarget.toString()} not supported';
 		}
+
 
 		var args:Array<String> = Sys.args();
 		var main:String = args[args.indexOf("-main") + 1];
@@ -121,8 +140,13 @@ class PicoTestMacros {
 			case ["python", _]:
 				return new PythonSpawner();
 			default:
-				throw 'test spawner ${spawnerType[1]} in target ${spawnerType[0]} not found';
+				return null;
 		}
+	}
+
+	private static function guessSpawner():TestSpawner {
+		if (Context.defined("lime")) return guessLimeSpawner();
+		return guessHaxeSpawner();
 	}
 
 	private static var _lineNum:Int = 1;
