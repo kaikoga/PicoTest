@@ -11,12 +11,26 @@ class PicoTestResult {
 	public var className(default, null):String;
 	public var methodName(default, null):String;
 	public var assertResults(default, null):Array<PicoTestAssertResult>;
-	public var tasks(default, null):Array<IPicoTestTask>;
+	private var tasks:Array<IPicoTestTask>;
+	private var _setup:Void->Void;
+	private var _tearDown:Void->Void;
 
-	public function new(className:String, methodName:String, assertResults:Array<PicoTestAssertResult> = null) {
+	public function setupIfNeeded():Void {
+		if (this._setup != null) this._setup();
+		this._setup = null;
+	}
+	
+	public function tearDownIfNeeded():Void {
+		if (this._tearDown != null) this._tearDown();
+		this._tearDown = null;
+	}
+
+	public function new(className:String, methodName:String, assertResults:Array<PicoTestAssertResult> = null, setup:Void->Void = null, tearDown:Void->Void = null) {
 		this.className = className;
 		this.methodName = methodName;
 		this.assertResults = if (assertResults != null) assertResults; else [];
+		this._setup = setup;
+		this._tearDown = tearDown;
 		this.tasks = [];
 	}
 

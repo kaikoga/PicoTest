@@ -162,6 +162,7 @@ class PicoTestRunner {
 				this.waitingTasks.push(task);
 			case PicoTestTaskStatus.Complete(result):
 				if (result.completeTask(task)) {
+					result.tearDownIfNeeded();
 					for (printer in this.printers) printer.print(result);
 					this.results.push(result);
 				}

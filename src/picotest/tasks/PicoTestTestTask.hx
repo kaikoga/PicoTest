@@ -18,10 +18,11 @@ class PicoTestTestTask implements IPicoTestTask {
 	}
 
 	public function start():Void {
-		this._result.tasks.push(this);
+		this._result.startTask(this);
 	}
 
 	public function resume(runner:PicoTestRunner):PicoTestTaskStatus {
+		this._result.setupIfNeeded();
 		try {
 			this.func();
 		} catch (e:Dynamic) {

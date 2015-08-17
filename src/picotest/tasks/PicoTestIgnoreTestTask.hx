@@ -18,10 +18,11 @@ class PicoTestIgnoreTestTask implements IPicoTestTask {
 	}
 
 	public function start():Void {
-		this._result.tasks.push(this);
+		this._result.startTask(this);
 	}
 
 	public function resume(runner:PicoTestRunner):PicoTestTaskStatus {
+		this._result.setupIfNeeded();
 		runner.ignore(this.message, this._result.className, this._result.methodName);
 		return PicoTestTaskStatus.Complete(this._result);
 	}

@@ -13,6 +13,15 @@ class PicoTestReader implements IPicoTestReader {
 		var className:String = Type.getClassName(testCaseClass);
 		var allMeta:Dynamic<Dynamic<Array<Dynamic>>> = haxe.rtti.Meta.getFields(testCaseClass);
 
+		var hasSetup:Bool = false;
+		var hasTearDown:Bool = false;
+		for (field in Type.getInstanceFields(testCaseClass)) {
+			switch (field) {
+				case "setup": hasSetup = true;
+				case "tearDown": hasTearDown = true;
+			}
+		}
+
 		for (field in Type.getInstanceFields(testCaseClass)) {
 			var testType:TestType = TestType.None;
 			if (field.indexOf("test") == 0) {
@@ -39,7 +48,10 @@ class PicoTestReader implements IPicoTestReader {
 					} catch (d:Dynamic) {
 						testCase = Type.createEmptyInstance(testCaseClass);
 					}
-					var task = new PicoTestTestTask(new PicoTestResult(className, field), bind(testCase, field));
+					var func:Void->Void = bind(testCase, field);
+					var setup:Void->Void = hasSetup ? bind(testCase, "setup") : null;
+					var tearDown:Void->Void = hasTearDown ? bind(testCase, "tearDown") : null;
+					var task = new PicoTestTestTask(new PicoTestResult(className, field, null, setup, tearDown), func);
 					runner.add(task);
 				case TestType.Ignore(message):
 					var task = new PicoTestIgnoreTestTask(new PicoTestResult(className, field), message);
