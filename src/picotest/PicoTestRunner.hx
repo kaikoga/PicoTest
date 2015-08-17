@@ -22,7 +22,6 @@ class PicoTestRunner {
 	public var readers:Array<IPicoTestReader>;
 	public var printers:Array<IPicoTestPrinter>;
 	public var reporters:Array<IPicoTestReporter>;
-	public var complete:Bool = false;
 
 	private var tasks:Array<IPicoTestTask>;
 	private var waitingTasks:Array<IPicoTestTask>;
@@ -76,42 +75,52 @@ class PicoTestRunner {
 		this.mainLoopThreads.push(PicoTestThread.create(mainLoop));
 	}
 
-	public function run():Void {
+	public function run(onComplete:Void->Void = null):Void {
+		if (onComplete != null) this.onComplete = onComplete;
 		#if js
 		// TODO enable source map support
 		#end
-		this.resume();
+		#if (flash || js || (java && !picotest_thread))
+		rerun();
+		#else
+		while (this.resume()) Sys.sleep(0.01);
+		#end
 	}
 
-	private function resume():Void {
-		while (true) {
-			if (this.tasks.length > 0) {
-				this.runTask(this.tasks.shift());
-			}
-			if (this.tasks.length == 0) {
-				if (this.waitingTasks.length > 0) {
-					this.tasks = this.waitingTasks;
-					this.waitingTasks = [];
-					#if (!sys)
-					Timer.delay(this.resume, 10);
-					return;
-					#end
-				} else {
-					for (reporter in this.reporters) reporter.report(this.results);
+	#if (flash || js || (java && !picotest_thread))
+	private function rerun():Void {
+		if (this.resume()) Timer.delay(this.rerun, 10);
+	}
+	#end
 
-					#if (flash && picotest_report)
-					System.exit(0);
-					#end
-					for (thread in this.mainLoopThreads) {
-						thread.kill();
-					}
-					return;
-				}
-			}
-			#if sys
-			Sys.sleep(0.01);
-			#end
+	public function resume():Bool {
+		if (this.onComplete == null) return false;
+
+		if (this.tasks.length > 0) {
+			this.runTask(this.tasks.shift());
 		}
+		if (this.tasks.length > 0) {
+			return true;
+		}
+		if (this.waitingTasks.length > 0) {
+			this.tasks = this.waitingTasks;
+			this.waitingTasks = [];
+			return true;
+		}
+
+		for (reporter in this.reporters) reporter.report(this.results);
+		for (thread in this.mainLoopThreads) thread.kill();
+
+		this.onComplete();
+		return false;
+	}
+
+	public dynamic function onComplete():Void {
+		#if (flash && picotest_report)
+		try { System.exit(0); } catch (d:Dynamic) {}
+		#elseif (sys && !macro)
+		Sys.exit(0);
+		#end
 	}
 
 	private function runTask(task:IPicoTestTask):Void {
@@ -146,7 +155,7 @@ class PicoTestRunner {
 	public function error(d:Dynamic):Void {
 		var message:String = Std.string(d);
 		var callStack:Array<StackItem> =
-		#if flash
+			#if flash
 		if (Std.is(d, Error)) {
 			this.buildFlashCallStack(cast (d, Error).getStackTrace());
 		} else {
