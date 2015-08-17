@@ -17,6 +17,7 @@ class PicoTestJavaThread extends Thread {
 	@:overload
 	override public function run():Void {
 		this.func(this.context);
+		this.context.halted();
 	}
 
 	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
@@ -24,8 +25,12 @@ class PicoTestJavaThread extends Thread {
 	}
 
 	public function kill():Void {
-		this.context.complete = true;
+		this.context.haltRequested();
 	}
+
+	@:allow(picotest.PicoTestRunner)
+	private var isHalted(get, never):Bool;
+	private function get_isHalted():Bool return this.context.isHalted;
 
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return true;

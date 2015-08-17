@@ -17,17 +17,22 @@ class PicoTestHaxeThread {
 	}
 
 	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
-		var t:PicoTestHaxeThread = new PicoTestHaxeThread(null);
+		var thread:PicoTestHaxeThread = new PicoTestHaxeThread(null);
 		var f:Void->Void = function():Void {
-			callb(t.context);
+			callb(thread.context);
+			thread.context.halted();
 		}
-		t.native = Thread.create(f);
-		return t;
+		thread.native = Thread.create(f);
+		return thread;
 	}
 
 	public function kill():Void {
-		this.context.complete = true;
+		this.context.haltRequested();
 	}
+
+	@:allow(picotest.PicoTestRunner)
+	private var isHalted(get, never):Bool;
+	private function get_isHalted():Bool return this.context.isHalted;
 
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return true;

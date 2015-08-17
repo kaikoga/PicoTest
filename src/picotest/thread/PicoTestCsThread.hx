@@ -17,6 +17,7 @@ class PicoTestCsThread {
 		var thread:PicoTestThread = new PicoTestCsThread(null);
 		var f:Void->Void = function():Void {
 			callb(thread.context);
+			thread.context.halted();
 		}
 		var native = new Thread(new ThreadStart(f));
 		thread.native = native;
@@ -25,8 +26,12 @@ class PicoTestCsThread {
 	}
 
 	public function kill():Void {
-		this.context.complete = true;
+		this.context.haltRequested();
 	}
+
+	@:allow(picotest.PicoTestRunner)
+	private var isHalted(get, never):Bool;
+	private function get_isHalted():Bool return this.context.isHalted;
 
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return true;

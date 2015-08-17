@@ -2,6 +2,8 @@ package picotest.thread;
 
 class PicoTestThreadUnavailable {
 
+	public var context(default, null):PicoTestThreadContext;
+
 	private function new () {
 
 	}
@@ -13,6 +15,10 @@ class PicoTestThreadUnavailable {
 	public function kill():Void {
 		throw "PicoTestThread not implemented in this platform";
 	}
+
+	@:allow(picotest.PicoTestRunner)
+	private var isHalted(get, never):Bool;
+	private function get_isHalted():Bool return false;
 
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return false;

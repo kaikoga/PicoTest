@@ -109,7 +109,11 @@ class PicoTestRunner {
 		}
 
 		for (reporter in this.reporters) reporter.report(this.results);
+
 		for (thread in this.mainLoopThreads) thread.kill();
+		while (this.mainLoopThreads.length > 0) {
+			this.mainLoopThreads = this.mainLoopThreads.filter(function(v:PicoTestThread):Bool { return !v.isHalted; } );
+		}
 
 		this.onComplete();
 		return false;
