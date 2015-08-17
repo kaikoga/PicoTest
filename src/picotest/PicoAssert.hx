@@ -21,7 +21,7 @@ class PicoAssert {
 	}
 
 	/**
-		Force generate an assertion failure. 
+		Force generate an assertion failure.
 	**/
 	public static function fail(message:String = null, ?p:PosInfos):Void {
 		if (message == null) message = "Assertion failed";
@@ -50,7 +50,7 @@ class PicoAssert {
 		if (Reflect.isEnumValue(expected) && Reflect.isEnumValue(actual)) return Type.enumEq(expected, actual);
 		return expected == actual;
 	}
-		
+
 	/**
 		Assert that `expected` and `actual` equals each other in Haxe standard equality.
 	**/
@@ -82,7 +82,7 @@ class PicoAssert {
 	}
 
 	/**
-		Assert that `expected` and `actual` matches using PicoMatcher.
+		Assert that `expected` and `actual` matches using `PicoMatcher`.
 	**/
 	public static function assertMatch(expected:Dynamic, actual:Dynamic, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
 		if (matcher == null) matcher = PicoMatcher.standard();
@@ -93,6 +93,7 @@ class PicoAssert {
 	}
 
 	/**
+		Assert that `expected` and `actual`, parsed as JSON respectively, matches using `PicoMatcher`.
 	**/
 	public static function assertJsonMatch<T>(expected:String, actual:String, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
 		if (matcher == null) matcher = PicoMatcher.standard();

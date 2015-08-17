@@ -10,12 +10,12 @@ class PicoTest {
 	/**
 		Version of PicoTest.
 	**/
-	inline public static var VERSION:String = "0.1.0";
+	inline public static var VERSION:String = "0.2.0";
 
 	/**
 		Current target runner which assertions are run against.
 	**/
-	@:allow(picotest.PicoTestRunner) 
+	@:allow(picotest.PicoTestRunner)
 	public static var currentRunner(default, null):PicoTestRunner;
 
 	private function new() {

@@ -16,13 +16,19 @@ class PicoMatcher {
 		this.matchers = [];
 	}
 
+	/**
+		Adds a matching rule to this `PicoMatcher`.
+	**/
 	public function addMatcher(matcher:PicoMatcher->Dynamic->Dynamic->MatchResult):Void {
 		this.matchers.push(matcher);
 	}
 
+	/**
+		Executes structure based matching using this `PicoMatcher`.
+	**/
 	public function match(expected:Dynamic, actual:Dynamic):MatchResult {
 		for (matcher in this.matchers) {
-			var match:MatchResult = matcher(this, expected, actual); 
+			var match:MatchResult = matcher(this, expected, actual);
 			switch (match) {
 				case MatchResult.Unknown:
 					continue;
@@ -84,10 +90,10 @@ class PicoMatcher {
 			var c:Int = e.length > a.length ? e.length : a.length;
 			for (i in 0...c) {
 				switch (matcher.match(e[i], a[i])) {
-					case Unknown, Match:
-					case Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('[$i]', e, a));
-					case MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('[$i]', e, d));
-					case Complex(a): mismatches.push(MatchComponent.ComplexAt('[$i]', a));
+					case MatchResult.Unknown, MatchResult.Match:
+					case MatchResult.Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('[$i]', e, a));
+					case MatchResult.MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('[$i]', e, d));
+					case MatchResult.Complex(a): mismatches.push(MatchComponent.ComplexAt('[$i]', a));
 				}
 			}
 			return mismatches.length == 0 ? MatchResult.Match : MatchResult.Complex(mismatches);
@@ -108,10 +114,10 @@ class PicoMatcher {
 			var e:Dynamic = Reflect.field(expected, field);
 			var a:Dynamic = Reflect.field(actual, field);
 			switch (matcher.match(e, a)) {
-				case Unknown, Match:
-				case Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('.$field', e, a));
-				case MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('.$field', e, d));
-				case Complex(a): mismatches.push(MatchComponent.ComplexAt('.$field', a));
+				case MatchResult.Unknown, MatchResult.Match:
+				case MatchResult.Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('.$field', e, a));
+				case MatchResult.MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('.$field', e, d));
+				case MatchResult.Complex(a): mismatches.push(MatchComponent.ComplexAt('.$field', a));
 			}
 		}
 		return mismatches.length == 0 ? MatchResult.Match : MatchResult.Complex(mismatches);
@@ -120,7 +126,7 @@ class PicoMatcher {
 	#if !picotest_nodep
 	public static function matchMatcher<T>(matcher:PicoMatcher, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Std.is(expected, Matcher))  {
-			var matcher:Matcher<T> = expected; 
+			var matcher:Matcher<T> = expected;
 			if (!matcher.matches(actual))
 			{
 				var e:StringDescription = new StringDescription();
@@ -135,48 +141,64 @@ class PicoMatcher {
 	}
 	#end
 
+	/**
+		Print a `MatchResult` as String.
+	**/
 	public static function printMatchResult(result:MatchResult):String {
 		switch (result) {
-			case Unknown, Match:
+			case MatchResult.Unknown, MatchResult.Match:
 				return null;
-			case Mismatch(e, a):
+			case MatchResult.Mismatch(e, a):
 				return '  - expected ${e} but was ${a}';
-			case MismatchDesc(e, d):
+			case MatchResult.MismatchDesc(e, d):
 				return '  - expected ${e} but ${d}';
-			case Complex(a):
+			case MatchResult.Complex(a):
 				var m:Array<String> = [];
 				for (comp in a) m.push(printMatchComponent(comp, "*"));
 				return m.join('\n');
 		}
 	}
 
+	/**
+		Print a `MatchComponent` which is at given `path` as String.
+	**/
 	public static function printMatchComponent(comp:MatchComponent, path:String = ""):String {
 		switch (comp) {
-			case MismatchAt(p, e, a):
+			case MatchComponent.MismatchAt(p, e, a):
 				return '  - ${path + p} expected ${e} but was ${a}';
-			case MismatchDescAt(p, e, d):
+			case MatchComponent.MismatchDescAt(p, e, d):
 				return '  - ${path + p} expected ${e} but ${d}';
-			case ComplexAt(p, a):
+			case MatchComponent.ComplexAt(p, a):
 				var m:Array<String> = [];
 				for (comp in a) m.push(printMatchComponent(comp, '${path + p}'));
 				return m.join('\n');
 		}
 	}
 
-	public static function standard():PicoMatcher {
-		var matcher:PicoMatcher = new PicoMatcher();
+	/**
+		Populate this `PicoMatcher` instance with standard matching rules.
+		Note that any matching rules added after call to this method is ignored.
+	**/
+	public function withStandard():PicoMatcher {
 		#if !picotest_nodep
-		matcher.addMatcher(PicoMatcher.matchMatcher);
+		this.addMatcher(PicoMatcher.matchMatcher);
 		#end
-		matcher.addMatcher(PicoMatcher.matchNull);
-		matcher.addMatcher(PicoMatcher.matchInt);
-		matcher.addMatcher(PicoMatcher.matchFloat);
-		matcher.addMatcher(PicoMatcher.matchBool);
-		matcher.addMatcher(PicoMatcher.matchString);
-		matcher.addMatcher(PicoMatcher.matchEnum);
-		matcher.addMatcher(PicoMatcher.matchArray);
-		matcher.addMatcher(PicoMatcher.matchStruct);
-		return matcher;
+		this.addMatcher(PicoMatcher.matchNull);
+		this.addMatcher(PicoMatcher.matchInt);
+		this.addMatcher(PicoMatcher.matchFloat);
+		this.addMatcher(PicoMatcher.matchBool);
+		this.addMatcher(PicoMatcher.matchString);
+		this.addMatcher(PicoMatcher.matchEnum);
+		this.addMatcher(PicoMatcher.matchArray);
+		this.addMatcher(PicoMatcher.matchStruct);
+		return this;
+	}
+
+	/**
+		Constructs a `PicoMatcher` instance with standard matching rules.
+	**/
+	public static function standard():PicoMatcher {
+		return new PicoMatcher().withStandard();
 	}
 }
 

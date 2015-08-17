@@ -35,7 +35,6 @@ class BasicAssertionSampleTestCase {
 		assertEquals(a, a);
 		assertEquals(d, d);
 		assertEquals(TestEnum.Default, TestEnum.Default);
-		// note that enum equality is currently not supported
 		assertEquals(TestEnum.Some(1), TestEnum.Some(1));
 	}
 

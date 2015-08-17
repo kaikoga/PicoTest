@@ -63,6 +63,8 @@ Basic assertions are defined in ```picotest.PicoAssert```.
 PicoTest assertion failure will continue running the test
 and tries to output as much failures as possible, as NanoTest does. 
 
+##Hamcrest Support
+
 To have complex assertions, PicoTest has Hamcrest support. 
 ```picotest.PicoAssert.assertThat()``` actually doesn't throw any errors,
 so you can have more assertion failures just as basic assertions of PicoTest.
@@ -70,6 +72,22 @@ so you can have more assertion failures just as basic assertions of PicoTest.
 Note: ```picotest.PicoAssert.assertThat()``` conflicts with ```org.hamcrest.Matchers.assertThat()```.
 To use PicoTest version of ```assertThat()```, ```import picotest.PicoAssert.*;``` should be later.
 (see ```HamcrestSampleTestCase``` for example)
+
+```-D picotest_nodep``` will remove hamcrest supports.
+
+##Structure Based Matching Support 
+
+```picotest.PicoAssert.assertMatch(expected, actual, ?message, ?matcher, ?p)```
+is a shortcut to do matching with complex structures.
+
+When ```matcher``` is not provided, all elements of arrays and anonymous structures are recursively matched,
+and any mismatch is reported in the failure output.
+When you need to define your own matching rules,
+you can also create your own ```PicoMatcher``` and pass it as ```matcher``` argument.
+
+When hamcrest support is enabled, hamcrest ```Matcher```s in ```expected``` are also taken into account.
+
+Refer ```PicoMatcherSampleTestCase``` and ```PicoMatcherHamcrestSampleTestCase``` for examples.
 
 #Async Supports
 
@@ -125,7 +143,7 @@ Warning: running PicoTest using threads is not officially tested and may contain
 
 ##Cross
 
-```-D picotest_nodep``` Removes hamcrest support
+```-D picotest_nodep``` Remove hamcrest supports
 ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
 
 ##Flash
@@ -137,8 +155,6 @@ Warning: running PicoTest using threads is not officially tested and may contain
 
 #Planned Features
 
-- Support basic assertions standalone
-- "throw" testing
 - Options to run Flash/js in browser 
 - Setting path to executables of ```neko```, ```node```, ```java```, ```mono```, etc... 
 - Support more platforms! 
@@ -146,6 +162,12 @@ Warning: running PicoTest using threads is not officially tested and may contain
 
 #Release Notes
 
+- Version 0.2.0
+  - "throw" testing (```assertThrows()```)
+  - structure based matching (```assertMatch()```)
+  - enum equality is taken into account
+  - ```setup()``` and ```tearDown()``` is supported (global ones are not)
+  - minor bug fixes
 - Version 0.1.0
   - Basic async support 
   - @Ignore support
