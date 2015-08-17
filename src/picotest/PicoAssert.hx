@@ -62,6 +62,18 @@ class PicoAssert {
 		else PicoTest.currentRunner.failure(message, p);
 	}
 
+	/**
+		Assert that given `func` throws an error, which could be target of further assertions in `checkSuccess`.
+	**/
+	public static function assertThrows(func:Void->Void, ?checkSuccess:Dynamic->Void, ?p:PosInfos):Void {
+		try {
+			func();
+			PicoTest.currentRunner.failure('Expected a throw but none happened', p);
+		} catch (d:Dynamic) {
+			if (checkSuccess != null) checkSuccess(d);
+		}
+	}
+
 	#if !picotest_nodep
 	/**
 		Assert that a hamcrest Matcher successfully matches.
