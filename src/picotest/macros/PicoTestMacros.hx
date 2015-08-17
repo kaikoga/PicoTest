@@ -83,7 +83,7 @@ class PicoTestMacros {
 			case TestTarget.Js:
 				return new LimeJsBrowserSpawner('html5');
 			case TestTarget.Neko:
-				return new LimeSpawner(Sys.systemName().toLowerCase());
+				return new LimeSpawner('neko');
 			case TestTarget.Cpp:
 				return new LimeSpawner(Sys.systemName().toLowerCase());
 			default:
