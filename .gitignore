@@ -1,2 +1,4 @@
-/samples/*/bin/
+/samples/01_simple/bin/
+/samples/02_openfl/bin/
+/samples/02_openfl/Export/
 /doc/bin/

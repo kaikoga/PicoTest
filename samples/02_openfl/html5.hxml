@@ -1,0 +1,4 @@
+-cmd lime build html5
+--next
+Export/html5/haxe/debug.hxml
+--macro picotest.PicoTest.runTests()

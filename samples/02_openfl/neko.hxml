@@ -1,0 +1,4 @@
+-cmd lime test neko > bin/report/neko.json
+--next
+Export/mac64/neko/haxe/debug.hxml
+--macro picotest.PicoTest.readResult("bin/report/neko.json")

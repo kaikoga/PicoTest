@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<meta title="OpenflTest" package="picotest" version="0.0.0" company="kaikoga" />
+	<app main="picotest.OpenflTest" path="Export" file="OpenflTest" />
+
+	<source path="Source" />
+	<source path="../../src" />
+
+	<haxelib name="openfl" />
+	<haxelib name="hamcrest" />
+	<_haxeflag name="--macro" value="picotest.PicoTest.warn()" />
+	<haxedef name="picotest_report" value="json" />
+
+	<assets path="Assets" rename="assets" exclude="openfl.svg" />
+	<icon path="Assets/openfl.svg" />
+
+</project>
