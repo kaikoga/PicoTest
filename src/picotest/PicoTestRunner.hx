@@ -167,6 +167,12 @@ class PicoTestRunner {
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
+	public function ignore(message:String, className:String, methodName:String):Void {
+		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Ignore(message, PicoTestCallInfo.fromReflect(className, methodName));
+		currentTaskResult.assertResults.push(assertResult);
+		for (printer in this.printers) printer.printAssertResult(assertResult);
+	}
+
 	#if flash
 	private function buildFlashCallStack(stackTrace:String):Array<StackItem> {
 		var callStack:Array<StackItem> = [];

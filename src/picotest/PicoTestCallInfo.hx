@@ -16,7 +16,6 @@ class PicoTestCallInfo {
 	public static function fromCallStack(callStack:Array<StackItem>):PicoTestCallInfo {
 		return new PicoTestCallInfo().readCallStack(callStack);
 	}
-
 	public function readCallStack(callStack:Array<StackItem>):PicoTestCallInfo {
 		this.position = PicoTestCallPosition.Unavailable;
 		this.callType = PicoTestCallType.Unknown;
@@ -60,10 +59,22 @@ class PicoTestCallInfo {
 	public static function fromPosInfos(posInfos:PosInfos):PicoTestCallInfo {
 		return new PicoTestCallInfo().readPosInfos(posInfos);
 	}
+
 	public function readPosInfos(posInfos:PosInfos) {
 		var filePath:String = posInfos.className.split(".").join("/").split(posInfos.fileName.split(".")[0])[0] + posInfos.fileName;
 		this.position = PicoTestCallPosition.ClassPath(filePath, posInfos.lineNumber);
 		this.callType = PicoTestCallType.Method(posInfos.className, posInfos.methodName);
+		this.from = null;
+		return this;
+	}
+
+	public static function fromReflect(className:String, methodName:String):PicoTestCallInfo {
+		return new PicoTestCallInfo().reflect(className, methodName);
+	}
+	public function reflect(className:String, methodName:String) {
+		var filePath:String = className.split(".").join("/");
+		this.position = PicoTestCallPosition.ClassPath(filePath, 1);
+		this.callType = PicoTestCallType.Method(className, methodName);
 		this.from = null;
 		return this;
 	}

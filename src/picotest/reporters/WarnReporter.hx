@@ -25,6 +25,7 @@ class WarnReporter implements IPicoTestReporter {
 					case PicoTestAssertResult.Error(message,callInfo):
 						warn(message, callInfo);
 					case PicoTestAssertResult.Trace(message,callInfo):
+					case PicoTestAssertResult.Ignore(message,callInfo):
 				}
 			}
 		}

@@ -14,6 +14,17 @@ class SampleTestCase {
 		assertTrue(false);
 	}
 
+	@Ignore @Test
+	public function metaIgnored() {
+		trace("fuga");
+		assertTrue(false);
+	}
+
+	@Ignore
+	public function testIgnored() {
+		trace("piyo");
+	}
+
 	public function testEmpty() {
 		trace("hoge");
 	}

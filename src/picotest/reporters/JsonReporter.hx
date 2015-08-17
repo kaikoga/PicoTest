@@ -39,13 +39,15 @@ class JsonReporter implements IPicoTestReporter {
 	public static function hashAssertResult(assertResult:PicoTestAssertResult):HashedAssertResult {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
-				return {assertResult:"."};
-			case PicoTestAssertResult.Failure(message,callInfo):
-				return {assertResult:"F", message:message, callInfo:hashCallInfo(callInfo)};
-			case PicoTestAssertResult.Error(message,callInfo):
-				return {assertResult:"E", message:message, callInfo:hashCallInfo(callInfo)};
-			case PicoTestAssertResult.Trace(message,callInfo):
-				return {assertResult:"T", message:message, callInfo:hashCallInfo(callInfo)};
+				return {assertResult: "."};
+			case PicoTestAssertResult.Failure(message, callInfo):
+				return {assertResult: "F", message: message, callInfo: hashCallInfo(callInfo)};
+			case PicoTestAssertResult.Error(message, callInfo):
+				return {assertResult: "E", message: message, callInfo: hashCallInfo(callInfo)};
+			case PicoTestAssertResult.Trace(message, callInfo):
+				return {assertResult: "T", message: message, callInfo: hashCallInfo(callInfo)};
+			case PicoTestAssertResult.Ignore(message, callInfo):
+				return {assertResult: "I", message: message, callInfo: hashCallInfo(callInfo)};
 		}
 	}
 

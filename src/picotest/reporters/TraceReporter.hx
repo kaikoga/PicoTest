@@ -26,11 +26,13 @@ class TraceReporter implements IPicoTestReporter {
 						case PicoTestAssertResult.Failure(message, callInfo):
 							resultText.push('${callInfo.print()}: ${message}');
 						case PicoTestAssertResult.Error(message, callInfo):
-							resultText.push('${callInfo.print()}: ${message}');
+							resultText.push('${callInfo.print()}: [error] ${message}');
 						case PicoTestAssertResult.Trace(message, callInfo):
 							for (line in message.split("\n")) {
 								resultText.push('${callInfo.print()}: [trace] ${line}');
 							}
+						case PicoTestAssertResult.Ignore(message, callInfo):
+							resultText.push('${callInfo.print()}: [ignore] ${message}');
 					}
 				}
 				if (result.isError()) {

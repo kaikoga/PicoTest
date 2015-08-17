@@ -1,5 +1,6 @@
 package picotest.readers;
 
+import picotest.tasks.PicoTestIgnoreTestTask;
 import picotest.tasks.PicoTestSimpleTestTask;
 
 class PicoTestReader implements IPicoTestReader {
@@ -13,26 +14,36 @@ class PicoTestReader implements IPicoTestReader {
 		var allMeta:Dynamic<Dynamic<Array<Dynamic>>> = haxe.rtti.Meta.getFields(testCaseClass);
 
 		for (field in Type.getInstanceFields(testCaseClass)) {
-			var isTest:Bool = false;
+			var testType:TestType = TestType.None;
 			if (field.indexOf("test") == 0) {
-				isTest = true;
+				testType = TestType.Test;
 			}
 
 			if (Reflect.hasField(allMeta, field)) {
 				var meta:Dynamic<Array<Dynamic>> = Reflect.field(allMeta, field);
 				if (Reflect.hasField(meta, "Test")) {
-					isTest = true;
+					testType = TestType.Test;
+				}
+				if (Reflect.hasField(meta, "Ignore")) {
+					var message:String = Reflect.field(meta, "Ignore");
+					if (message == null) message = ""; 
+					testType = TestType.Ignore(message);
 				}
 			}
-			if (isTest) {
-				var testCase:Dynamic;
-				try {
-					testCase = Type.createInstance(testCaseClass, []);
-				} catch (d:Dynamic) {
-					testCase = Type.createEmptyInstance(testCaseClass);
-				}
-				var task = new PicoTestSimpleTestTask(className, field, bind(testCase, field));
-				runner.add(task);
+			switch (testType) {
+				case TestType.None:
+				case TestType.Test:
+					var testCase:Dynamic;
+					try {
+						testCase = Type.createInstance(testCaseClass, []);
+					} catch (d:Dynamic) {
+						testCase = Type.createEmptyInstance(testCaseClass);
+					}
+					var task = new PicoTestSimpleTestTask(className, field, bind(testCase, field));
+					runner.add(task);
+				case TestType.Ignore(message):
+					var task = new PicoTestIgnoreTestTask(className, field, message);
+					runner.add(task);
 			}
 		}
 	}
@@ -42,4 +53,10 @@ class PicoTestReader implements IPicoTestReader {
 			Reflect.callMethod(d, Reflect.field(d, field), []);
 		};
 	}
+}
+
+private enum TestType {
+	None;
+	Test;
+	Ignore(message:String);
 }
