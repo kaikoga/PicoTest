@@ -1,6 +1,9 @@
-package picotest;
+package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import sys.io.File;
+import sys.FileSystem;
+import sys.io.Process;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import picotest.readers.PicoTestFileResultReader;
@@ -42,58 +45,49 @@ class PicoTestMacros {
 		var reportDir:String = "bin/report";
 		if (Context.defined(PICOTEST_REPORT_DIR)) reportDir = Context.definedValue(PICOTEST_REPORT_DIR);
 		var reportFile:String = '$reportDir/${testTarget.toString()}.json';
-		switch (system) {
-			case "Windows":
-				command('mkdir $reportDir');
-			case "Linux", "BSD", "Mac":
-				command('mkdir -p $reportDir');
-			default:
-				throw 'Could not create report directory in platform $system';
-		}
+		FileSystem.createDirectory(reportDir);
 		switch (testTarget) {
 			case TestTarget.Flash:
 				var fp:String = null;
 				var flog:String = null;
-				if (Context.defined(PICOTEST_FP)) fp = Context.definedValue(PICOTEST_FP);
-				if (Context.defined(PICOTEST_FLOG)) flog = Context.definedValue(PICOTEST_FLOG);
+				if (Context.defined(PICOTEST_FP)) fp = Context.definedValue(PICOTEST_FP).split('"').join('');
+				if (Context.defined(PICOTEST_FLOG)) flog = Context.definedValue(PICOTEST_FLOG).split('"').join('');
 				switch (system) {
 					case "Windows":
-						if (fp == null) fp = '"C:/Program Files (x86)/FlashPlayerDebugger.exe"';
-						if (flog == null) flog = '"%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt"';
-						command('$fp $bin');
-						command('cp $flog $reportFile');
+						if (fp == null) fp = 'C:/Program Files (x86)/FlashPlayerDebugger.exe';
+						if (flog == null) flog = '%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt';
+						command(fp, [bin]);
 					case "Linux":
 						if (fp == null) fp = 'flashplayer';
 						if (flog == null) flog = '~/Macromedia/Flash_Player/Logs/flashlog.txt';
-						command('$fp $bin');
-						command('cp $flog $reportFile');
+						command(fp, [bin]);
 					case "Mac":
-						if (fp == null) fp = '"Flash Player Debugger"';
+						if (fp == null) fp = 'Flash Player Debugger';
 						if (flog == null) flog = '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
-						command('open -nWa $fp $bin');
-						command('cp $flog $reportFile');
+						command('open', ['-nWa', fp, bin]);
 					default:
 						throw 'Flash warning in platform $system not supported';
 				}
+				command('cp', [flog, reportFile]);
 			case TestTarget.Neko:
-				command('(neko $bin > $reportFile)');
+				command('neko', [bin], reportFile);
 			case TestTarget.Js:
-				command('(node $bin > $reportFile)');
+				command('node', [bin], reportFile);
 			case TestTarget.Php:
-				command('(php $bin/index.php > $reportFile)');
+				command('php', ['$bin/index.php'], reportFile);
 			case TestTarget.Cpp:
-				command('(./$bin/$mainClass-debug > $reportFile)');
+				command('./$bin/$mainClass-debug', [], reportFile);
 			case TestTarget.Java:
-				command('(java -jar ./$bin/$mainClass-debug.jar > $reportFile)');
+				command('java', ['-jar', './$bin/$mainClass-debug.jar'], reportFile);
 			case TestTarget.Cs:
 				switch (system) {
 					case "Windows":
-						command('(./$bin/bin/$mainClass-Debug.exe > $reportFile)');
+						command('./$bin/bin/$mainClass-Debug.exe', [], reportFile);
 					default:
-						command('(mono ./$bin/bin/$mainClass-Debug.exe > $reportFile)');
+						command('mono', ['./$bin/bin/$mainClass-Debug.exe'], reportFile);
 				}
 			case TestTarget.Python:
-				command('(python $bin > $reportFile)');
+				command('python', [bin], reportFile);
 			default:
 				throw 'target ${testTarget.toString()} not supported';
 		}
@@ -108,11 +102,17 @@ class PicoTestMacros {
 		runner.run();
 	}
 
-	private static function command(cmd:String, ?args:Array<String>):Void {
-		var c = (args != null) ? cmd + " " + args.join(" ") : cmd;
-		var err:Int = neko.Lib.load("std","sys_command",1)(untyped(c.__s));
+	private static function command(cmd:String, args:Array<String> = null, outFile:String = null):Void {
+		if (args == null) args = [];
+		var process:Process = new Process(cmd, args);
+		var err:Int = process.exitCode();
 		if (err != 0) {
-			throw c;
+			throw '$cmd ${args.join(" ")}:$err: ${process.stdout.readAll()}';
+		}
+		if (outFile != null) {
+			var out = File.write(outFile);
+			out.write(process.stdout.readAll());
+			out.close();
 		}
 	}
 

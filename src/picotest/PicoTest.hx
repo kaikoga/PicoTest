@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.macros.PicoTestMacros;
 import picotest.reporters.JsonReporter;
 import haxe.PosInfos;
 import picotest.reporters.TraceReporter;
