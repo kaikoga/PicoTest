@@ -1,10 +1,14 @@
 package picotest;
 
+/**
+	Example test suite.
+*/
 class SampleTest {
 
 	public function new() {
 		var runner:PicoTestRunner = PicoTest.runner();
-		runner.load(SampleTestCase);
+		runner.load(BasicAssertionSampleTestCase);
+		runner.load(MarkingSampleTestCase);
 		#if !picotest_nodep
 		runner.load(HamcrestSampleTestCase);
 		#end

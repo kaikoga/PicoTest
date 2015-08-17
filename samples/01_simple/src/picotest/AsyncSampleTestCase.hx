@@ -4,12 +4,16 @@ import picotest.thread.PicoTestThread;
 import picotest.PicoAssert.*;
 import picotest.PicoTestAsync.*;
 
+/**
+	Example of async testing.
+*/
 class AsyncSampleTestCase {
 
 	private var i:Int;
 
 	public function testAssertLater() {
-		this.i = 0;
+		this.i = 1;
+		// launch cross-platform thread for testing, for now.
 		if (PicoTestThread.available) {
 			PicoTestThread.create(function(c):Void{ this.i++; });
 		}
@@ -18,8 +22,25 @@ class AsyncSampleTestCase {
 
 	private function onAssertLater() {
 		assertTrue(true);
-		assertTrue(false);
-		assertEquals(2, i);
+		if (PicoTestThread.available) {
+			assertEquals(2, i);
+		} else {
+			assertEquals(1, i);
+		}
+	}
+
+	public function testAssertLaterChain() {
+		this.i = 100;
+		assertLater(onAssertLater1, 200);
+	}
+
+	private function onAssertLater1() {
+		this.i += 10;
+		assertLater(onAssertLater2, 200);
+	}
+
+	private function onAssertLater2() {
+		assertEquals(110, i);
 	}
 
 	public function testCreateCallbackTimeout() {
@@ -27,6 +48,7 @@ class AsyncSampleTestCase {
 	}
 
 	public function testCreateCallbackDefaultTimeout() {
+		// will fail
 		createCallback(callback, 10);
 	}
 
@@ -42,11 +64,11 @@ class AsyncSampleTestCase {
 	}
 
 	private function callback() {
-		assertTrue(false);
+		fail("callback()");
 	}
 
 	private function onTimeout() {
-		assertTrue(false);
+		fail("onTimeout()");
 	}
 
 }
