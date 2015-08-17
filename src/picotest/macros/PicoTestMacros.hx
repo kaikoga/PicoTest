@@ -1,6 +1,7 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import picotest.use.LimeSpawner;
 import picotest.use.CommandSpawner;
 import picotest.use.FlashStandaloneSpawner;
 import picotest.use.TestSpawner;

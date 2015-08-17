@@ -1,4 +1,5 @@
--cmd lime test mac > bin/report/mac.json
+-cmd lime build mac
 --next
 Export/mac64/cpp/haxe/debug.hxml
---macro picotest.PicoTest.readResult("bin/report/mac.json")
+--macro picotest.use.LimeSpawner.toSpawn("mac")
+--macro picotest.PicoTest.runTests()

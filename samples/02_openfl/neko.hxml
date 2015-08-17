@@ -1,4 +1,5 @@
--cmd lime test neko > bin/report/neko.json
+-cmd lime build neko
 --next
 Export/mac64/neko/haxe/debug.hxml
---macro picotest.PicoTest.readResult("bin/report/neko.json")
+--macro picotest.use.LimeSpawner.toSpawn("neko")
+--macro picotest.PicoTest.runTests()
