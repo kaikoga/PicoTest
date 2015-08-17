@@ -97,10 +97,11 @@ class PicoTestMacros {
 			default:
 				throw 'target ${testTarget.toString()} not supported';
 		}
-		readResult(reportFile, testTarget.toString());
+		readResult(reportFile);
 	}
 
-	public static function readResult(report:String, header:String):Void {
+	public static function readResult(report:String, header:String = null):Void {
+		if (header == null) header = testTarget.toString();
 		var runner:PicoTestRunner = PicoTest.runner();
 		runner.reporters = [new WarnReporter()];
 		new PicoTestFileResultReader().read(runner, report, header);

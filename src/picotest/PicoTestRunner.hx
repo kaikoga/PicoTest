@@ -22,7 +22,7 @@ import flash.errors.Error;
 	PicoTest runner.
 **/
 class PicoTestRunner {
-	
+
 	public var readers:Array<IPicoTestReader>;
 	public var printers:Array<IPicoTestPrinter>;
 	public var reporters:Array<IPicoTestReporter>;
@@ -30,6 +30,7 @@ class PicoTestRunner {
 	private var tasks:Array<IPicoTestTask>;
 	private var waitingTasks:Array<IPicoTestTask>;
 	private var results:Array<PicoTestResult>;
+	private var completed:Bool = false;
 
 	private var currentTask:IPicoTestTask;
 	@:noDoc
@@ -119,7 +120,7 @@ class PicoTestRunner {
 		Executes some of the tests and returns `true` if there are uncomplete tasks, otherwise returns `false`.
 	**/
 	public function resume():Bool {
-		if (this.onComplete == null) return false;
+		if (this.completed) return false;
 
 		if (this.tasks.length > 0) {
 			this.runTask(this.tasks.shift());
@@ -141,6 +142,7 @@ class PicoTestRunner {
 		}
 
 		this.onComplete();
+		this.completed = true;
 		return false;
 	}
 

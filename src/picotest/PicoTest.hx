@@ -50,10 +50,17 @@ class PicoTest {
 	}
 
 	/**
+		Run tests, assuming app has been compiled at given path.
+	**/
+	public static function runTests():Void {
+		PicoTestMacros.runTests();
+	}
+
+	/**
 		Read test results from file.
 	**/
-	public static function readResult(report:String, header:String):Void {
-		PicoTestMacros.readResult(report, header);
+	public static function readResult(report:String, header:String = null):Void {
+		PicoTestMacros.readResult(report, header = null);
 	}
 
 	private static function println(line:String):Void {
