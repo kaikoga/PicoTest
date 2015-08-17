@@ -21,6 +21,7 @@ class LimeJsBrowserSpawner extends TestSpawner {
 		// CommandHelper.command('lime', ['run', this.limeTarget], reportFile);
 
 		this.runInAnotherNeko('bin/report/bin/run_lime_html5.n', 'picotest.use.main.LimeJsBrowserSpawnerMain', {
+			browser: browser(),
 			httpServerSetting: {
 				port: remotePort(),
 				files: [

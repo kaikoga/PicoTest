@@ -79,16 +79,32 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function selectBrowser(kind:String = null):String {
-		// TODO kind
-		switch (PicoTestExternalCommand.systemName()) {
-			case "Windows":
-				return 'firefox';
-			case "Linux":
-				return 'firefox';
-			case "Mac":
-				return 'Firefox';
-			default:
-				throw 'Running as browser in platform ${PicoTestExternalCommand.systemName()} not supported';
+		// TODO support more kind
+		switch (kind.toLowerCase()) {
+			case "firefox":
+				switch (PicoTestExternalCommand.systemName()) {
+					case "Windows":
+						return 'firefox';
+					case "Linux":
+						return 'firefox';
+					case "Mac":
+						return 'Firefox';
+					default:
+						throw 'Running as browser in platform ${PicoTestExternalCommand.systemName()} not supported';
+				}
+			case "", "chrome", null:
+				switch (PicoTestExternalCommand.systemName()) {
+					case "Windows":
+						return 'chrome';
+					case "Linux":
+						return 'chrome';
+					case "Mac":
+						return '"Google Chrome"';
+					default:
+						throw 'Running as browser in platform ${PicoTestExternalCommand.systemName()} not supported';
+				}
+			case _:
+				return kind;
 		}
 	}
 	

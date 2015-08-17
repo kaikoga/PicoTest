@@ -15,7 +15,7 @@ class LimeJsBrowserSpawnerMain implements ITestExecuter {
 
 	public function execute():Void {
 		var args:LimeJsBrowserSpawnerParams = PicoTestExternalCommandHelper.anotherNekoArgs();
-		PicoTestExternalCommand.open('Firefox', 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
+		PicoTestExternalCommand.open(args.browser, 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
 	}
 
 	public static function main():Void {
@@ -26,6 +26,7 @@ class LimeJsBrowserSpawnerMain implements ITestExecuter {
 #end
 
 typedef LimeJsBrowserSpawnerParams = {
+	browser:String,
 	httpServerSetting:PicoHttpServerSetting,
 	reportFile:String
 }

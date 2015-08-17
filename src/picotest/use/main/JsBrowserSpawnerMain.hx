@@ -15,7 +15,7 @@ class JsBrowserSpawnerMain implements ITestExecuter {
 
 	public function execute():Void {
 		var args:JsBrowserSpawnerParams = PicoTestExternalCommandHelper.anotherNekoArgs();
-		PicoTestExternalCommand.open('Firefox', 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
+		PicoTestExternalCommand.open(args.browser, 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
 	}
 
 	public static function main():Void {
@@ -27,6 +27,7 @@ class JsBrowserSpawnerMain implements ITestExecuter {
 #end
 
 typedef JsBrowserSpawnerParams = {
+	browser:String,
 	httpServerSetting:PicoHttpServerSetting,
 	reportFile:String
 }
