@@ -11,6 +11,10 @@ import org.hamcrest.MatcherAssert;
 
 class PicoAssert {
 
+	private static function format( d:Dynamic ) {
+		return if (Std.is(d, String)) '"$d"' else '$d';
+	}
+
 	public static function fail(message:String = null, ?p:PosInfos):Void {
 		if (message == null) message = "Assertion failed";
 		PicoTest.currentRunner.failure(message, p);
@@ -26,6 +30,18 @@ class PicoAssert {
 		if (message == null) message = "Expected false but was true";
 		if (value) PicoTest.currentRunner.failure(message, p);
 		else PicoTest.currentRunner.success();
+	}
+
+	public static function assertEquals<T>(expected:T, actual:T, message:String = null, ?p:PosInfos):Void {
+		if (message == null) message = 'Expected ${format(expected)} but was ${format(actual)}';
+		if (expected == actual) PicoTest.currentRunner.success();
+		else PicoTest.currentRunner.failure(message, p);
+	}
+
+	public static function assertNotEquals<T>(expected:T, actual:T, message:String = null, ?p:PosInfos):Void {
+		if (message == null) message = 'Expected not ${format(expected)} but was ${format(actual)}';
+		if (expected != actual) PicoTest.currentRunner.success();
+		else PicoTest.currentRunner.failure(message, p);
 	}
 
 	#if !picotest_nodep
