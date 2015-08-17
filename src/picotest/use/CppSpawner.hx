@@ -5,11 +5,11 @@ package picotest.use;
 class CppSpawner extends TestSpawner {
 
 	public function new():Void {
-		super('cpp_${systemName().toLowerCase()}');
+		super('cpp_${CommandHelper.systemName().toLowerCase()}');
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('./${bin()}/${mainClass()}-debug', [], reportFile);
+		CommandHelper.command('./${bin()}/${mainClass()}-debug', [], reportFile);
 	}
 }
 

@@ -9,7 +9,7 @@ class JavaSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('java', ['-jar', './${bin()}/${mainClass()}-debug.jar'], reportFile);
+		CommandHelper.command('java', ['-jar', './${bin()}/${mainClass()}-debug.jar'], reportFile);
 	}
 }
 

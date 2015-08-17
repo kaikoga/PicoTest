@@ -13,15 +13,15 @@ class FlashStandaloneSpawner extends TestSpawner {
 
 	override public function execute(reportFile:String):Void {
 		var bin:String = Compiler.getOutput();
-		switch (systemName()) {
+		switch (CommandHelper.systemName()) {
 			case "Windows", "Linux":
-				this.command(flashPlayer(), [bin]);
+				CommandHelper.command(flashPlayer(), [bin]);
 			case "Mac":
-				this.command('open', ['-nWa', flashPlayer(), bin]);
+				CommandHelper.command('open', ['-nWa', flashPlayer(), bin]);
 			default:
-				throw 'Flash warning in platform ${systemName()} not supported';
+				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
 		}
-		this.command('cp', [flashLog(), reportFile]);
+		CommandHelper.command('cp', [flashLog(), reportFile]);
 	}
 
 	public static function toSpawn():FlashStandaloneSpawner {

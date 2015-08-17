@@ -14,7 +14,7 @@ class LimeSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('lime', ['run', this.limeTarget], reportFile);
+		CommandHelper.command('lime', ['run', this.limeTarget], reportFile);
 	}
 
 	public static function toSpawn(limeTarget:String):LimeSpawner {

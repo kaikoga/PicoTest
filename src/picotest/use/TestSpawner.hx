@@ -1,11 +1,8 @@
 package picotest.use;
 
-import haxe.macro.Compiler;
 import picotest.macros.PicoTestMacros;
+import haxe.macro.Compiler;
 import haxe.macro.Context;
-import haxe.io.Bytes;
-import sys.io.File;
-import sys.io.Process;
 
 #if (macro || macro_doc_gen)
 
@@ -21,10 +18,6 @@ class TestSpawner {
 
 	}
 
-	private function systemName():String {
-		return Sys.systemName();
-	}
-
 	private function bin():String {
 		return Compiler.getOutput();
 	}
@@ -38,7 +31,7 @@ class TestSpawner {
 	private function flashPlayer():String {
 		if (Context.defined(PicoTestMacros.PICOTEST_FP)) return Context.definedValue(PicoTestMacros.PICOTEST_FP);
 
-		switch (systemName()) {
+		switch (CommandHelper.systemName()) {
 			case "Windows":
 				return '"C:/Program Files (x86)/FlashPlayerDebugger.exe"';
 			case "Linux":
@@ -46,14 +39,14 @@ class TestSpawner {
 			case "Mac":
 				return '"Flash Player Debugger"';
 			default:
-				throw 'Flash warning in platform ${systemName()} not supported';
+				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
 		}
 	}
 
 	private function flashLog():String {
 		if (Context.defined(PicoTestMacros.PICOTEST_FLOG)) return Context.definedValue(PicoTestMacros.PICOTEST_FLOG);
 
-		switch (systemName()) {
+		switch (CommandHelper.systemName()) {
 			case "Windows":
 				return '"%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt';
 			case "Linux":
@@ -61,31 +54,33 @@ class TestSpawner {
 			case "Mac":
 				return '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
 			default:
-				throw 'Flash warning in platform ${systemName()} not supported';
+				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
+		}
+	}
+
+	private function remotePort():Int {
+		if (Context.defined(PicoTestMacros.PICOTEST_REPORT_REMOTE_PORT)) return Std.parseInt(Context.definedValue(PicoTestMacros.PICOTEST_REPORT_REMOTE_PORT));
+		return 8001;
+	}
+
+	private function runInAnotherNeko(out:String, main:String, anotherNekoArgs:Dynamic):Void {
+		var args = ["-main", main, "-neko", out];
+
+		// we also need path to picotest, so copy classpath
+		var cp:Array<String> = Context.getClassPath();
+		for (path in cp) {
+			if (path.indexOf("/haxe/std/") >= 0) continue;
+			if (path.indexOf("/haxe/extraLibs/") >= 0) continue;
+			if (path == "") continue;
+			args.push("-cp");
+			args.push(path);
 		}
 
-	}
-	private function command(cmd:String, args:Array<String> = null, outFile:String = null):Void {
-		if (args == null) args = [];
-		var process:Process;
-		if (systemName() == "Windows") {
-			// assume Windows is great
-			process = new Process(cmd, args);
-		} else {
-			process = new Process("sh", []);
-			process.stdin.writeString('$cmd ${args.join(" ")}');
-			process.stdin.close();
-		}
-		var err:Int = process.exitCode();
-		var stdout:Bytes = try { process.stdout.readAll(); } catch (d:Dynamic) { err = -1; null; }
-		if (err != 0) {
-			throw 'Command $cmd ${args.join(" ")} returned $err: ${stdout}';
-		}
-		if (outFile != null) {
-			var out = File.write(outFile);
-			out.write(stdout);
-			out.close();
-		}
+		args.push("-D");
+		args.push('${CommandHelper.PICOTEST_ANOTHER_NEKO_ARGS}=${CommandHelper.serializeBase64(anotherNekoArgs)}');
+		
+		Sys.command("haxe", args);
+		Sys.command("neko", [out]);
 	}
 }
 

@@ -9,7 +9,7 @@ class PhpSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('php', ['${bin()}/index.php'], reportFile);
+		CommandHelper.command('php', ['${bin()}/index.php'], reportFile);
 	}
 }
 

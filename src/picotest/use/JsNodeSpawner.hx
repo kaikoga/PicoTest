@@ -9,7 +9,7 @@ class JsNodeSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('node', [bin()], reportFile);
+		CommandHelper.command('node', [bin()], reportFile);
 	}
 }
 

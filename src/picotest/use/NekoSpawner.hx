@@ -9,7 +9,7 @@ class NekoSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('neko', [bin()], reportFile);
+		CommandHelper.command('neko', [bin()], reportFile);
 	}
 }
 

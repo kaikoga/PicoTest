@@ -12,8 +12,8 @@ class LimeFlashSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('lime', ['run', 'flash']);
-		this.command('cp', [flashLog(), reportFile]);
+		CommandHelper.command('lime', ['run', 'flash']);
+		CommandHelper.command('cp', [flashLog(), reportFile]);
 	}
 
 	public static function toSpawn():LimeFlashSpawner {

@@ -1,10 +1,20 @@
 package picotest;
 
+import haxe.io.Bytes;
 import picotest.macros.PicoTestMacros;
 import picotest.reporters.JsonReporter;
 import haxe.PosInfos;
 import picotest.reporters.TraceReporter;
 import picotest.printers.TracePrinter;
+
+#if sys
+import sys.net.Host;
+import sys.net.Socket;
+#end
+
+#if js
+import js.html.XMLHttpRequest;
+#end
 
 class PicoTest {
 
@@ -27,6 +37,7 @@ class PicoTest {
 	**/
 	public static function runner():PicoTestRunner {
 		var runner = new PicoTestRunner();
+
 		#if picotest_report
 		haxe.Log.trace = emptyTrace;
 		runner.printers = [];
@@ -35,6 +46,11 @@ class PicoTest {
 		runner.printers = [new TracePrinter()];
 		runner.reporters = [new TraceReporter()];
 		#end
+		
+		#if picotest_remote
+		stdout = stdoutRemote;
+		#end
+
 		return runner;
 	}
 
@@ -97,6 +113,20 @@ class PicoTest {
 		var lines:Array<String> = (_currentLine + value).split("\n");
 		_currentLine = lines.pop();
 		for (line in lines) println(line);
+	}
+
+	public static dynamic function stdoutRemote(value:String):Void {
+		// FIXME we use HTTP POST compatible format, as JS doesn't support raw sockets
+		#if sys
+		var socket:Socket = new Socket();
+		socket.connect(new Host("127.0.0.1"), 8001);
+		var data:Bytes = Bytes.ofString(value);
+		socket.shutdown(true, true);
+		#elseif js
+		var xhr:XMLHttpRequest = new XMLHttpRequest();
+		xhr.open("POST", "result");
+		xhr.send(value);
+		#end
 	}
 
 }

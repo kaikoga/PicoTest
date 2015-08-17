@@ -9,7 +9,7 @@ class PythonSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('python', [bin()], reportFile);
+		CommandHelper.command('python', [bin()], reportFile);
 	}
 }
 

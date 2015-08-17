@@ -9,7 +9,7 @@ class CsMonoSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('mono', ['./${bin()}/bin/${mainClass()}-Debug.exe'], reportFile);
+		CommandHelper.command('mono', ['./${bin()}/bin/${mainClass()}-Debug.exe'], reportFile);
 	}
 }
 

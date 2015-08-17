@@ -9,7 +9,7 @@ class CsSpawner extends TestSpawner {
 	}
 
 	override public function execute(reportFile:String):Void {
-		this.command('./${bin()}/bin/${mainClass()}-Debug.exe', [], reportFile);
+		CommandHelper.command('./${bin()}/bin/${mainClass()}-Debug.exe', [], reportFile);
 	}
 }
 
