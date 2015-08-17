@@ -1,6 +1,9 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import picotest.macros.runners.CommandExecuter;
+import picotest.macros.runners.FlashStandaloneExecuter;
+import picotest.macros.runners.TestExecuter;
 import sys.io.File;
 import sys.FileSystem;
 import sys.io.Process;
@@ -40,57 +43,40 @@ class PicoTestMacros {
 		var args:Array<String> = Sys.args();
 		var main:String = args[args.indexOf("-main") + 1];
 		var mainClass:String = main.split(".").pop();
-		var system:String = Sys.systemName();
 		var bin:String = Compiler.getOutput();
 		var reportDir:String = "bin/report";
 		if (Context.defined(PICOTEST_REPORT_DIR)) reportDir = Context.definedValue(PICOTEST_REPORT_DIR);
 		var reportFile:String = '$reportDir/${testTarget.toString()}.json';
 		FileSystem.createDirectory(reportDir);
+
+		var executer:TestExecuter;
 		switch (testTarget) {
 			case TestTarget.Flash:
-				var fp:String = null;
-				var flog:String = null;
-				if (Context.defined(PICOTEST_FP)) fp = Context.definedValue(PICOTEST_FP).split('"').join('');
-				if (Context.defined(PICOTEST_FLOG)) flog = Context.definedValue(PICOTEST_FLOG).split('"').join('');
-				switch (system) {
-					case "Windows":
-						if (fp == null) fp = 'C:/Program Files (x86)/FlashPlayerDebugger.exe';
-						if (flog == null) flog = '%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt';
-						command(fp, [bin]);
-					case "Linux":
-						if (fp == null) fp = 'flashplayer';
-						if (flog == null) flog = '~/Macromedia/Flash_Player/Logs/flashlog.txt';
-						command(fp, [bin]);
-					case "Mac":
-						if (fp == null) fp = 'Flash Player Debugger';
-						if (flog == null) flog = '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
-						command('open', ['-nWa', fp, bin]);
-					default:
-						throw 'Flash warning in platform $system not supported';
-				}
-				command('cp', [flog, reportFile]);
+				executer = new FlashStandaloneExecuter();
 			case TestTarget.Neko:
-				command('neko', [bin], reportFile);
+				executer = new CommandExecuter('neko', [bin]);
 			case TestTarget.Js:
-				command('node', [bin], reportFile);
+				executer = new CommandExecuter('node', [bin]);
 			case TestTarget.Php:
-				command('php', ['$bin/index.php'], reportFile);
+				executer = new CommandExecuter('php', ['$bin/index.php']);
 			case TestTarget.Cpp:
-				command('./$bin/$mainClass-debug', [], reportFile);
+				executer = new CommandExecuter('./$bin/$mainClass-debug', []);
 			case TestTarget.Java:
-				command('java', ['-jar', './$bin/$mainClass-debug.jar'], reportFile);
+				executer = new CommandExecuter('java', ['-jar', './$bin/$mainClass-debug.jar']);
 			case TestTarget.Cs:
-				switch (system) {
+				switch (Sys.systemName()) {
 					case "Windows":
-						command('./$bin/bin/$mainClass-Debug.exe', [], reportFile);
+						executer = new CommandExecuter('./$bin/bin/$mainClass-Debug.exe', []);
 					default:
-						command('mono', ['./$bin/bin/$mainClass-Debug.exe'], reportFile);
+						executer = new CommandExecuter('mono', ['./$bin/bin/$mainClass-Debug.exe']);
 				}
 			case TestTarget.Python:
-				command('python', [bin], reportFile);
+				executer = new CommandExecuter('python', [bin]);
 			default:
 				throw 'target ${testTarget.toString()} not supported';
 		}
+
+		executer.execute(reportFile);
 		readResult(reportFile);
 	}
 
