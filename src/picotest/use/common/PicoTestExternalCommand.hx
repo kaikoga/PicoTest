@@ -61,7 +61,9 @@ class PicoTestExternalCommand {
 
 		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting).open();
 
-		while (picoServer.postData == null) picoServer.listen();
+		while (picoServer.postData == null) {
+			try { picoServer.listen(); } catch(e:Dynamic) {} 
+		}
 
 		PicoTestExternalCommandHelper.writeFile(picoServer.postData, this.outFile);
 		picoServer.close();
