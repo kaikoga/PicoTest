@@ -10,7 +10,6 @@ class PicoTestReader implements IPicoTestReader {
 
 	public function load(runner:PicoTestRunner, testCaseClass:Class<Dynamic>):Void {
 		var className:String = Type.getClassName(testCaseClass);
-		var testCase:Dynamic = Type.createEmptyInstance(testCaseClass);
 		var allMeta:Dynamic<Dynamic<Array<Dynamic>>> = haxe.rtti.Meta.getFields(testCaseClass);
 
 		for (field in Type.getInstanceFields(testCaseClass)) {
@@ -26,6 +25,12 @@ class PicoTestReader implements IPicoTestReader {
 				}
 			}
 			if (isTest) {
+				var testCase:Dynamic;
+				try {
+					testCase = Type.createInstance(testCaseClass, []);
+				} catch (d:Dynamic) {
+					testCase = Type.createEmptyInstance(testCaseClass);
+				}
 				var task = new PicoTestSimpleTestTask(className, field, bind(testCase, field));
 				runner.add(task);
 			}

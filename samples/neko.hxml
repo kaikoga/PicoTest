@@ -5,3 +5,4 @@
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
 -neko bin/test.n
+-D picotest_thread

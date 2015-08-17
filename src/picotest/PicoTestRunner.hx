@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.thread.PicoTestThreadContext;
 import haxe.Timer;
 import picotest.tasks.PicoTestTaskStatus;
 import haxe.PosInfos;
@@ -9,6 +10,7 @@ import picotest.readers.PicoTestReader;
 import picotest.readers.IPicoTestReader;
 import picotest.reporters.IPicoTestReporter;
 import picotest.tasks.IPicoTestTask;
+import picotest.thread.PicoTestThread;
 
 #if flash
 import flash.system.System;
@@ -20,7 +22,7 @@ class PicoTestRunner {
 	public var readers:Array<IPicoTestReader>;
 	public var printers:Array<IPicoTestPrinter>;
 	public var reporters:Array<IPicoTestReporter>;
-	public var display:Bool = true;
+	public var complete:Bool = false;
 
 	private var tasks:Array<IPicoTestTask>;
 	private var waitingTasks:Array<IPicoTestTask>;
@@ -35,6 +37,8 @@ class PicoTestRunner {
 		}
 	}
 
+	private var mainLoopThreads:Array<PicoTestThread>;
+	
 	public function new() {
 		this.readers = [new PicoTestReader()];
 		this.printers = [];
@@ -42,6 +46,7 @@ class PicoTestRunner {
 		this.tasks = [];
 		this.waitingTasks = [];
 		this.results = [];
+		this.mainLoopThreads = [];
 	}
 
 	public function add(task:IPicoTestTask):Void {
@@ -62,6 +67,13 @@ class PicoTestRunner {
 
 	public function load(testCaseClass:Class<Dynamic>):Void {
 		for (reader in this.readers) reader.load(this, testCaseClass);
+	}
+
+	public function addMainLoop(mainLoop:PicoTestThreadContext->Void):Void {
+		if (!PicoTestThread.available) {
+			throw "PicoTestRunner.addMainLoop() not supported in platform";
+		}
+		this.mainLoopThreads.push(PicoTestThread.create(mainLoop));
 	}
 
 	public function run():Void {
@@ -90,6 +102,9 @@ class PicoTestRunner {
 					#if (flash && picotest_report)
 					System.exit(0);
 					#end
+					for (thread in this.mainLoopThreads) {
+						thread.kill();
+					}
 					return;
 				}
 			}
@@ -108,6 +123,7 @@ class PicoTestRunner {
 			case PicoTestTaskStatus.Complete(result):
 				for (printer in this.printers) printer.print(result);
 				this.results.push(result);
+			case PicoTestTaskStatus.Done:
 		}
 		this.currentTask = null;
 		PicoTest.currentRunner = null;

@@ -20,7 +20,6 @@ class PicoTest {
 		haxe.Log.trace = emptyTrace;
 		runner.printers = [];
 		runner.reporters = [new JsonReporter()];
-		runner.display = false;
 		#else
 		runner.printers = [new TracePrinter()];
 		runner.reporters = [new TraceReporter()];

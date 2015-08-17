@@ -1,8 +1,9 @@
 package picotest;
 
+import picotest.tasks.PicoTestDelayedTask;
 import haxe.PosInfos;
 
-#if (flash || js || java)
+#if (flash || js || (java && !picotest_thread))
 
 import haxe.Timer;
 import picotest.tasks.PicoTestTriggeredTestTask;
@@ -20,6 +21,29 @@ class PicoTestAsync {
 		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult.className, taskResult.methodName, func, timeoutFunc);
 		if (timeoutMs > 0) {
 			Timer.delay(task.createTimeoutCallback(PicoTest.currentRunner, p), timeoutMs);
+		}
+		return task.createCallback(PicoTest.currentRunner, p);
+	}
+
+}
+
+#elseif (sys && picotest_thread)
+
+import picotest.tasks.PicoTestTriggeredTestTask;
+import picotest.tasks.PicoTestDelayedTestTask;
+
+class PicoTestAsync {
+
+	public static function assertLater<T>(func:Void->Void, delayMs:Int):Void {
+		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
+		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult.className, taskResult.methodName, func, delayMs));
+	}
+
+	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
+		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
+		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult.className, taskResult.methodName, func, timeoutFunc);
+		if (timeoutMs > 0) {
+			PicoTest.currentRunner.add(new PicoTestDelayedTask(task.createTimeoutCallback(PicoTest.currentRunner, p), timeoutMs));
 		}
 		return task.createCallback(PicoTest.currentRunner, p);
 	}
