@@ -1,16 +1,12 @@
 package picotest.use;
 
-import haxe.io.Input;
 import haxe.macro.Context;
-import haxe.macro.Expr.ExprOf;
-import haxe.macro.Compiler;
+import sys.io.File;
+import sys.io.Process;
+import picotest.use.http.PicoHttpServer;
 import haxe.Unserializer;
 import haxe.crypto.Base64;
 import haxe.Serializer;
-import sys.net.Host;
-import sys.net.Socket;
-import sys.io.File;
-import sys.io.Process;
 import haxe.io.Bytes;
 
 #if (sys || macro || macro_doc_gen)
@@ -68,66 +64,31 @@ class CommandHelper {
 		}
 	}
 
+	/**
+		Execute a command.
+	**/
 	public static function command(cmd:String, args:Array<String> = null, outFile:String = null):Void {
 		if (args == null) args = [];
 		var process:Process = startProcess(cmd, args);
 		joinProcess(process, cmd, args, outFile);
 	}
 
-	public static function remoteCommand(cmd:String, args:Array<String> = null, outFile:String = null, httpServer:HttpServer = null):Void {
+	/**
+		Execute a command, hosting a short living local HTTP server while execution.
+	**/
+	public static function remoteCommand(cmd:String, args:Array<String> = null, outFile:String = null, httpServerSetting:PicoHttpServerSetting = null):Void {
 		if (args == null) args = [];
 		var process:Process = startProcess(cmd, args);
 
-		var server:Socket = new Socket();
-		var data:Bytes = null;
-		server.bind(new Host("127.0.0.1"), httpServer.port);
-		while (data == null) {
-			server.listen(1);
-			var socket:Socket = server.accept();
-			var request:Array<String> = socket.input.readLine().split(" "); 
-			switch (request[0]) {
-				case "GET":
-					var localFile:String = null;
-					if ((httpServer.files != null) && httpServer.files.exists(request[1])) {
-						localFile = httpServer.files.get(request[1]);
-					} else if (httpServer.index != null) {
-						localFile = httpServer.index;
-					}
-					var body:String = "";
-					if (localFile != null) {
-						var input:Input = File.read(localFile);
-						body = input.readAll().toString();
-						input.close();
-					}
-					socket.write('HTTP/1.0 200 OK
+		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting).open();
 
-${body}');
-					socket.shutdown(false, true);
-				case "POST":
-					var header:String = null;
-					var contentLength:Int = 0;
-					while (header != "") {
-						header = socket.input.readLine();
-						if (header.indexOf("Content-Length: ") == 0) {
-							contentLength = Std.parseInt(header.split("Content-Length: ")[1]);
-						}
-					}
-					data = socket.input.read(contentLength);
-					socket.shutdown(false, true);
-			} 
-		}
-		//server.shutdown(true, true);
-		writeFile(data, outFile);
+		while (picoServer.postData == null) picoServer.listen();
 
+		writeFile(picoServer.postData, outFile);
+		picoServer.close();
 		joinProcess(process, cmd, args);
 	}
 
 }
 
 #end
-
-typedef HttpServer = {
-	port:Int,
-	files:Map<String, String>,
-	index:String
-} 

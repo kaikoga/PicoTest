@@ -1,6 +1,6 @@
 package picotest.use.main;
 
-import picotest.use.CommandHelper.HttpServer;
+import picotest.use.http.PicoHttpServer.PicoHttpServerSetting;
 
 #if neko
 
@@ -8,7 +8,7 @@ class JsBrowserSpawnerMain {
 
 	public static function main():Void {
 		var args:JsBrowserSpawnerParams = CommandHelper.anotherNekoArgs();
-		CommandHelper.remoteCommand('open', ['-a', 'Firefox', 'http://localhost:${args.httpServer.port}/'], args.reportFile, args.httpServer);
+		CommandHelper.remoteCommand('open', ['-a', 'Firefox', 'http://localhost:${args.httpServerSetting.port}/'], args.reportFile, args.httpServerSetting);
 	}
 
 }
@@ -16,6 +16,6 @@ class JsBrowserSpawnerMain {
 #end
 
 typedef JsBrowserSpawnerParams = {
-	httpServer:HttpServer,
+	httpServerSetting:PicoHttpServerSetting,
 	reportFile:String
 }
