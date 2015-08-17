@@ -1,5 +1,5 @@
 -cp src
--cp ../src
+-cp ../../src
 -lib hamcrest
 -debug
 -main picotest.SampleTest

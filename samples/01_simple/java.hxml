@@ -1,6 +1,9 @@
 -cp src
--cp ../src
+-cp ../../src
 -lib hamcrest
 -debug
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
+-java bin/java
+-D picotest_nodep
+-D picotest_thread

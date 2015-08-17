@@ -1,8 +1,8 @@
 -cp src
--cp ../src
+-cp ../../src
 -lib hamcrest
 -debug
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
--python bin/test.py
+-cpp bin/cpp
 -D picotest_thread
