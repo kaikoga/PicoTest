@@ -1,0 +1,13 @@
+{
+  "name": "picotest",
+  "url" : "https://github.com/kaikoga/picotest/",
+  "license": "MIT",
+  "tags": ["cross", "utility","unittest","testing"],
+  "description": "A very versatile unit testing framework",
+  "version": "0.0.0",
+  "releasenote": "Not released yet.",
+  "contributors": ["kaikoga"],
+  "dependencies": {
+    "hamcrest": ""
+  }
+}

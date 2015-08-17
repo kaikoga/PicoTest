@@ -1,0 +1,10 @@
+-cp src
+-cp ../src
+-lib hamcrest
+-debug
+-main picotest.SampleTest
+--macro picotest.PicoTest.warn()
+-swf bin/test.swf
+-D fdb
+-D picotest_fp="Flash Player Debugger"
+-D picotest_flog=~/Library/Preferences/Macromedia/Flash\ Player/Logs/flashlog.txt

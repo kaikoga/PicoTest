@@ -1,0 +1,7 @@
+-cp src
+-cp ../src
+-lib hamcrest
+-debug
+-main picotest.SampleTest
+-D fdb
+-swf bin/test.swf
