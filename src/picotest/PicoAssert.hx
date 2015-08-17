@@ -44,12 +44,17 @@ class PicoAssert {
 		else PicoTest.currentRunner.success();
 	}
 
+	inline private static function equals<T>(expected:T, actual:T):Bool {
+		if (Reflect.isEnumValue(expected) && Reflect.isEnumValue(actual)) return Type.enumEq(expected, actual);
+		return expected == actual;
+	}
+		
 	/**
 		Assert that `expected` and `actual` equals each other in Haxe standard equality.
 	**/
 	public static function assertEquals<T>(expected:T, actual:T, message:String = null, ?p:PosInfos):Void {
 		if (message == null) message = 'Expected ${format(expected)} but was ${format(actual)}';
-		if (expected == actual) PicoTest.currentRunner.success();
+		if (equals(expected, actual)) PicoTest.currentRunner.success();
 		else PicoTest.currentRunner.failure(message, p);
 	}
 
@@ -58,7 +63,7 @@ class PicoAssert {
 	**/
 	public static function assertNotEquals<T>(expected:T, actual:T, message:String = null, ?p:PosInfos):Void {
 		if (message == null) message = 'Expected not ${format(expected)} but was ${format(actual)}';
-		if (expected != actual) PicoTest.currentRunner.success();
+		if (!equals(expected, actual)) PicoTest.currentRunner.success();
 		else PicoTest.currentRunner.failure(message, p);
 	}
 
