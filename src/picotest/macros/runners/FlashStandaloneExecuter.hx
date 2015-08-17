@@ -21,22 +21,16 @@ class FlashStandaloneExecuter extends TestExecuter {
 		var system:String = Sys.systemName();
 		switch (system) {
 			case "Windows":
-				if (fp == null) fp = 'C:/Program Files (x86)/FlashPlayerDebugger.exe';
+				if (fp == null) fp = '"C:/Program Files (x86)/FlashPlayerDebugger.exe"';
 				if (flog == null) flog = '"%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt';
 				this.command(fp, [bin]);
 			case "Linux":
 				if (fp == null) fp = 'flashplayer';
 				if (flog == null) flog = '~/Macromedia/Flash_Player/Logs/flashlog.txt';
-				// FIXME
-				fp = fp.split('"').join('').split('\\ ').join(' ');
-				flog = flog.split('"').join('').split('\\ ').join(' ');
 				this.command(fp, [bin]);
 			case "Mac":
-				if (fp == null) fp = 'Flash Player Debugger';
-				if (flog == null) flog = '~/Library/Preferences/Macromedia/Flash Player/Logs/flashlog.txt';
-				// FIXME
-				fp = fp.split('"').join('').split('\\ ').join(' ');
-				flog = flog.split('"').join('').split('\\ ').join(' ');
+				if (fp == null) fp = '"Flash Player Debugger"';
+				if (flog == null) flog = '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
 				this.command('open', ['-nWa', fp, bin]);
 			default:
 				throw 'Flash warning in platform $system not supported';
