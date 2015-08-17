@@ -2,14 +2,17 @@ package picotest.use;
 
 #if (macro || macro_doc_gen)
 
+import picotest.use.common.CommandHelper;
+import picotest.use.common.TestSpawner;
+
 class CsMonoSpawner extends TestSpawner {
 
 	public function new():Void {
 		super('cs_mono');
 	}
 
-	override public function execute(reportFile:String):Void {
-		CommandHelper.command('mono', ['./${bin()}/bin/${mainClass()}-Debug.exe'], reportFile);
+	override public function execute():Void {
+		CommandHelper.command('mono', ['./${bin()}/bin/${mainClass()}-Debug.exe'], reportFile());
 	}
 }
 

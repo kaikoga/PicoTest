@@ -1,16 +1,22 @@
 package picotest.use.main;
 
-#if neko
-
 import picotest.use.http.PicoHttpServer.PicoHttpServerSetting;
 
-class LimeJsBrowserSpawnerMain {
+#if neko
+
+import picotest.use.common.ITestExecuter;
+import picotest.use.common.CommandHelper;
+
+class LimeJsBrowserSpawnerMain implements ITestExecuter {
 
 	public static function main():Void {
+		new LimeJsBrowserSpawnerMain().execute();
+	}
+
+	public function execute():Void {
 		var args:LimeJsBrowserSpawnerParams = CommandHelper.anotherNekoArgs();
 		CommandHelper.remoteCommand('open', ['-a', 'Firefox', 'http://localhost:${args.httpServerSetting.port}/'], args.reportFile, args.httpServerSetting);
 	}
-
 }
 
 #end

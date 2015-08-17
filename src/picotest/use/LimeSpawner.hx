@@ -1,9 +1,11 @@
 package picotest.use;
 
+#if (macro || macro_doc_gen)
+
+import picotest.use.common.CommandHelper;
+import picotest.use.common.TestSpawner;
 import haxe.macro.Context;
 import picotest.macros.PicoTestMacros;
-
-#if (macro || macro_doc_gen)
 
 class LimeSpawner extends TestSpawner {
 
@@ -13,8 +15,8 @@ class LimeSpawner extends TestSpawner {
 		this.limeTarget = limeTarget;
 	}
 
-	override public function execute(reportFile:String):Void {
-		CommandHelper.command('lime', ['run', this.limeTarget], reportFile);
+	override public function execute():Void {
+		CommandHelper.command('lime', ['run', this.limeTarget], reportFile());
 	}
 
 	public static function toSpawn(limeTarget:String):LimeSpawner {

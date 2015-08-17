@@ -1,9 +1,11 @@
 package picotest.use;
 
+#if (macro || macro_doc_gen)
+
+import picotest.use.common.CommandHelper;
+import picotest.use.common.TestSpawner;
 import picotest.macros.PicoTestMacros;
 import haxe.macro.Compiler;
-
-#if (macro || macro_doc_gen)
 
 class FlashStandaloneSpawner extends TestSpawner {
 
@@ -11,7 +13,7 @@ class FlashStandaloneSpawner extends TestSpawner {
 		super("flash_sa");
 	}
 
-	override public function execute(reportFile:String):Void {
+	override public function execute():Void {
 		var bin:String = Compiler.getOutput();
 		switch (CommandHelper.systemName()) {
 			case "Windows", "Linux":
@@ -21,7 +23,7 @@ class FlashStandaloneSpawner extends TestSpawner {
 			default:
 				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
 		}
-		CommandHelper.command('cp', [flashLog(), reportFile]);
+		CommandHelper.command('cp', [flashLog(), reportFile()]);
 	}
 
 	public static function toSpawn():FlashStandaloneSpawner {

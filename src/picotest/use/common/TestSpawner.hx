@@ -1,12 +1,14 @@
-package picotest.use;
+package picotest.use.common;
 
+#if (macro || macro_doc_gen)
+
+import sys.FileSystem;
+import sys.io.File;
 import picotest.macros.PicoTestMacros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 
-#if (macro || macro_doc_gen)
-
-class TestSpawner {
+class TestSpawner implements ITestExecuter {
 
 	public var name(default, null):String;
 
@@ -14,10 +16,26 @@ class TestSpawner {
 		this.name = name;
 	}
 
-	public function execute(reportFile:String):Void {
+	public function execute():Void {
 
 	}
 
+	public function reportDir():String {
+		if (Context.defined(PicoTestMacros.PICOTEST_REPORT_DIR)) return Context.definedValue(PicoTestMacros.PICOTEST_REPORT_DIR);
+		return "bin/report";
+	}
+	
+	public function reportFile():String {
+		FileSystem.createDirectory(reportDir());
+		return '${reportDir()}/${name}.json';
+	}
+	
+	public function reportData():String {
+		var report:String = File.read(reportFile()).readAll().toString();
+		if (report == null || report == "") throw '${reportFile()}: report file not found';
+		return report;
+	}
+	
 	private function bin():String {
 		return Compiler.getOutput();
 	}

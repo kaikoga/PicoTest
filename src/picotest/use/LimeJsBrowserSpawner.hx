@@ -1,9 +1,10 @@
 package picotest.use;
 
+#if (macro || macro_doc_gen)
+
+import picotest.use.common.TestSpawner;
 import haxe.macro.Compiler;
 import picotest.macros.PicoTestMacros;
-
-#if (macro || macro_doc_gen)
 
 class LimeJsBrowserSpawner extends TestSpawner {
 
@@ -16,7 +17,7 @@ class LimeJsBrowserSpawner extends TestSpawner {
 		this.browser = browser;
 	}
 
-	override public function execute(reportFile:String):Void {
+	override public function execute():Void {
 		// we have to run our tests through http so we runInAnotherNeko() instead of simple
 		// CommandHelper.command('lime', ['run', this.limeTarget], reportFile);
 
@@ -30,7 +31,7 @@ class LimeJsBrowserSpawner extends TestSpawner {
 				],
 				docRoot: "Export/html5/bin"
 			},
-			reportFile: reportFile
+			reportFile: reportFile()
 		});
 
 	}

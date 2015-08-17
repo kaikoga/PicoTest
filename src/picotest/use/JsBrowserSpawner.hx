@@ -1,11 +1,11 @@
 package picotest.use;
 
-#if macro
+#if (macro || macro_doc_gen)
+
+import picotest.use.common.CommandHelper;
+import picotest.use.common.TestSpawner;
 import haxe.macro.Compiler;
 import picotest.macros.PicoTestMacros;
-#end
-
-#if (macro || macro_doc_gen)
 import haxe.io.Bytes;
 
 class JsBrowserSpawner extends TestSpawner {
@@ -36,14 +36,14 @@ class JsBrowserSpawner extends TestSpawner {
 		return Bytes.ofString(html);
 	}
 
-	override public function execute(reportFile:String):Void {
+	override public function execute():Void {
 		CommandHelper.writeFile(htmlData(), htmlFile());
 		this.runInAnotherNeko('bin/report/bin/run_js_html.n', 'picotest.use.main.JsBrowserSpawnerMain', {
 			httpServerSetting: {
 				port: remotePort(),
 				files: ["/" => htmlFile(), "/test.js" => bin()]
 			},
-			reportFile: reportFile
+			reportFile: reportFile()
 		});
 	}
 

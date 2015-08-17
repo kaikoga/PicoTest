@@ -1,6 +1,7 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import picotest.readers.PicoTestResultReader;
 import picotest.use.LimeFlashSpawner;
 import picotest.use.LimeJsBrowserSpawner;
 import picotest.use.NekoSpawner;
@@ -13,13 +14,12 @@ import picotest.use.CsSpawner;
 import picotest.use.CppSpawner;
 import picotest.use.LimeSpawner;
 import picotest.use.FlashStandaloneSpawner;
-import picotest.use.TestSpawner;
+import picotest.use.common.TestSpawner;
 import sys.io.File;
 import sys.FileSystem;
 import sys.io.Process;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
-import picotest.readers.PicoTestFileResultReader;
 import picotest.reporters.WarnReporter;
 
 /**
@@ -63,20 +63,15 @@ class PicoTestMacros {
 	}
 
 	public static function runTests():Void {
-		var reportDir:String = "bin/report";
-		if (Context.defined(PICOTEST_REPORT_DIR)) reportDir = Context.definedValue(PICOTEST_REPORT_DIR);
-		FileSystem.createDirectory(reportDir);
-
 		if (spawner == null) spawner = guessSpawner();
-		var reportFile:String = '$reportDir/${spawner.name}.json';
-		spawner.execute(reportFile);
-		readResult(reportFile, spawner.name);
+		spawner.execute();
+		readResult(spawner.reportData(), spawner.name);
 	}
 
 	public static function readResult(report:String, header:String):Void {
 		var runner:PicoTestRunner = PicoTest.runner();
 		runner.reporters = [new WarnReporter()];
-		new PicoTestFileResultReader().read(runner, report, header);
+		new PicoTestResultReader().read(runner, report, header);
 		runner.run();
 	}
 
