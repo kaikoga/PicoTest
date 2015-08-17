@@ -3,3 +3,4 @@
 Export/html5/haxe/debug.hxml
 --macro picotest.use.LimeSpawner.toSpawn("html5")
 --macro picotest.PicoTest.runTests()
+--no-output

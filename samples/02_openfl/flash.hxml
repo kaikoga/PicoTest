@@ -1,5 +1,6 @@
 -cmd lime build flash
 --next
 Export/flash/haxe/debug.hxml
---macro picotest.use.LimeSpawner.toSpawn("flash")
+--macro picotest.use.LimeFlashSpawner.toSpawn()
 --macro picotest.PicoTest.runTests()
+--no-output
