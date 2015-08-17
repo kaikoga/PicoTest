@@ -1,5 +1,7 @@
 package picotest;
 
+import haxe.Json;
+import picotest.PicoMatcher.MatchResult;
 import haxe.PosInfos;
 
 #if !picotest_nodep
@@ -77,6 +79,27 @@ class PicoAssert {
 		} catch (d:Dynamic) {
 			if (checkSuccess != null) checkSuccess(d);
 		}
+	}
+
+	/**
+		Assert that `expected` and `actual` matches using PicoMatcher.
+	**/
+	public static function assertMatch<T>(expected:T, actual:T, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
+		if (matcher == null) matcher = PicoMatcher.standard();
+		if (message == null) message = 'Structure mismatch:';
+		var result:String = PicoMatcher.printMatchResult(matcher.match(expected, actual));
+		if (result == null) PicoTest.currentRunner.success();
+		else PicoTest.currentRunner.failure('$message\n$result', p);
+	}
+
+	/**
+	**/
+	public static function assertJsonMatch<T>(expected:String, actual:String, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
+		if (matcher == null) matcher = PicoMatcher.standard();
+		if (message == null) message = 'JSON structure mismatch:';
+		var result:String =  PicoMatcher.printMatchResult(matcher.match(Json.parse(expected), Json.parse(actual)));
+		if (result == null) PicoTest.currentRunner.success();
+		else PicoTest.currentRunner.failure('$message\n$result', p);
 	}
 
 	#if !picotest_nodep
