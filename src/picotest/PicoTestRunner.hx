@@ -38,7 +38,7 @@ class PicoTestRunner {
 	}
 
 	private var mainLoopThreads:Array<PicoTestThread>;
-	
+
 	public function new() {
 		this.readers = [new PicoTestReader()];
 		this.printers = [];
@@ -117,6 +117,8 @@ class PicoTestRunner {
 	private function runTask(task:IPicoTestTask):Void {
 		PicoTest.currentRunner = this;
 		this.currentTask = task;
+		var oldTrace:Dynamic->?PosInfos->Void = haxe.Log.trace;
+		haxe.Log.trace = function(v:Dynamic, ?p:PosInfos):Void { this.trace(v, p); };
 		switch (this.currentTask.resume(this)) {
 			case PicoTestTaskStatus.Continue:
 				this.waitingTasks.push(task);
@@ -125,6 +127,7 @@ class PicoTestRunner {
 				this.results.push(result);
 			case PicoTestTaskStatus.Done:
 		}
+		haxe.Log.trace = oldTrace;
 		this.currentTask = null;
 		PicoTest.currentRunner = null;
 	}
@@ -153,6 +156,13 @@ class PicoTestRunner {
 		CallStack.exceptionStack();
 		#end
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Error(message, PicoTestCallInfo.fromCallStack(callStack));
+		currentTaskResult.assertResults.push(assertResult);
+		for (printer in this.printers) printer.printAssertResult(assertResult);
+	}
+
+	public function trace(v:Dynamic = null, p:PosInfos):Void {
+		var message:String = Std.string(v);
+		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Trace(message, PicoTestCallInfo.fromPosInfos(p));
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
