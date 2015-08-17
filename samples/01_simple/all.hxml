@@ -10,6 +10,8 @@ cpp.hxml
 --next
 swf.hxml
 --next
+js_html.hxml
+--next
 php.hxml
 #--next
 #python.hxml
