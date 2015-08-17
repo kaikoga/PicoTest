@@ -66,7 +66,7 @@ class PicoTestMacros {
 						command('cp $flog $reportFile');
 					case "Mac":
 						if (fp == null) fp = '"Flash Player Debugger"';
-						if (flog == null) flog = '"~/Library/Preferences/Macromedia/Flash Player/Logs/flashlog.txt"';
+						if (flog == null) flog = '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
 						command('open -nWa $fp $bin');
 						command('cp $flog $reportFile');
 					default:
