@@ -80,6 +80,7 @@ class TestSpawner implements ITestExecuter {
 
 	private function selectBrowser(kind:String = null):String {
 		// TODO support more kind
+		if (kind == null) kind = "";
 		switch (kind.toLowerCase()) {
 			case "firefox":
 				switch (PicoTestExternalCommand.systemName()) {
@@ -92,7 +93,7 @@ class TestSpawner implements ITestExecuter {
 					default:
 						throw 'Running as browser in platform ${PicoTestExternalCommand.systemName()} not supported';
 				}
-			case "", "chrome", null:
+			case "", "chrome":
 				switch (PicoTestExternalCommand.systemName()) {
 					case "Windows":
 						return 'chrome';
