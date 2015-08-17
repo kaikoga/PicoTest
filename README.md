@@ -137,12 +137,22 @@ Warning: running PicoTest using threads is not officially tested and may contain
 
 #Planned Features
 
-- Async testing ... doing!
 - Support basic assertions standalone
 - "throw" testing
 - Options to run Flash/js in browser 
 - Setting path to executables of ```neko```, ```node```, ```java```, ```mono```, etc... 
 - Support more platforms! 
+- More async testing.
+
+#Release Notes
+
+- Version 0.1.0
+  - Basic async support 
+  - @Ignore support
+  - Include trace outputs in assert results
+  - Refined documentation
+- Version 0.0.0
+  - Initial release
 
 #License
 
