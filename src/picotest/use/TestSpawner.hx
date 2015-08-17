@@ -1,4 +1,4 @@
-package picotest.macros.runners;
+package picotest.use;
 
 import haxe.io.Bytes;
 import sys.io.File;
@@ -6,20 +6,26 @@ import sys.io.Process;
 
 #if (macro || macro_doc_gen)
 
-class TestExecuter {
-	
-	private function new():Void {
-		
+class TestSpawner {
+
+	public var name(default, null):String;
+
+	private function new(name:String):Void {
+		this.name = name;
 	}
 
 	public function execute(reportFile:String):Void {
-		
+
+	}
+
+	private function systemName():String {
+		return Sys.systemName();
 	}
 
 	private function command(cmd:String, args:Array<String> = null, outFile:String = null):Void {
 		if (args == null) args = [];
 		var process:Process;
-		if (Sys.systemName() == "Windows") {
+		if (systemName() == "Windows") {
 			// assume Windows is great
 			process = new Process(cmd, args);
 		} else {

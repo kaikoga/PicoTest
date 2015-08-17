@@ -1,14 +1,15 @@
-package picotest.macros.runners;
+package picotest.use;
 
+import picotest.macros.PicoTestMacros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 
 #if (macro || macro_doc_gen)
 
-class FlashStandaloneExecuter extends TestExecuter {
+class FlashStandaloneSpawner extends TestSpawner {
 
 	public function new() {
-		super();
+		super("flash_sa");
 	}
 
 	override public function execute(reportFile:String):Void {
@@ -18,8 +19,7 @@ class FlashStandaloneExecuter extends TestExecuter {
 		if (Context.defined(PicoTestMacros.PICOTEST_FLOG)) flog = Context.definedValue(PicoTestMacros.PICOTEST_FLOG);
 		var bin:String = Compiler.getOutput();
 
-		var system:String = Sys.systemName();
-		switch (system) {
+		switch (systemName()) {
 			case "Windows":
 				if (fp == null) fp = '"C:/Program Files (x86)/FlashPlayerDebugger.exe"';
 				if (flog == null) flog = '"%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt';
@@ -33,10 +33,16 @@ class FlashStandaloneExecuter extends TestExecuter {
 				if (flog == null) flog = '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
 				this.command('open', ['-nWa', fp, bin]);
 			default:
-				throw 'Flash warning in platform $system not supported';
+				throw 'Flash warning in platform ${systemName()} not supported';
 		}
 		flog = flog.split("~").join(Sys.getEnv("HOME"));
 		this.command('cp', [flog, reportFile]);
+	}
+
+	public static function toSpawn():FlashStandaloneSpawner {
+		var spawner:FlashStandaloneSpawner = new FlashStandaloneSpawner(); 
+		PicoTestMacros.spawner = spawner;
+		return spawner;
 	}
 }
 

@@ -1,14 +1,14 @@
-package picotest.macros.runners;
+package picotest.use;
 
 #if (macro || macro_doc_gen)
 
-class CommandExecuter extends TestExecuter {
+class CommandSpawner extends TestSpawner {
 
 	private var cmd:String;
 	private var args:Array<String>;
 
-	public function new(cmd:String, args:Array<String> = null, outFile:String = null):Void {
-		super();
+	public function new(name:String, cmd:String, args:Array<String> = null, outFile:String = null):Void {
+		super(name);
 		this.cmd = cmd;
 		this.args = args;
 	}
