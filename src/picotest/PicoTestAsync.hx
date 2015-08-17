@@ -24,7 +24,7 @@ class PicoTestAsync {
 		`func` will be called after `delayMs`.
 		Assertions in `func` are treated as part of current test method.
 	**/
-	public static function assertLater<T>(func:Void->Void, delayMs:Int):Void {
+	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
 		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
 	}
@@ -49,7 +49,7 @@ class PicoTestAsync {
 
 class PicoTestAsync {
 
-	public static function assertLater<T>(func:Void->Void, delayMs:Int):Void {
+	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
 		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
 	}
@@ -72,12 +72,12 @@ import picotest.PicoAssert.*;
 @:noDoc
 class PicoTestAsync {
 
-	public static function assertLater<T>(func:Void->Void, delayMs:Int):Void {
-		fail("assertLater() not supported in platform");
+	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
+		fail("assertLater() not supported in platform", p);
 	}
 
 	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
-		fail("createCallback() not supported in platform");
+		fail("createCallback() not supported in platform", p);
 		return emptyCallback;
 	}
 
