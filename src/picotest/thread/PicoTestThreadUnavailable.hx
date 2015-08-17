@@ -1,5 +1,6 @@
 package picotest.thread;
 
+@:noDoc
 class PicoTestThreadUnavailable {
 
 	public var context(default, null):PicoTestThreadContext;
@@ -8,7 +9,7 @@ class PicoTestThreadUnavailable {
 
 	}
 
-	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
+	public static function create(callb:PicoTestThreadContext->Void):PicoTestThreadUnavailable {
 		throw "PicoTestThread not implemented in this platform";
 	}
 

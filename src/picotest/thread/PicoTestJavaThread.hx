@@ -1,8 +1,11 @@
 package picotest.thread;
 
-typedef Thread = java.lang.Thread;
+#if java
 
-class PicoTestJavaThread extends Thread {
+@:noDoc typedef JavaThread = java.lang.Thread;
+
+@:noDoc
+class PicoTestJavaThread extends JavaThread {
 
 	private var func:PicoTestThreadContext->Void;
 	private var context:PicoTestThreadContext;
@@ -20,7 +23,7 @@ class PicoTestJavaThread extends Thread {
 		this.context.halted();
 	}
 
-	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
+	public static function create(callb:PicoTestThreadContext->Void):PicoTestJavaThread {
 		return new PicoTestJavaThread(callb);
 	}
 
@@ -35,3 +38,5 @@ class PicoTestJavaThread extends Thread {
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return true;
 }
+
+#end

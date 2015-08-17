@@ -1,0 +1,83 @@
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/swf.xml
+-swf dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/neko.xml
+-neko dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/js.xml
+-js dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/cpp.xml
+-cpp dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/java.xml
+-java dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/cs.xml
+-cs dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/php.xml
+-php dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/python.xml
+-python dummy
+--next
+
+-cp ../src
+-lib hamcrest
+--macro haxe.macro.Compiler.include("picotest")
+-D doc-gen
+--no-output
+-xml bin/xml/macro.xml
+--interp
+-D macro-doc-gen
+--next
+
+-cmd haxelib run dox -i bin/xml -o bin/html --title PicoTest -in picotest

@@ -1,6 +1,6 @@
-#if sys
-
 package picotest.readers;
+
+#if sys
 
 import sys.io.File;
 

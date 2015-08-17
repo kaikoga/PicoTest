@@ -42,6 +42,7 @@ class WarnReporter implements IPicoTestReporter {
 	private function filePosition(file:String, line:Int):{min:Int, max:Int} {
 		var min = 0;
 		var max = 0;
+		#if macro
 		var text:String = File.read(file).readAll().toString();
 		var ereg:EReg = ~/(\r\n|\r|\n)/;
 
@@ -57,6 +58,7 @@ class WarnReporter implements IPicoTestReporter {
 			ereg.matchedPos().pos;
 		else
 			text.length;
+		#end
 		return {min:min, max:max};
 	}
 

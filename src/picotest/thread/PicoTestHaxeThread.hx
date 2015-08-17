@@ -1,11 +1,10 @@
 package picotest.thread;
 
-#if cpp
-typedef Thread = cpp.vm.Thread;
-#elseif neko
-typedef Thread = neko.vm.Thread;
-#end
+#if (cpp || neko)
 
+@:noDoc typedef Thread = #if cpp cpp.vm.Thread; #elseif neko neko.vm.Thread; #end
+
+@:noDoc
 class PicoTestHaxeThread {
 
 	private var native:Thread;
@@ -16,7 +15,7 @@ class PicoTestHaxeThread {
 		this.context = new PicoTestThreadContext();
 	}
 
-	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
+	public static function create(callb:PicoTestThreadContext->Void):PicoTestHaxeThread {
 		var thread:PicoTestHaxeThread = new PicoTestHaxeThread(null);
 		var f:Void->Void = function():Void {
 			callb(thread.context);
@@ -37,3 +36,5 @@ class PicoTestHaxeThread {
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return true;
 }
+
+#end

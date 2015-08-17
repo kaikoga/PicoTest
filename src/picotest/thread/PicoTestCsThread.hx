@@ -1,25 +1,28 @@
 package picotest.thread;
 
-typedef Thread = cs.system.threading.Thread;
-typedef ThreadStart = cs.system.threading.ThreadStart;
+#if cs
 
+@:noDoc typedef CsThread = cs.system.threading.Thread;
+@:noDoc typedef CsThreadStart = cs.system.threading.ThreadStart;
+
+@:noDoc
 class PicoTestCsThread {
 
-	private var native:Thread;
+	private var native:CsThread;
 	private var context:PicoTestThreadContext;
 
-	private function new(native:Thread) {
+	private function new(native:CsThread) {
 		this.native = native;
 		this.context = new PicoTestThreadContext();
 	}
 
-	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
-		var thread:PicoTestThread = new PicoTestCsThread(null);
+	public static function create(callb:PicoTestThreadContext->Void):PicoTestCsThread {
+		var thread:PicoTestCsThread = new PicoTestCsThread(null);
 		var f:Void->Void = function():Void {
 			callb(thread.context);
 			thread.context.halted();
 		}
-		var native = new Thread(new ThreadStart(f));
+		var native = new CsThread(new CsThreadStart(f));
 		thread.native = native;
 		native.Start();
 		return thread;
@@ -36,3 +39,5 @@ class PicoTestCsThread {
 	public static var available(get, never):Bool;
 	private static function get_available():Bool return true;
 }
+
+#end
