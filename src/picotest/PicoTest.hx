@@ -21,7 +21,7 @@ class PicoTest {
 	/**
 		Version of PicoTest.
 	**/
-	inline public static var VERSION:String = "0.2.0";
+	inline public static var VERSION:String = "0.3.0";
 
 	/**
 		Current target runner which assertions are run against.
@@ -46,7 +46,7 @@ class PicoTest {
 		runner.printers = [new TracePrinter()];
 		runner.reporters = [new TraceReporter()];
 		#end
-		
+
 		#if picotest_remote
 		stdout = stdoutRemote;
 		#end

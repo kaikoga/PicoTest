@@ -139,29 +139,42 @@ The difficult part is that threading itself in Haxe is not cross-platform.
 
 Warning: running PicoTest using threads is not officially tested and may contain bugs!
 
+#Test Spawner
+
+Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript tests in your browser.  
+
 #Compiler Defines
 
 ##Cross
 
 ```-D picotest_nodep``` Remove hamcrest supports
 ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
+```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)  
+```-D picotest_report=json``` output report file (used internally by ```PicoTest.warn()```)  
 
 ##Flash
 
 ```-D picotest_fp``` Path to executable of Flash Player (default per OS)  
 ```-D picotest_flog``` Path to flashlog.txt (default per OS)
-```-D picotest_report=json``` output report file (used internally by ```PicoTest.warn()```)  
-```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)  
+
+##JavaScript
+
+```-D picotest_browser``` Specify browser to run tests in (TODO)  
+```-D picotest_remote_port``` A local port to receive test result from browser (default ```8001```)  
 
 #Planned Features
 
-- Options to run Flash/js in browser 
+- Find out the standards of Flash Player executable path (well, I'll stop using "Flash Player Debugger" before 1.0...)
 - Setting path to executables of ```neko```, ```node```, ```java```, ```mono```, etc... 
+- Options to run Flash in browser
 - Support more platforms! 
 - More async testing.
 
 #Release Notes
 
+- Version 0.3.0
+  - OpenFL support
+  - JavaScript testing on browsers support
 - Version 0.2.0
   - "throw" testing (```assertThrows()```)
   - structure based matching (```assertMatch()```)
