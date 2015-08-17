@@ -12,6 +12,7 @@ class SampleTest {
 		runner.load(PicoMatcherSampleTestCase);
 		#if !picotest_nodep
 		runner.load(HamcrestSampleTestCase);
+		runner.load(PicoMatcherHamcrestSampleTestCase);
 		#end
 		runner.load(AsyncSampleTestCase);
 		runner.run();

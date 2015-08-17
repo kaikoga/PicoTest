@@ -1,5 +1,10 @@
 package picotest;
 
+#if !picotest_nodep
+import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
+#end
+
 /**
 	Does structure based matching.
 **/
@@ -21,11 +26,18 @@ class PicoMatcher {
 			switch (match) {
 				case MatchResult.Unknown:
 					continue;
-				case MatchResult.Match, MatchResult.Mismatch(_,_), MatchResult.Complex(_):
+				case MatchResult.Match, MatchResult.Mismatch(_,_), MatchResult.MismatchDesc(_,_), MatchResult.Complex(_):
 					return match;
 			}
 		}
 		return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+	}
+
+	public static function matchNull(matcher:PicoMatcher, expected:Dynamic, actual:Dynamic):MatchResult {
+		if (expected == null || actual == null) {
+			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+		}
+		return MatchResult.Unknown;
 	}
 
 	public static function matchInt(matcher:PicoMatcher, expected:Dynamic, actual:Dynamic):MatchResult {
@@ -74,6 +86,7 @@ class PicoMatcher {
 				switch (matcher.match(e[i], a[i])) {
 					case Unknown, Match:
 					case Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('[$i]', e, a));
+					case MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('[$i]', e, d));
 					case Complex(a): mismatches.push(MatchComponent.ComplexAt('[$i]', a));
 				}
 			}
@@ -97,11 +110,30 @@ class PicoMatcher {
 			switch (matcher.match(e, a)) {
 				case Unknown, Match:
 				case Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('.$field', e, a));
+				case MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('.$field', e, d));
 				case Complex(a): mismatches.push(MatchComponent.ComplexAt('.$field', a));
 			}
 		}
 		return mismatches.length == 0 ? MatchResult.Match : MatchResult.Complex(mismatches);
 	}
+
+	#if !picotest_nodep
+	public static function matchMatcher<T>(matcher:PicoMatcher, expected:Dynamic, actual:Dynamic):MatchResult {
+		if (Std.is(expected, Matcher))  {
+			var matcher:Matcher<T> = expected; 
+			if (!matcher.matches(actual))
+			{
+				var e:StringDescription = new StringDescription();
+				e.appendDescriptionOf(matcher);
+				var a:StringDescription = new StringDescription();
+				matcher.describeMismatch(actual, a);
+				return MatchResult.MismatchDesc(e.toString(), a.toString());
+			}
+			return MatchResult.Match;
+		}
+		return MatchResult.Unknown;
+	}
+	#end
 
 	public static function printMatchResult(result:MatchResult):String {
 		switch (result) {
@@ -109,6 +141,8 @@ class PicoMatcher {
 				return null;
 			case Mismatch(e, a):
 				return '  - expected ${e} but was ${a}';
+			case MismatchDesc(e, d):
+				return '  - expected ${e} but ${d}';
 			case Complex(a):
 				var m:Array<String> = [];
 				for (comp in a) m.push(printMatchComponent(comp, "*"));
@@ -120,6 +154,8 @@ class PicoMatcher {
 		switch (comp) {
 			case MismatchAt(p, e, a):
 				return '  - ${path + p} expected ${e} but was ${a}';
+			case MismatchDescAt(p, e, d):
+				return '  - ${path + p} expected ${e} but ${d}';
 			case ComplexAt(p, a):
 				var m:Array<String> = [];
 				for (comp in a) m.push(printMatchComponent(comp, '${path + p}'));
@@ -129,6 +165,10 @@ class PicoMatcher {
 
 	public static function standard():PicoMatcher {
 		var matcher:PicoMatcher = new PicoMatcher();
+		#if !picotest_nodep
+		matcher.addMatcher(PicoMatcher.matchMatcher);
+		#end
+		matcher.addMatcher(PicoMatcher.matchNull);
 		matcher.addMatcher(PicoMatcher.matchInt);
 		matcher.addMatcher(PicoMatcher.matchFloat);
 		matcher.addMatcher(PicoMatcher.matchBool);
@@ -144,10 +184,12 @@ enum MatchResult {
 	Unknown;
 	Match;
 	Mismatch(expected:String, actual:String);
+	MismatchDesc(expected:String, description:String);
 	Complex(array:Array<MatchComponent>);
 }
 
 enum MatchComponent {
 	MismatchAt(path:String, expected:String, actual:String);
+	MismatchDescAt(path:String, expected:String, description:String);
 	ComplexAt(path:String, array:Array<MatchComponent>);
 }

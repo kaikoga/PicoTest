@@ -84,7 +84,7 @@ class PicoAssert {
 	/**
 		Assert that `expected` and `actual` matches using PicoMatcher.
 	**/
-	public static function assertMatch<T>(expected:T, actual:T, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
+	public static function assertMatch(expected:Dynamic, actual:Dynamic, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
 		if (matcher == null) matcher = PicoMatcher.standard();
 		if (message == null) message = 'Structure mismatch:';
 		var result:String = PicoMatcher.printMatchResult(matcher.match(expected, actual));
