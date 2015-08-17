@@ -1,7 +1,8 @@
 package picotest.tasks;
 
+import haxe.ds.Option;
+
 interface IPicoTestTask {
-	var className(default, null):String;
-	var methodName(default, null):String;
-	function resume():Bool;
+	var result(get, never):Option<PicoTestResult>;
+	function resume(runner:PicoTestRunner):PicoTestTaskStatus;
 }

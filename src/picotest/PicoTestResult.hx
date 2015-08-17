@@ -1,15 +1,16 @@
 package picotest;
 
 import picotest.PicoTestAssertResult;
-import picotest.tasks.IPicoTestTask;
 
 class PicoTestResult {
 
-	public var task(default, null):IPicoTestTask;
+	public var className(default, null):String;
+	public var methodName(default, null):String;
 	public var assertResults:Array<PicoTestAssertResult>;
 
-	public function new(task:IPicoTestTask, assertResults:Array<PicoTestAssertResult> = null) {
-		this.task = task;
+	public function new(className:String, methodName:String, assertResults:Array<PicoTestAssertResult> = null) {
+		this.className = className;
+		this.methodName = methodName;
 		this.assertResults = if (assertResults != null) assertResults; else [];
 	}
 

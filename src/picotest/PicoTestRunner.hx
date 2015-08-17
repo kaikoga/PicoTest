@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.tasks.PicoTestTaskStatus;
 import haxe.PosInfos;
 import haxe.CallStack;
 import picotest.printers.IPicoTestPrinter;
@@ -20,24 +21,32 @@ class PicoTestRunner {
 	public var reporters:Array<IPicoTestReporter>;
 	public var display:Bool = true;
 
-	private var completedResults:Array<PicoTestResult>;
-	private var incompleteResults:Array<PicoTestResult>;
-	private var currentAssertResults:Array<PicoTestAssertResult>;
+	private var tasks:Array<IPicoTestTask>;
+	private var results:Array<PicoTestResult>;
+
+	private var currentTask:IPicoTestTask;
+	private var currentTaskResult(get, never):PicoTestResult;
+	private function get_currentTaskResult():PicoTestResult {
+		return switch (this.currentTask.result) {
+			case Some(result): result;
+			case None: throw "PicoTestRunner not running";
+		}
+	}
 
 	public function new() {
 		this.readers = [new PicoTestReader()];
 		this.printers = [];
 		this.reporters = [];
-		this.completedResults = [];
-		this.incompleteResults = [];
+		this.tasks = [];
+		this.results = [];
 	}
 
 	public function add(task:IPicoTestTask):Void {
-		this.incompleteResults.push(new PicoTestResult(task));
+		this.tasks.push(task);
 	}
 
 	public function addResult(result:PicoTestResult):Void {
-		this.completedResults.push(result);
+		this.results.push(result);
 	}
 
 	public function load(testCaseClass:Class<Dynamic>):Void {
@@ -50,32 +59,17 @@ class PicoTestRunner {
 		#end
 		if (PicoTest.currentRunner != null) throw "PicoTestRunner instance is running";
 		PicoTest.currentRunner = this;
-		while (incompleteResults.length > 0) {
-			var result:PicoTestResult = incompleteResults.shift();
-			currentAssertResults = result.assertResults;
-			var isComplete:Bool = true;
-			try {
-				isComplete = result.task.resume();
-			#if flash
-			} catch (e:Error) {
-				// flash must retrieve stack trace from Error object
-				this.error(Std.string(e), this.buildFlashCallStack(e.getStackTrace()));
-				isComplete = true;
-			#end
-			} catch (d:Dynamic) {
-				this.error(Std.string(d), CallStack.exceptionStack());
-				isComplete = true;
+		while (this.tasks.length > 0) {
+			this.currentTask = this.tasks.shift();
+			switch (this.currentTask.resume(this)) {
+				case PicoTestTaskStatus.Complete(result):
+					for (printer in this.printers) printer.print(result);
+					this.results.push(result);
 			}
-			if (isComplete) {
-				for (printer in this.printers) printer.print(result);
-				completedResults.push(result);
-			} else {
-				incompleteResults.push(result);
-			}
+			this.currentTask = null;
 		}
-		for (reporter in this.reporters) reporter.report(this.completedResults);
+		for (reporter in this.reporters) reporter.report(this.results);
 		PicoTest.currentRunner = null;
-
 
 		#if (flash && picotest_report)
 		System.exit(0);
@@ -89,13 +83,24 @@ class PicoTestRunner {
 
 	public function failure(message:String = null, p:PosInfos):Void {
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Failure(message, PicoTestCallInfo.fromPosInfos(p));
-		currentAssertResults.push(assertResult);
+		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
-	public function error(message:String = null, callStack:Array<StackItem>):Void {
+	public function error(d:Dynamic):Void {
+		var message:String = Std.string(d);
+		var callStack:Array<StackItem> =
+		#if flash
+		if (Std.is(d, Error)) {
+			this.buildFlashCallStack(cast (d, Error).getStackTrace());
+		} else {
+			CallStack.exceptionStack();
+		}
+		#else
+		CallStack.exceptionStack();
+		#end
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Error(message, PicoTestCallInfo.fromCallStack(callStack));
-		currentAssertResults.push(assertResult);
+		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
@@ -125,4 +130,5 @@ class PicoTestRunner {
 		return callStack;
 	}
 	#end
+
 }

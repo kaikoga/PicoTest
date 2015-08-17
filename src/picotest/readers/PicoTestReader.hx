@@ -1,6 +1,6 @@
 package picotest.readers;
 
-import picotest.tasks.PicoTestSimpleTask;
+import picotest.tasks.PicoTestSimpleTestTask;
 
 class PicoTestReader implements IPicoTestReader {
 
@@ -26,7 +26,7 @@ class PicoTestReader implements IPicoTestReader {
 				}
 			}
 			if (isTest) {
-				var task = new PicoTestSimpleTask(className, field, Reflect.field(testCase, field));
+				var task = new PicoTestSimpleTestTask(className, field, Reflect.field(testCase, field));
 				runner.add(task);
 			}
 		}

@@ -10,8 +10,8 @@ class TraceReporter implements IPicoTestReporter {
 		PicoTest.stdout("\nreport:\n");
 		var map:Map<String, Array<PicoTestResult>> = new Map();
 		for (result in results) {
-			if (!map.exists(result.task.className)) map[result.task.className] = [];
-			var a:Array<PicoTestResult> = map[result.task.className];
+			if (!map.exists(result.className)) map[result.className] = [];
+			var a:Array<PicoTestResult> = map[result.className];
 			a.push(result);
 		}
 
@@ -19,7 +19,7 @@ class TraceReporter implements IPicoTestReporter {
 			var row:String = '$className: ';
 			var text:Array<String> = [];
 			for (result in map[className]) {
-				var resultText:Array<String> = ["", '${result.task.className}:${result.task.methodName}():'];
+				var resultText:Array<String> = ["", '${result.className}:${result.methodName}():'];
 				for (assertResult in result.assertResults) {
 					switch (assertResult) {
 						case PicoTestAssertResult.Success:

@@ -1,6 +1,5 @@
 package picotest.reporters;
 
-import picotest.tasks.PicoTestSimpleTask;
 import picotest.PicoTestCallInfo;
 import haxe.Json;
 import picotest.PicoTestAssertResult;
@@ -25,7 +24,7 @@ class JsonReporter implements IPicoTestReporter {
 		for (assertResult in result.assertResults) {
 			a.push(hashAssertResult(assertResult));
 		}
-		return {className:result.task.className, methodName:result.task.methodName, assertResults:a}
+		return {className:result.className, methodName:result.methodName, assertResults:a}
 	}
 
 	public static function unhashResult(hashed:HashedResult, header:String = null):PicoTestResult {
@@ -33,7 +32,7 @@ class JsonReporter implements IPicoTestReporter {
 		for (hashedAssertResult in hashed.assertResults) {
 			a.push(unhashAssertResult(hashedAssertResult, header));
 		}
-		return new PicoTestResult(new PicoTestSimpleTask(hashed.className, hashed.methodName, function():Void{}), a);
+		return new PicoTestResult(hashed.className, hashed.methodName, a);
 
 	}
 
