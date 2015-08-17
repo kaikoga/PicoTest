@@ -116,12 +116,13 @@ class PicoTest {
 	}
 
 	public static dynamic function stdoutRemote(value:String):Void {
-		// FIXME we use HTTP POST compatible format, as JS doesn't support raw sockets
+		// we use HTTP POST compatible format, as JS doesn't support raw sockets
 		#if sys
 		var socket:Socket = new Socket();
 		socket.connect(new Host("127.0.0.1"), 8001);
-		var data:Bytes = Bytes.ofString(value);
-		socket.shutdown(true, true);
+		socket.write("POST result .\r\n\r\n");
+		socket.output.write(Bytes.ofString(value));
+		socket.close();
 		#elseif js
 		var xhr:XMLHttpRequest = new XMLHttpRequest();
 		xhr.open("POST", "result");

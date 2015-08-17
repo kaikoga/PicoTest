@@ -1,6 +1,5 @@
 -cmd lime build neko
 --next
 Export/mac64/neko/haxe/debug.hxml
---macro picotest.use.LimeSpawner.toSpawn("neko")
 --macro picotest.PicoTest.runTests()
 --no-output

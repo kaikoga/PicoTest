@@ -1,6 +1,7 @@
 package picotest.use.http;
 
 import sys.io.File;
+import sys.FileSystem;
 import sys.net.Host;
 import sys.net.Socket;
 import haxe.io.Bytes;
@@ -43,10 +44,18 @@ class PicoHttpServer {
 		switch (request.method) {
 			case PicoHttpMethod.GET:
 				var localFile:String = null;
-				if ((setting.files != null) && setting.files.exists(request.uri)) {
-					localFile = setting.files.get(request.uri);
-				} else if (setting.index != null) {
-					localFile = setting.index;
+				if (localFile == null) {
+					if ((setting.files != null) && setting.files.exists(request.uri)) {
+						localFile = setting.files.get(request.uri);
+					}
+				}
+				if (localFile == null) {
+					if (setting.docRoot != null) {
+						var path:String = setting.docRoot + request.uri;
+						if (path.indexOf("..") < 0 && FileSystem.exists(path)) {
+							localFile = path;
+						}
+					}
 				}
 				if (localFile != null) {
 					var input:Input = File.read(localFile);
@@ -54,8 +63,10 @@ class PicoHttpServer {
 					input.close();
 				}
 			case PicoHttpMethod.POST:
-				postData = request.body;
-			case _:
+				this.postData = request.body;
+			case PicoHttpMethod.INVALID:
+				socket.output.write(Bytes.ofString('HTTP/1.0 500 Internal Error\r\n\r\n'));
+				socket.close();
 		}
 		socket.output.write(Bytes.ofString('HTTP/1.0 200 OK\r\n\r\n'));
 		if (responseBody != null) {
@@ -67,8 +78,8 @@ class PicoHttpServer {
 
 typedef PicoHttpServerSetting = {
 	port:Int,
-	files:Map<String, String>,
-	index:String
+	?files:Map<String, String>,
+	?docRoot:String
 }
 
 enum PicoHttpMethod {
@@ -81,7 +92,7 @@ class PicoHttpRequest {
 
 	public var valid(default, null):Bool;
 
-	public var method(default, null):PicoHttpMethod;
+	public var method(default, null):PicoHttpMethod = PicoHttpMethod.INVALID;
 	public var uri(default, null):String;
 	public var httpVersion(default, null):String;
 

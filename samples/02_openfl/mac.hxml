@@ -1,6 +1,5 @@
 -cmd lime build mac
 --next
 Export/mac64/cpp/haxe/debug.hxml
---macro picotest.use.LimeSpawner.toSpawn("mac")
 --macro picotest.PicoTest.runTests()
 --no-output

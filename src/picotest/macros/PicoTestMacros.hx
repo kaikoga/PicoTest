@@ -50,6 +50,11 @@ class PicoTestMacros {
 		return _testTarget;
 	}
 
+	public static function build():Void {
+		Compiler.define(PICOTEST_REPORT, PICOTEST_REPORT_JSON);
+		Context.onAfterGenerate(runTests);
+	}
+
 	public static function warn():Void {
 		Compiler.define(PICOTEST_REPORT, PICOTEST_REPORT_JSON);
 		Context.onAfterGenerate(runTests);
