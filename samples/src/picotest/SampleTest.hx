@@ -8,6 +8,7 @@ class SampleTest {
 		#if !picotest_nodep
 		runner.load(HamcrestSampleTestCase);
 		#end
+		runner.load(AsyncSampleTestCase);
 		runner.run();
 	}
 

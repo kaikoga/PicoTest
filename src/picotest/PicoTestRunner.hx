@@ -1,5 +1,6 @@
 package picotest;
 
+import haxe.Timer;
 import picotest.tasks.PicoTestTaskStatus;
 import haxe.PosInfos;
 import haxe.CallStack;
@@ -22,10 +23,11 @@ class PicoTestRunner {
 	public var display:Bool = true;
 
 	private var tasks:Array<IPicoTestTask>;
+	private var waitingTasks:Array<IPicoTestTask>;
 	private var results:Array<PicoTestResult>;
 
 	private var currentTask:IPicoTestTask;
-	private var currentTaskResult(get, never):PicoTestResult;
+	public var currentTaskResult(get, never):PicoTestResult;
 	private function get_currentTaskResult():PicoTestResult {
 		return switch (this.currentTask.result) {
 			case Some(result): result;
@@ -38,11 +40,20 @@ class PicoTestRunner {
 		this.printers = [];
 		this.reporters = [];
 		this.tasks = [];
+		this.waitingTasks = [];
 		this.results = [];
 	}
 
 	public function add(task:IPicoTestTask):Void {
 		this.tasks.push(task);
+	}
+
+	public function append(task:IPicoTestTask):Void {
+		this.tasks.push(task);
+	}
+
+	public function prepend(task:IPicoTestTask):Void {
+		this.tasks.unshift(task);
 	}
 
 	public function addResult(result:PicoTestResult):Void {
@@ -57,23 +68,49 @@ class PicoTestRunner {
 		#if js
 		// TODO enable source map support
 		#end
-		if (PicoTest.currentRunner != null) throw "PicoTestRunner instance is running";
-		PicoTest.currentRunner = this;
-		while (this.tasks.length > 0) {
-			this.currentTask = this.tasks.shift();
-			switch (this.currentTask.resume(this)) {
-				case PicoTestTaskStatus.Complete(result):
-					for (printer in this.printers) printer.print(result);
-					this.results.push(result);
-			}
-			this.currentTask = null;
-		}
-		for (reporter in this.reporters) reporter.report(this.results);
-		PicoTest.currentRunner = null;
+		this.resume();
+	}
 
-		#if (flash && picotest_report)
-		System.exit(0);
-		#end
+	private function resume():Void {
+		while (true) {
+			if (this.tasks.length > 0) {
+				this.runTask(this.tasks.shift());
+			}
+			if (this.tasks.length == 0) {
+				if (this.waitingTasks.length > 0) {
+					this.tasks = this.waitingTasks;
+					this.waitingTasks = [];
+					#if (!sys)
+					Timer.delay(this.resume, 10);
+					return;
+					#end
+				} else {
+					for (reporter in this.reporters) reporter.report(this.results);
+
+					#if (flash && picotest_report)
+					System.exit(0);
+					#end
+					return;
+				}
+			}
+			#if sys
+			Sys.sleep(0.01);
+			#end
+		}
+	}
+
+	private function runTask(task:IPicoTestTask):Void {
+		PicoTest.currentRunner = this;
+		this.currentTask = task;
+		switch (this.currentTask.resume(this)) {
+			case PicoTestTaskStatus.Continue:
+				this.waitingTasks.push(task);
+			case PicoTestTaskStatus.Complete(result):
+				for (printer in this.printers) printer.print(result);
+				this.results.push(result);
+		}
+		this.currentTask = null;
+		PicoTest.currentRunner = null;
 	}
 
 	public function success(assertResult:PicoTestAssertResult = null):Void {

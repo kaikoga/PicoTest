@@ -5,7 +5,7 @@ import haxe.PosInfos;
 
 class PicoTestCallInfo {
 
-	public var target:PicoTestCallTarget = null;
+	public var target:PicoTestCallTarget = PicoTestCallTarget.Local;
 	public var position:PicoTestCallPosition = PicoTestCallPosition.Unavailable;
 	public var callType:PicoTestCallType = PicoTestCallType.Unknown;
 	public var from:Null<PicoTestCallInfo> = null;

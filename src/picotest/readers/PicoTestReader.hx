@@ -26,10 +26,15 @@ class PicoTestReader implements IPicoTestReader {
 				}
 			}
 			if (isTest) {
-				var task = new PicoTestSimpleTestTask(className, field, Reflect.field(testCase, field));
+				var task = new PicoTestSimpleTestTask(className, field, bind(testCase, field));
 				runner.add(task);
 			}
 		}
+	}
 
+	private function bind(d:Dynamic, field:String):Void->Void {
+		return function():Void {
+			Reflect.callMethod(d, Reflect.field(d, field), []);
+		};
 	}
 }
