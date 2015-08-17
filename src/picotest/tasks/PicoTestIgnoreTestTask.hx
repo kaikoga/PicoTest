@@ -12,9 +12,13 @@ class PicoTestIgnoreTestTask implements IPicoTestTask {
 		return Option.Some(this._result);
 	}
 
-	public function new(className:String, methodName:String, message:String) {
-		this._result = new PicoTestResult(className, methodName);
+	public function new(result:PicoTestResult, message:String) {
+		this._result = result;
 		this.message = message;
+	}
+
+	public function start():Void {
+		this._result.tasks.push(this);
 	}
 
 	public function resume(runner:PicoTestRunner):PicoTestTaskStatus {

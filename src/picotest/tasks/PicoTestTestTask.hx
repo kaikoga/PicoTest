@@ -17,6 +17,10 @@ class PicoTestTestTask implements IPicoTestTask {
 		this.func = func;
 	}
 
+	public function start():Void {
+		this._result.tasks.push(this);
+	}
+
 	public function resume(runner:PicoTestRunner):PicoTestTaskStatus {
 		try {
 			this.func();

@@ -2,12 +2,12 @@ package picotest.tasks;
 
 import haxe.Timer;
 
-class PicoTestDelayedTestTask extends PicoTestSimpleTestTask {
+class PicoTestDelayedTestTask extends PicoTestTestTask {
 
 	private var waitUntil:Float;
 
-	public function new(className:String, methodName:String, func:Void->Void, delayMs:Int) {
-		super(className, methodName, func);
+	public function new(result:PicoTestResult, func:Void->Void, delayMs:Int) {
+		super(result, func);
 		this.waitUntil = Timer.stamp() + delayMs / 1000;
 	}
 

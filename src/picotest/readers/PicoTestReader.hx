@@ -1,7 +1,7 @@
 package picotest.readers;
 
 import picotest.tasks.PicoTestIgnoreTestTask;
-import picotest.tasks.PicoTestSimpleTestTask;
+import picotest.tasks.PicoTestTestTask;
 
 class PicoTestReader implements IPicoTestReader {
 
@@ -39,10 +39,10 @@ class PicoTestReader implements IPicoTestReader {
 					} catch (d:Dynamic) {
 						testCase = Type.createEmptyInstance(testCaseClass);
 					}
-					var task = new PicoTestSimpleTestTask(className, field, bind(testCase, field));
+					var task = new PicoTestTestTask(new PicoTestResult(className, field), bind(testCase, field));
 					runner.add(task);
 				case TestType.Ignore(message):
-					var task = new PicoTestIgnoreTestTask(className, field, message);
+					var task = new PicoTestIgnoreTestTask(new PicoTestResult(className, field), message);
 					runner.add(task);
 			}
 		}

@@ -26,7 +26,7 @@ class PicoTestAsync {
 	**/
 	public static function assertLater<T>(func:Void->Void, delayMs:Int):Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult.className, taskResult.methodName, func, delayMs));
+		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
 	}
 
 	/**
@@ -36,7 +36,7 @@ class PicoTestAsync {
 	**/
 	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult.className, taskResult.methodName, func, timeoutFunc);
+		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult, func, timeoutFunc);
 		if (timeoutMs > 0) {
 			Timer.delay(task.createTimeoutCallback(PicoTest.currentRunner, p), timeoutMs);
 		}
@@ -51,12 +51,12 @@ class PicoTestAsync {
 
 	public static function assertLater<T>(func:Void->Void, delayMs:Int):Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult.className, taskResult.methodName, func, delayMs));
+		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
 	}
 
 	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult.className, taskResult.methodName, func, timeoutFunc);
+		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult, func, timeoutFunc);
 		if (timeoutMs > 0) {
 			PicoTest.currentRunner.add(new PicoTestDelayedTask(task.createTimeoutCallback(PicoTest.currentRunner, p), timeoutMs));
 		}

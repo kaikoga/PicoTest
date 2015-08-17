@@ -1,5 +1,6 @@
 package picotest;
 
+import haxe.ds.Option;
 import picotest.thread.PicoTestThreadContext;
 import haxe.Timer;
 import picotest.tasks.PicoTestTaskStatus;
@@ -35,8 +36,8 @@ class PicoTestRunner {
 	public var currentTaskResult(get, never):PicoTestResult;
 	private function get_currentTaskResult():PicoTestResult {
 		return switch (this.currentTask.result) {
-			case Some(result): result;
-			case None: throw "PicoTestRunner not running";
+			case Option.Some(result): result;
+			case Option.None: throw "PicoTestRunner not running";
 		}
 	}
 
@@ -54,16 +55,19 @@ class PicoTestRunner {
 
 	@:noDoc
 	public function add(task:IPicoTestTask):Void {
+		task.start();
 		this.tasks.push(task);
 	}
 
 	@:noDoc
 	public function append(task:IPicoTestTask):Void {
+		task.start();
 		this.tasks.push(task);
 	}
 
 	@:noDoc
 	public function prepend(task:IPicoTestTask):Void {
+		task.start();
 		this.tasks.unshift(task);
 	}
 
@@ -157,8 +161,10 @@ class PicoTestRunner {
 			case PicoTestTaskStatus.Continue:
 				this.waitingTasks.push(task);
 			case PicoTestTaskStatus.Complete(result):
-				for (printer in this.printers) printer.print(result);
-				this.results.push(result);
+				if (result.completeTask(task)) {
+					for (printer in this.printers) printer.print(result);
+					this.results.push(result);
+				}
 			case PicoTestTaskStatus.Done:
 		}
 		haxe.Log.trace = oldTrace;

@@ -3,13 +3,13 @@ package picotest.tasks;
 import haxe.PosInfos;
 
 @:access(picotest.PicoTestRunner.runTask)
-class PicoTestTriggeredTestTask extends PicoTestSimpleTestTask {
+class PicoTestTriggeredTestTask extends PicoTestTestTask {
 
 	private var timeoutFunc:Void->Void;
 	private var state:PicoTestTriggeredTestTaskState = null;
 
-	public function new(className:String, methodName:String, func:Void->Void, timeoutFunc:Void->Void, ?p:PosInfos) {
-		super(className, methodName, func);
+	public function new(result:PicoTestResult, func:Void->Void, timeoutFunc:Void->Void, ?p:PosInfos) {
+		super(result, func);
 		this.timeoutFunc = timeoutFunc;
 		this.state = PicoTestTriggeredTestTaskState.Initial(p);
 	}
