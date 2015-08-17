@@ -28,7 +28,9 @@ class PicoTestCallInfo {
 			switch (stackItem) {
 				case StackItem.FilePos(s, fileName, lineNumber):
 					#if neko
-					this.position = PicoTestCallPosition.ClassPath(fileName.split("::")[0].split(".").join("/") + ".hx", lineNumber);
+					var filePath:Array<String> = fileName.split("::")[0].split(".");
+					filePath.remove("hx");
+					this.position = PicoTestCallPosition.ClassPath(filePath.join("/") + ".hx", lineNumber);
 					#else
 					this.position = PicoTestCallPosition.Absolute(fileName, lineNumber);
 					#end
