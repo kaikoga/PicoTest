@@ -1,5 +1,6 @@
 package picotest.use;
 
+import haxe.macro.Compiler;
 import picotest.macros.PicoTestMacros;
 import haxe.macro.Context;
 import haxe.io.Bytes;
@@ -22,6 +23,16 @@ class TestSpawner {
 
 	private function systemName():String {
 		return Sys.systemName();
+	}
+
+	private function bin():String {
+		return Compiler.getOutput();
+	}
+
+	private function mainClass():String {
+		var args:Array<String> = Sys.args();
+		var main:String = args[args.indexOf("-main") + 1];
+		return main.split(".").pop();
 	}
 
 	private function flashPlayer():String {

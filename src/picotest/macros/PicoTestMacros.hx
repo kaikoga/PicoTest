@@ -1,8 +1,15 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import picotest.use.NekoSpawner;
+import picotest.use.PythonSpawner;
+import picotest.use.PhpSpawner;
+import picotest.use.JsNodeSpawner;
+import picotest.use.JavaSpawner;
+import picotest.use.CsMonoSpawner;
+import picotest.use.CsSpawner;
+import picotest.use.CppSpawner;
 import picotest.use.LimeSpawner;
-import picotest.use.CommandSpawner;
 import picotest.use.FlashStandaloneSpawner;
 import picotest.use.TestSpawner;
 import sys.io.File;
@@ -91,21 +98,21 @@ class PicoTestMacros {
 			case ["flash", _]:
 				return new FlashStandaloneSpawner();
 			case ["neko", _]:
-				return new CommandSpawner('neko', 'neko', [bin]);
+				return new NekoSpawner();
 			case ["js", "node"]:
-				return new CommandSpawner('js_node', 'node', [bin]);
+				return new JsNodeSpawner();
 			case ["php", _]:
-				return new CommandSpawner('php', 'php', ['$bin/index.php']);
+				return new PhpSpawner();
 			case ["cpp", _]:
-				return new CommandSpawner('cpp_${Sys.systemName()}', './$bin/$mainClass-debug', []);
+				return new CppSpawner();
 			case ["java", _]:
-				return new CommandSpawner('java', 'java', ['-jar', './$bin/$mainClass-debug.jar']);
+				return new JavaSpawner();
 			case ["cs", "mono"]:
-				return new CommandSpawner('cs_mono', 'mono', ['./$bin/bin/$mainClass-Debug.exe']);
+				return new CsMonoSpawner();
 			case ["cs", _]:
-				return new CommandSpawner('cs', './$bin/bin/$mainClass-Debug.exe', []);
+				return new CsSpawner();
 			case ["python", _]:
-				return new CommandSpawner('python', 'python', [bin]);
+				return new PythonSpawner();
 			default:
 				throw 'test spawner ${spawnerType[1]} in target ${spawnerType[0]} not found';
 		}
