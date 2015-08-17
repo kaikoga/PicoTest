@@ -3,7 +3,7 @@
 -lib hamcrest
 -debug
 -main picotest.SampleTest
---macro picotest.use.JsBrowserSpawner.toSpawn("Firefox")
+--macro picotest.use.JsBrowserSpawner.toSpawn()
 --macro picotest.PicoTest.warn()
 -js bin/test.js
 -D source-map-content

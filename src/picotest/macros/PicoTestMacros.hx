@@ -32,6 +32,7 @@ class PicoTestMacros {
 	inline public static var PICOTEST_REPORT_REMOTE:String = "picotest_remote";
 	inline public static var PICOTEST_REPORT_REMOTE_PORT:String = "picotest_remote_port";
 	inline public static var PICOTEST_REPORT_DIR:String = "picotest_report_dir";
+	inline public static var PICOTEST_BROWSER:String = "picotest_browser";
 	inline public static var PICOTEST_FP:String = "picotest_fp";
 	inline public static var PICOTEST_FLOG:String = "picotest_flog";
 
@@ -80,7 +81,7 @@ class PicoTestMacros {
 			case TestTarget.Flash:
 				return new LimeFlashSpawner();
 			case TestTarget.Js:
-				return new LimeJsBrowserSpawner('html5','Firefox');
+				return new LimeJsBrowserSpawner('html5');
 			case TestTarget.Neko:
 				return new LimeSpawner(Sys.systemName().toLowerCase());
 			case TestTarget.Cpp:

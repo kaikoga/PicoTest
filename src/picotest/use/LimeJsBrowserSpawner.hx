@@ -9,12 +9,10 @@ import picotest.macros.PicoTestMacros;
 class LimeJsBrowserSpawner extends TestSpawner {
 
 	private var limeTarget:String;
-	private var browser:String;
 
-	public function new(limeTarget:String, browser:String) {
+	public function new(limeTarget:String) {
 		super('${limeTarget}_lime');
 		this.limeTarget = limeTarget;
-		this.browser = browser;
 	}
 
 	override public function execute():Void {
@@ -36,8 +34,8 @@ class LimeJsBrowserSpawner extends TestSpawner {
 
 	}
 
-	public static function toSpawn(limeTarget:String, browser:String):LimeJsBrowserSpawner {
-		var spawner:LimeJsBrowserSpawner = new LimeJsBrowserSpawner(limeTarget, browser); 
+	public static function toSpawn(limeTarget:String):LimeJsBrowserSpawner {
+		var spawner:LimeJsBrowserSpawner = new LimeJsBrowserSpawner(limeTarget); 
 		PicoTestMacros.spawner = spawner;
 		Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE, "1");
 		return spawner;

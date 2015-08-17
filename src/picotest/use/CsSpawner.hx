@@ -2,7 +2,7 @@ package picotest.use;
 
 #if (macro || macro_doc_gen)
 
-import picotest.use.common.CommandHelper;
+import picotest.use.common.PicoTestExternalCommand;
 import picotest.use.common.TestSpawner;
 
 class CsSpawner extends TestSpawner {
@@ -12,7 +12,7 @@ class CsSpawner extends TestSpawner {
 	}
 
 	override public function execute():Void {
-		CommandHelper.command('./${bin()}/bin/${mainClass()}-Debug.exe', [], reportFile());
+		new PicoTestExternalCommand('./${bin()}/bin/${mainClass()}-Debug.exe', [], reportFile()).execute();
 	}
 }
 

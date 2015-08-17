@@ -2,7 +2,7 @@ package picotest.use;
 
 #if (macro || macro_doc_gen)
 
-import picotest.use.common.CommandHelper;
+import picotest.use.common.PicoTestExternalCommand;
 import picotest.use.common.TestSpawner;
 import picotest.macros.PicoTestMacros;
 import haxe.macro.Compiler;
@@ -14,16 +14,8 @@ class FlashStandaloneSpawner extends TestSpawner {
 	}
 
 	override public function execute():Void {
-		var bin:String = Compiler.getOutput();
-		switch (CommandHelper.systemName()) {
-			case "Windows", "Linux":
-				CommandHelper.command(flashPlayer(), [bin]);
-			case "Mac":
-				CommandHelper.command('open', ['-nWa', flashPlayer(), bin]);
-			default:
-				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
-		}
-		CommandHelper.command('cp', [flashLog(), reportFile()]);
+		PicoTestExternalCommand.open(flashPlayer(), bin(), true).execute();
+		new PicoTestExternalCommand('cp', [flashLog(), reportFile()]).execute();
 	}
 
 	public static function toSpawn():FlashStandaloneSpawner {

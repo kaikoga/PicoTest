@@ -2,9 +2,8 @@ package picotest.use;
 
 #if (macro || macro_doc_gen)
 
-import picotest.use.common.CommandHelper;
+import picotest.use.common.PicoTestExternalCommand;
 import picotest.use.common.TestSpawner;
-import haxe.macro.Context;
 import picotest.macros.PicoTestMacros;
 
 class LimeFlashSpawner extends TestSpawner {
@@ -14,8 +13,8 @@ class LimeFlashSpawner extends TestSpawner {
 	}
 
 	override public function execute():Void {
-		CommandHelper.command('lime', ['run', 'flash']);
-		CommandHelper.command('cp', [flashLog(), reportFile()]);
+		new PicoTestExternalCommand('lime', ['run', 'flash']).execute();
+		new PicoTestExternalCommand('cp', [flashLog(), reportFile()]).execute();
 	}
 
 	public static function toSpawn():LimeFlashSpawner {

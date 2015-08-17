@@ -49,7 +49,7 @@ class TestSpawner implements ITestExecuter {
 	private function flashPlayer():String {
 		if (Context.defined(PicoTestMacros.PICOTEST_FP)) return Context.definedValue(PicoTestMacros.PICOTEST_FP);
 
-		switch (CommandHelper.systemName()) {
+		switch (PicoTestExternalCommand.systemName()) {
 			case "Windows":
 				return '"C:/Program Files (x86)/FlashPlayerDebugger.exe"';
 			case "Linux":
@@ -57,14 +57,14 @@ class TestSpawner implements ITestExecuter {
 			case "Mac":
 				return '"Flash Player Debugger"';
 			default:
-				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
+				throw 'Flash warning in platform ${PicoTestExternalCommand.systemName()} not supported';
 		}
 	}
 
 	private function flashLog():String {
 		if (Context.defined(PicoTestMacros.PICOTEST_FLOG)) return Context.definedValue(PicoTestMacros.PICOTEST_FLOG);
 
-		switch (CommandHelper.systemName()) {
+		switch (PicoTestExternalCommand.systemName()) {
 			case "Windows":
 				return '"%APPDATA%/Macromedia/Flash Player/Logs/flashlog.txt';
 			case "Linux":
@@ -72,8 +72,27 @@ class TestSpawner implements ITestExecuter {
 			case "Mac":
 				return '~/Library/Preferences/Macromedia/Flash\\ Player/Logs/flashlog.txt';
 			default:
-				throw 'Flash warning in platform ${CommandHelper.systemName()} not supported';
+				throw 'Flash warning in platform ${PicoTestExternalCommand.systemName()} not supported';
 		}
+	}
+
+	private function selectBrowser(kind:String = null):String {
+		// TODO kind
+		switch (PicoTestExternalCommand.systemName()) {
+			case "Windows":
+				return 'firefox';
+			case "Linux":
+				return 'firefox';
+			case "Mac":
+				return 'Firefox';
+			default:
+				throw 'Running as browser in platform ${PicoTestExternalCommand.systemName()} not supported';
+		}
+	}
+	
+	private function browser():String {
+		if (Context.defined(PicoTestMacros.PICOTEST_BROWSER)) return selectBrowser(Context.definedValue(PicoTestMacros.PICOTEST_BROWSER));
+		return selectBrowser(null);
 	}
 
 	private function remotePort():Int {
@@ -95,7 +114,7 @@ class TestSpawner implements ITestExecuter {
 		}
 
 		args.push("-D");
-		args.push('${CommandHelper.PICOTEST_ANOTHER_NEKO_ARGS}=${CommandHelper.serializeBase64(anotherNekoArgs)}');
+		args.push('${PicoTestExternalCommandHelper.PICOTEST_ANOTHER_NEKO_ARGS}=${PicoTestExternalCommandHelper.serializeBase64(anotherNekoArgs)}');
 		
 		Sys.command("haxe", args);
 		Sys.command("neko", [out]);

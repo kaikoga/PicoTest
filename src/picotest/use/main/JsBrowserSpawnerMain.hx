@@ -4,18 +4,22 @@ import picotest.use.http.PicoHttpServer.PicoHttpServerSetting;
 
 #if neko
 
+import picotest.use.common.PicoTestExternalCommandHelper;
 import picotest.use.common.ITestExecuter;
-import picotest.use.common.CommandHelper;
+import picotest.use.common.PicoTestExternalCommand;
 
 class JsBrowserSpawnerMain implements ITestExecuter {
 
-	public static function main():Void {
-		new JsBrowserSpawnerMain().execute();
+	public function new() {
 	}
 
 	public function execute():Void {
-		var args:JsBrowserSpawnerParams = CommandHelper.anotherNekoArgs();
-		CommandHelper.remoteCommand('open', ['-a', 'Firefox', 'http://localhost:${args.httpServerSetting.port}/'], args.reportFile, args.httpServerSetting);
+		var args:JsBrowserSpawnerParams = PicoTestExternalCommandHelper.anotherNekoArgs();
+		PicoTestExternalCommand.open('Firefox', 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
+	}
+
+	public static function main():Void {
+		new JsBrowserSpawnerMain().execute();
 	}
 
 }

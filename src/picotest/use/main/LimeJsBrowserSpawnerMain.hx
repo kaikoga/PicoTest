@@ -5,17 +5,21 @@ import picotest.use.http.PicoHttpServer.PicoHttpServerSetting;
 #if neko
 
 import picotest.use.common.ITestExecuter;
-import picotest.use.common.CommandHelper;
+import picotest.use.common.PicoTestExternalCommand;
+import picotest.use.common.PicoTestExternalCommandHelper;
 
 class LimeJsBrowserSpawnerMain implements ITestExecuter {
 
-	public static function main():Void {
-		new LimeJsBrowserSpawnerMain().execute();
+	public function new() {
 	}
 
 	public function execute():Void {
-		var args:LimeJsBrowserSpawnerParams = CommandHelper.anotherNekoArgs();
-		CommandHelper.remoteCommand('open', ['-a', 'Firefox', 'http://localhost:${args.httpServerSetting.port}/'], args.reportFile, args.httpServerSetting);
+		var args:LimeJsBrowserSpawnerParams = PicoTestExternalCommandHelper.anotherNekoArgs();
+		PicoTestExternalCommand.open('Firefox', 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
+	}
+
+	public static function main():Void {
+		new LimeJsBrowserSpawnerMain().execute();
 	}
 }
 
