@@ -12,6 +12,8 @@ class TestSpawner implements ITestExecuter {
 
 	public var name(default, null):String;
 
+	public var forceRemote(default, null):Bool;
+
 	private function new(name:String):Void {
 		this.name = name;
 	}

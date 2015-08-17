@@ -12,6 +12,7 @@ class JsBrowserSpawner extends TestSpawner {
 
 	public function new():Void {
 		super('js_html');
+		this.forceRemote = true;
 	}
 
 	private function htmlFile():String {
@@ -47,7 +48,6 @@ class JsBrowserSpawner extends TestSpawner {
 	public static function toSpawn():JsBrowserSpawner {
 		var spawner:JsBrowserSpawner = new JsBrowserSpawner();
 		PicoTestMacros.spawner = spawner;
-		Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE, "1");
 		return spawner;
 	}
 

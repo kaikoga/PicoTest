@@ -67,6 +67,13 @@ class PicoTest {
 	}
 
 	/**
+		Build tests for executing in runTests().
+	**/
+	public static function setup():Void {
+		PicoTestMacros.setup();
+	}
+
+	/**
 		Run tests, assuming app has been compiled at given path.
 	**/
 	public static function runTests():Void {

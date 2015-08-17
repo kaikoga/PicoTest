@@ -39,7 +39,14 @@ class PicoTestMacros {
 	private function new() {
 	}
 
-	public static var spawner:TestSpawner = null;
+	public static var spawner(default, set):TestSpawner;
+	private static function set_spawner(value:TestSpawner):TestSpawner {
+		spawner = value;
+		if (spawner.forceRemote) {
+			Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE);
+		}
+		return value;
+	} 
 
 	private static var _testTarget:TestTarget = null;
 	private static var testTarget(get, never):TestTarget;
@@ -53,18 +60,18 @@ class PicoTestMacros {
 		return _testTarget;
 	}
 
-	public static function build():Void {
+	public static function setup():Void {
 		Compiler.define(PICOTEST_REPORT, PICOTEST_REPORT_JSON);
-		Context.onAfterGenerate(runTests);
+		if (spawner == null) spawner = guessSpawner();
+		if (spawner.forceRemote) Compiler.define(PICOTEST_REPORT_REMOTE, "1");
 	}
 
 	public static function warn():Void {
-		Compiler.define(PICOTEST_REPORT, PICOTEST_REPORT_JSON);
+		setup();
 		Context.onAfterGenerate(runTests);
 	}
 
 	public static function runTests():Void {
-		if (spawner == null) spawner = guessSpawner();
 		spawner.execute();
 		readResult(spawner.reportData(), spawner.name);
 	}

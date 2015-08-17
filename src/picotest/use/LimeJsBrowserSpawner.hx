@@ -12,6 +12,7 @@ class LimeJsBrowserSpawner extends TestSpawner {
 
 	public function new(limeTarget:String) {
 		super('${limeTarget}_lime');
+		this.forceRemote = true;
 		this.limeTarget = limeTarget;
 	}
 
@@ -37,7 +38,6 @@ class LimeJsBrowserSpawner extends TestSpawner {
 	public static function toSpawn(limeTarget:String):LimeJsBrowserSpawner {
 		var spawner:LimeJsBrowserSpawner = new LimeJsBrowserSpawner(limeTarget); 
 		PicoTestMacros.spawner = spawner;
-		Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE, "1");
 		return spawner;
 	}
 }

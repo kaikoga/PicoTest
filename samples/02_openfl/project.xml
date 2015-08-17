@@ -9,7 +9,7 @@
 
 	<haxelib name="openfl" />
 	<haxelib name="hamcrest" />
-	<haxeflag name="-D" value="picotest_report=json" />
+	<haxeflag name="--macro" value="picotest.PicoTest.setup()" />
 	
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="Assets/openfl.svg" />
