@@ -2,6 +2,9 @@ package picotest;
 
 import picotest.PicoTestAssertResult;
 
+/**
+	Test method result of PicoTest.
+**/
 class PicoTestResult {
 
 	public var className(default, null):String;

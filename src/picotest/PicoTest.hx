@@ -7,13 +7,23 @@ import picotest.printers.TracePrinter;
 
 class PicoTest {
 
+	/**
+		Version of PicoTest.
+	**/
 	inline public static var VERSION:String = "0.0.0";
-	public static var currentRunner:PicoTestRunner;
-	public static var classPaths:Array<String> = [];
+
+	/**
+		Current target runner which assertions are run against.
+	**/
+	@:allow(picotest.PicoTestRunner) 
+	public static var currentRunner(default, null):PicoTestRunner;
 
 	private function new() {
 	}
 
+	/**
+		Creates a PicoTestRunner.
+	**/
 	public static function runner():PicoTestRunner {
 		var runner = new PicoTestRunner();
 		#if picotest_report
@@ -31,11 +41,17 @@ class PicoTest {
 
 	}
 
-	#if macro
+	#if (macro || macro_doc_gen)
+	/**
+		Run tests after compile and emits result as compiler warnings.
+	**/
 	public static function warn():Void {
 		PicoTestMacros.warn();
 	}
 
+	/**
+		Read test results from file.
+	**/
 	public static function readResult(report:String, header:String):Void {
 		PicoTestMacros.readResult(report, header);
 	}
@@ -66,6 +82,9 @@ class PicoTest {
 	#end
 
 	private static var _currentLine:String = "";
+	/**
+		Low-level cross-platform output without decoration.
+	**/
 	public static dynamic function stdout(value:String):Void {
 		var lines:Array<String> = (_currentLine + value).split("\n");
 		_currentLine = lines.pop();

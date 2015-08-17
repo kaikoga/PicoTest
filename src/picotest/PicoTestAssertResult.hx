@@ -1,5 +1,8 @@
 package picotest;
 
+/**
+	Assertion result of PicoTest.
+**/
 enum PicoTestAssertResult {
 	Success;
 	Failure(message:String, callInfo:PicoTestCallInfo);

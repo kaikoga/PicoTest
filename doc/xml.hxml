@@ -12,6 +12,7 @@
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
+-D picotest-thread
 -xml bin/xml/neko.xml
 -neko dummy
 --next
@@ -30,6 +31,7 @@
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
+-D picotest-thread
 -xml bin/xml/cpp.xml
 -cpp dummy
 --next
@@ -39,6 +41,7 @@
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
+-D picotest-thread
 -xml bin/xml/java.xml
 -java dummy
 --next
@@ -48,6 +51,7 @@
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
+-D picotest-thread
 -xml bin/xml/cs.xml
 -cs dummy
 --next
@@ -66,6 +70,7 @@
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
+-D picotest-thread
 -xml bin/xml/python.xml
 -python dummy
 --next

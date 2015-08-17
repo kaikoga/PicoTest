@@ -1,11 +1,14 @@
 package picotest;
 
-#if macro
+#if (macro || macro_doc_gen)
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import picotest.readers.PicoTestFileResultReader;
 import picotest.reporters.WarnReporter;
 
+/**
+	Macro definitions of PicoTest. Calling through `picotest.PicoTest` is recommended.
+**/
 class PicoTestMacros {
 
 	inline public static var PICOTEST_REPORT:String = "picotest_report";
@@ -118,6 +121,7 @@ class PicoTestMacros {
 		_lineNum++;
 	}
 }
+@:noDoc
 @:enum abstract TestTarget(String) {
 	public var Flash = "flash";
 	public var As3 = "as3";
@@ -147,5 +151,5 @@ class PicoTestMacros {
 }
 
 #else
-class PicoTestMacros { private function new() {} }
+@:noDoc class PicoTestMacros { private function new() {} }
 #end

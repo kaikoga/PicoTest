@@ -17,8 +17,11 @@ import flash.system.System;
 import flash.errors.Error;
 #end
 
+/**
+	PicoTest runner.
+**/
 class PicoTestRunner {
-
+	
 	public var readers:Array<IPicoTestReader>;
 	public var printers:Array<IPicoTestPrinter>;
 	public var reporters:Array<IPicoTestReporter>;
@@ -28,6 +31,7 @@ class PicoTestRunner {
 	private var results:Array<PicoTestResult>;
 
 	private var currentTask:IPicoTestTask;
+	@:noDoc
 	public var currentTaskResult(get, never):PicoTestResult;
 	private function get_currentTaskResult():PicoTestResult {
 		return switch (this.currentTask.result) {
@@ -48,26 +52,36 @@ class PicoTestRunner {
 		this.mainLoopThreads = [];
 	}
 
+	@:noDoc
 	public function add(task:IPicoTestTask):Void {
 		this.tasks.push(task);
 	}
 
+	@:noDoc
 	public function append(task:IPicoTestTask):Void {
 		this.tasks.push(task);
 	}
 
+	@:noDoc
 	public function prepend(task:IPicoTestTask):Void {
 		this.tasks.unshift(task);
 	}
 
+	@:noDoc
 	public function addResult(result:PicoTestResult):Void {
 		this.results.push(result);
 	}
 
+	/**
+		Load test methods from `testCaseClass`.
+	**/
 	public function load(testCaseClass:Class<Dynamic>):Void {
 		for (reader in this.readers) reader.load(this, testCaseClass);
 	}
 
+	/**
+		Adds main loops which must be run aside PicoTest thread.
+	**/
 	public function addMainLoop(mainLoop:PicoTestThreadContext->Void):Void {
 		if (!PicoTestThread.available) {
 			throw "PicoTestRunner.addMainLoop() not supported in platform";
@@ -75,6 +89,10 @@ class PicoTestRunner {
 		this.mainLoopThreads.push(PicoTestThread.create(mainLoop));
 	}
 
+	/**
+		Launch tests, and `onComplete` will be called when all the tests are completed.
+		Non-blocking on platforms with `haxe.Timer.delay()` (flash, js, java without `-D picotest-thread`).
+	**/
 	public function run(onComplete:Void->Void = null):Void {
 		if (onComplete != null) this.onComplete = onComplete;
 		#if js
@@ -93,6 +111,9 @@ class PicoTestRunner {
 	}
 	#end
 
+	/**
+		Executes some of the tests and returns `true` if there are uncomplete tasks, otherwise returns `false`.
+	**/
 	public function resume():Bool {
 		if (this.onComplete == null) return false;
 
@@ -145,17 +166,20 @@ class PicoTestRunner {
 		PicoTest.currentRunner = null;
 	}
 
+	@:noDoc
 	public function success(assertResult:PicoTestAssertResult = null):Void {
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Success;
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
+	@:noDoc
 	public function failure(message:String = null, p:PosInfos):Void {
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Failure(message, PicoTestCallInfo.fromPosInfos(p));
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
+	@:noDoc
 	public function error(d:Dynamic):Void {
 		var message:String = Std.string(d);
 		var callStack:Array<StackItem> =
@@ -173,6 +197,7 @@ class PicoTestRunner {
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
+	@:noDoc
 	public function trace(v:Dynamic = null, p:PosInfos):Void {
 		var message:String = Std.string(v);
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Trace(message, PicoTestCallInfo.fromPosInfos(p));
@@ -180,6 +205,7 @@ class PicoTestRunner {
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
+	@:noDoc
 	public function ignore(message:String, className:String, methodName:String):Void {
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Ignore(message, PicoTestCallInfo.fromReflect(className, methodName));
 		currentTaskResult.assertResults.push(assertResult);
