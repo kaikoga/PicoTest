@@ -36,7 +36,7 @@ class JsBrowserSpawner extends TestSpawner {
 
 	override public function execute():Void {
 		PicoTestExternalCommandHelper.writeFile(htmlData(), htmlFile());
-		this.runInAnotherNeko('bin/report/bin/run_js_html.n', 'picotest.use.main.JsBrowserSpawnerMain', {
+		this.runInAnotherNeko('bin/report/bin/run_js_html.n', 'picotest.use.JsBrowserLauncher', {
 			browser: browser(),
 			httpServerSetting: {
 				port: remotePort(),
