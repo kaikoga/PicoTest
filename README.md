@@ -172,6 +172,8 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 #Release Notes
 
+- Version 0.3.1
+  - NaN now matches with NaN on ```assertMatch()``` (matching with NaN always failed on 0.3.0).
 - Version 0.3.0
   - OpenFL support
   - JavaScript testing on browsers support

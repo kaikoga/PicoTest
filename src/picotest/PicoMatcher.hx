@@ -55,7 +55,7 @@ class PicoMatcher {
 
 	public static function matchFloat(matcher:PicoMatcher, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Std.is(expected, Float) && Std.is(actual, Float)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return (expected == actual || (Math.isNaN(expected) && Math.isNaN(actual))) ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
 		}
 		return MatchResult.Unknown;
 	}

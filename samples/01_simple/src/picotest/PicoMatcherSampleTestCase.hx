@@ -9,6 +9,9 @@ class PicoMatcherSampleTestCase {
 
 	public function testAssertMatch() {
 		assertMatch(1, 1);
+		assertMatch(1.0, 1.0);
+		assertMatch(1.0, 1);
+		assertMatch(Math.NaN, Math.NaN);
 		assertMatch(true, true);
 		assertMatch(TestEnum.Default, TestEnum.Default);
 		assertMatch(TestEnum.Some(1), TestEnum.Some(1));
@@ -22,6 +25,12 @@ class PicoMatcherSampleTestCase {
 
 	public function testAssertMatchFail() {
 		assertMatch(1, 2);
+		assertMatch(1.0, 2.0);
+		assertMatch(1.0, 2);
+		assertMatch(1, Math.NaN);
+		assertMatch(Math.NaN, 1);
+		assertMatch(1.0, Math.NaN);
+		assertMatch(Math.NaN, 1.0);
 		assertMatch(true, false);
 		assertMatch(TestEnum.Default, TestEnum.Another);
 		assertMatch(TestEnum.Some(1), TestEnum.Some(2));
