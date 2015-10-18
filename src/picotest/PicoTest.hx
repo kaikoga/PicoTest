@@ -21,7 +21,7 @@ class PicoTest {
 	/**
 		Version of PicoTest.
 	**/
-	inline public static var VERSION:String = "0.3.0";
+	inline public static var VERSION:String = "0.4.0";
 
 	/**
 		Current target runner which assertions are run against.

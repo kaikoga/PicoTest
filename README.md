@@ -89,6 +89,13 @@ When hamcrest support is enabled, hamcrest ```Matcher```s in ```expected``` are 
 
 Refer ```PicoMatcherSampleTestCase``` and ```PicoMatcherHamcrestSampleTestCase``` for examples.
 
+#Parametrized Tests
+
+```@Parameter("parameterProviderMethodName")``` (note the String) will take test parameter from given function.
+```@Parameter``` will take the default parameter, which can be passed through second argument of PicoTestRunner.load(). 
+
+Refer ```ParametrizedSampleTestCase``` for examples.
+
 #Async Supports
 
 Async supports are defined in ```picotest.PicoTestAsync```.
@@ -172,6 +179,8 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 #Release Notes
 
+- Version 0.4.0
+  - Parametrized test support
 - Version 0.3.1
   - NaN now matches with NaN on ```assertMatch()``` (matching with NaN always failed on 0.3.0).
 - Version 0.3.0
