@@ -80,8 +80,8 @@ class PicoTestRunner {
 	/**
 		Load test methods from `testCaseClass`.
 	**/
-	public function load(testCaseClass:Class<Dynamic>):Void {
-		for (reader in this.readers) reader.load(this, testCaseClass);
+	public function load(testCaseClass:Class<Dynamic>, defaultParameters:Iterable<Dynamic> = null):Void {
+		for (reader in this.readers) reader.load(this, testCaseClass, defaultParameters);
 	}
 
 	/**

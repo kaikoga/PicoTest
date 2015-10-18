@@ -24,6 +24,11 @@ class ParametrizedSampleTestCase {
 		assertEquals(a, b);
 	}
 
+	@Parameter
+	public function testDefaultParameter(a:Int, b:Int) {
+		assertEquals(a, b);
+	}
+
 	public function parameterProvider() {
 		return [[1, 1], [2, 2]];
 	}
