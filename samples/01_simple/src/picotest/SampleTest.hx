@@ -9,6 +9,7 @@ class SampleTest {
 		var runner:PicoTestRunner = PicoTest.runner();
 		runner.load(BasicAssertionSampleTestCase);
 		runner.load(MarkingSampleTestCase);
+		runner.load(ParametrizedSampleTestCase);
 		runner.load(PicoMatcherSampleTestCase);
 		#if !picotest_nodep
 		runner.load(HamcrestSampleTestCase);
