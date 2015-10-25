@@ -9,7 +9,7 @@ class PicoTestReader implements IPicoTestReader {
 
 	}
 
-	public function load(runner:PicoTestRunner, testCaseClass:Class<Dynamic>, defaultParameters:Iterable<Dynamic> = null):Void {
+	public function load(runner:PicoTestRunner, testCaseClass:Class<Dynamic>, defaultParameters:Iterable<Array<Dynamic>> = null):Void {
 		var className:String = Type.getClassName(testCaseClass);
 		var allMeta:Dynamic<Dynamic<Array<Dynamic>>> = haxe.rtti.Meta.getFields(testCaseClass);
 
