@@ -10,6 +10,7 @@ class SampleTest {
 		runner.load(BasicAssertionSampleTestCase);
 		runner.load(MarkingSampleTestCase);
 		runner.load(ParametrizedSampleTestCase, [[1, 1], [2, 2]]);
+		runner.load(ParametrizedSetupSampleTestCase);
 		runner.load(PicoMatcherSampleTestCase);
 		#if !picotest_nodep
 		runner.load(HamcrestSampleTestCase);
