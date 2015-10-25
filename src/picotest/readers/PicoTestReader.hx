@@ -1,5 +1,6 @@
 package picotest.readers;
 
+import haxe.Constraints.Function;
 import picotest.tasks.PicoTestIgnoreTestTask;
 import picotest.tasks.PicoTestTestTask;
 
@@ -97,8 +98,18 @@ class PicoTestReader implements IPicoTestReader {
 	}
 
 	private function bind(d:Dynamic, field:String, args:Array<Dynamic>):Void->Dynamic {
+		var func:Function;
+		try {
+			func = Reflect.field(d, field);
+		} catch (d:Dynamic) {
+			func = null;
+		}
+		if (func == null) {
+			throw ("Picotest: function " + field + " not found in " + Std.string(d));
+			return function():Dynamic { return null; };
+		}
 		return function():Dynamic {
-			return Reflect.callMethod(d, Reflect.field(d, field), args);
+			return Reflect.callMethod(d, func, args);
 		};
 	}
 }
