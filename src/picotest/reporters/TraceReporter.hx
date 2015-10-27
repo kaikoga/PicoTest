@@ -40,6 +40,7 @@ class TraceReporter implements IPicoTestReporter {
 				switch (result.mark()) {
 					case PicoTestResultMark.Empty:
 						row += "0";
+						var callInfo:PicoTestCallInfo = PicoTestCallInfo.fromReflect(result.className, result.methodName);
 						resultText.push('${callInfo.print()}: [Empty] Test is empty');
 					case PicoTestResultMark.Success:
 						row += ".";
