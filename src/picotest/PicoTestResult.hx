@@ -34,14 +34,42 @@ class PicoTestResult {
 		this.tasks = [];
 	}
 
-	public function isFail():Bool {
+	public function mark():PicoTestResultMark {
+		var mark:PicoTestResultMark = PicoTestResultMark.Empty;
 		for (assertResult in assertResults) {
 			switch (assertResult) {
-				case PicoTestAssertResult.Failure(_,_): return true;
-				default:
+				case PicoTestAssertResult.Success:
+					switch (mark) {
+						case
+						PicoTestResultMark.Empty:
+							mark = PicoTestResultMark.Success;
+						case _:
+					}
+				case PicoTestAssertResult.Failure(message,callInfo):
+					switch (mark) {
+						case
+						PicoTestResultMark.Empty,
+						PicoTestResultMark.Success:
+							mark = PicoTestResultMark.Failure;
+						case _:
+					}
+				case PicoTestAssertResult.Error(message,callInfo):
+					switch (mark) {
+						case
+						PicoTestResultMark.Empty,
+						PicoTestResultMark.Success,
+						PicoTestResultMark.Failure:
+							mark = PicoTestResultMark.Error;
+						case _:
+					}
+				case PicoTestAssertResult.Trace(message,callInfo):
+				case PicoTestAssertResult.Ignore(message,callInfo):
+					mark = PicoTestResultMark.Ignore;
+				case PicoTestAssertResult.Invalid(message,callInfo):
+					mark = PicoTestResultMark.Invalid;
 			}
 		}
-		return false;
+		return mark;
 	}
 
 	public function isError():Bool {
@@ -55,6 +83,16 @@ class PicoTestResult {
 	}
 
 	public function isIgnore():Bool {
+		for (assertResult in assertResults) {
+			switch (assertResult) {
+				case PicoTestAssertResult.Ignore(_,_): return true;
+				default:
+			}
+		}
+		return false;
+	}
+
+	public function isInvalid():Bool {
 		for (assertResult in assertResults) {
 			switch (assertResult) {
 				case PicoTestAssertResult.Ignore(_,_): return true;

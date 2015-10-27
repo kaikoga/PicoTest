@@ -1,5 +1,7 @@
 package picotest.readers;
 
+import picotest.tasks.PicoTestInvalidTestTask;
+import picotest.tasks.IPicoTestTask;
 import haxe.Constraints.Function;
 import picotest.tasks.PicoTestIgnoreTestTask;
 import picotest.tasks.PicoTestTestTask;
@@ -19,6 +21,8 @@ class PicoTestReader implements IPicoTestReader {
 		var hasTearDown:Bool = false;
 		var setupParameters:ParameterProvider = [[]];
 
+		var task:IPicoTestTask;
+
 		for (field in Type.getInstanceFields(testCaseClass)) {
 			var meta:Dynamic<Array<Dynamic>>;
 			if (Reflect.hasField(allMeta, field)) {
@@ -35,7 +39,13 @@ class PicoTestReader implements IPicoTestReader {
 					parameters = defaultParameters;
 				} else {
 					var parameterProviderName:String = Std.string(metaParameter[0]);
-					parameters = bind(createInstance(testCaseClass), parameterProviderName, [])();
+					try {
+						parameters = bind(createInstance(testCaseClass), parameterProviderName, [])();
+					} catch (message:String) {
+						task = new PicoTestInvalidTestTask(new PicoTestResult(className, field), message);
+						runner.add(task);
+						continue;
+					}
 					if (parameters == null) parameters = defaultParameters;
 					if (parameters == null || !parameters.iterator().hasNext()) parameters = [[]];
 				}
@@ -72,13 +82,18 @@ class PicoTestReader implements IPicoTestReader {
 				case TestType.Test(field, parameters):
 					for (setupArguments in setupParameters) {
 						for (arguments in parameters) {
-						var testCase:Dynamic = createInstance(testCaseClass);
-						var func:Void->Void = bind(testCase, field, arguments);
-						var setup:Void->Void = hasSetup ? bind(testCase, "setup", setupArguments) : null;
-						var tearDown:Void->Void = hasTearDown ? bind(testCase, "tearDown", []) : null;
-						var task = new PicoTestTestTask(new PicoTestResult(className, field, null, setup, tearDown), func);
-						runner.add(task);
-					}
+							try {
+								var testCase:Dynamic = createInstance(testCaseClass);
+								var func:Void->Void = bind(testCase, field, arguments);
+								var setup:Void->Void = hasSetup ? bind(testCase, "setup", setupArguments) : null;
+								var tearDown:Void->Void = hasTearDown ? bind(testCase, "tearDown", []) : null;
+								task = new PicoTestTestTask(new PicoTestResult(className, field, null, setup, tearDown), func);
+								runner.add(task);
+							} catch (message:String) {
+								task = new PicoTestInvalidTestTask(new PicoTestResult(className, field), message);
+								runner.add(task);
+							}
+						}
 					}
 				case TestType.Ignore(field, message):
 					var task = new PicoTestIgnoreTestTask(new PicoTestResult(className, field), message);
@@ -104,10 +119,7 @@ class PicoTestReader implements IPicoTestReader {
 		} catch (d:Dynamic) {
 			func = null;
 		}
-		if (func == null) {
-			throw ("Picotest: function " + field + " not found in " + Std.string(d));
-			return function():Dynamic { return null; };
-		}
+		if (func == null) throw ("Picotest: function " + field + " not found in " + Std.string(d));
 		return function():Dynamic {
 			return Reflect.callMethod(d, func, args);
 		};

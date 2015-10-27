@@ -12,11 +12,13 @@ class TracePrinter implements IPicoTestPrinter {
 				PicoTest.stdout(".");
 			case PicoTestAssertResult.Failure(_,_):
 				PicoTest.stdout("F");
-			case PicoTestAssertResult.Error(_):
+			case PicoTestAssertResult.Error(_,_):
 				PicoTest.stdout("E");
-			case PicoTestAssertResult.Trace(_):
-			case PicoTestAssertResult.Ignore(_):
+			case PicoTestAssertResult.Trace(_,_):
+			case PicoTestAssertResult.Ignore(_,_):
 				PicoTest.stdout("I");
+			case PicoTestAssertResult.Invalid(_,_):
+				PicoTest.stdout("X");
 		}
 	}
 

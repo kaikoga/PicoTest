@@ -222,6 +222,13 @@ class PicoTestRunner {
 		for (printer in this.printers) printer.printAssertResult(assertResult);
 	}
 
+	@:noDoc
+	public function invalid(message:String, className:String, methodName:String):Void {
+		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Invalid(message, PicoTestCallInfo.fromReflect(className, methodName));
+		currentTaskResult.assertResults.push(assertResult);
+		for (printer in this.printers) printer.printAssertResult(assertResult);
+	}
+
 	#if flash
 	private function buildFlashCallStack(stackTrace:String):Array<StackItem> {
 		var callStack:Array<StackItem> = [];

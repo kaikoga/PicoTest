@@ -40,6 +40,11 @@ class ErrorSampleTestCase {
 	public function testEmpty() {
 	}
 
+	@Parameter("bogus")
+	public function testInvalid() {
+		assertEquals(1, 2);
+	}
+
 	#if flash
 	public function testThrowErrorError() {
 		throw new Error();

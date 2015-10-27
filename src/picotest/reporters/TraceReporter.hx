@@ -26,28 +26,36 @@ class TraceReporter implements IPicoTestReporter {
 						case PicoTestAssertResult.Failure(message, callInfo):
 							resultText.push('${callInfo.print()}: ${message}');
 						case PicoTestAssertResult.Error(message, callInfo):
-							resultText.push('${callInfo.print()}: [error] ${message}');
+							resultText.push('${callInfo.print()}: [Error] ${message}');
 						case PicoTestAssertResult.Trace(message, callInfo):
 							for (line in message.split("\n")) {
-								resultText.push('${callInfo.print()}: [trace] ${line}');
+								resultText.push('${callInfo.print()}: [Trace] ${line}');
 							}
 						case PicoTestAssertResult.Ignore(message, callInfo):
-							resultText.push('${callInfo.print()}: [ignore] ${message}');
+							resultText.push('${callInfo.print()}: [Ignore] ${message}');
+						case PicoTestAssertResult.Invalid(message, callInfo):
+							resultText.push('${callInfo.print()}: [Invalid] ${message}');
 					}
 				}
-				if (result.isError()) {
-					row += "E";
-				} else if (result.isFail()) {
-					row += "F";
-				} else if (result.isIgnore()) {
-					row += "I";
-				} else {
-					row += ".";
+				switch (result.mark()) {
+					case PicoTestResultMark.Empty:
+						row += "0";
+					case PicoTestResultMark.Success:
+						row += ".";
+					case PicoTestResultMark.Failure:
+						row += "F";
+					case PicoTestResultMark.Error:
+						row += "E";
+					case PicoTestResultMark.Ignore:
+						row += "I";
+					case PicoTestResultMark.Invalid:
+						row += "X";
 				}
 				if (resultText.length > 2) text = text.concat(resultText);
 			}
 			PicoTest.stdout(row + "\n");
 			if (text.length > 0) for(row in text) PicoTest.stdout(row + "\n");
+			PicoTest.stdout("\n\n");
 		}
 		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
 	}

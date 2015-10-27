@@ -9,6 +9,7 @@ class PicoTestResultSummary {
 	private var testsFailure:Int = 0;
 	private var testsError:Int = 0;
 	private var testsIgnore:Int = 0;
+	private var testsInvalid:Int = 0;
 
 	private var assertsSuccess:Int = 0;
 	private var assertsFailure:Int = 0;
@@ -19,42 +20,20 @@ class PicoTestResultSummary {
 
 	public function read(results:Array<PicoTestResult>):PicoTestResultSummary {
 		for (result in results) {
-			var mark:PicoTestResultMark = PicoTestResultMark.Empty;
 			for (assertResult in result.assertResults) {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
-						switch (mark) {
-							case
-							PicoTestResultMark.Empty:
-								mark = PicoTestResultMark.Success;
-							case _:
-						}
 						this.assertsSuccess++;
 					case PicoTestAssertResult.Failure(message,callInfo):
-						switch (mark) {
-							case
-							PicoTestResultMark.Empty,
-							PicoTestResultMark.Success:
-								mark = PicoTestResultMark.Failure;
-							case _:
-						}
 						this.assertsFailure++;
 					case PicoTestAssertResult.Error(message,callInfo):
-						switch (mark) {
-							case
-							PicoTestResultMark.Empty,
-							PicoTestResultMark.Success,
-							PicoTestResultMark.Failure:
-								mark = PicoTestResultMark.Error;
-							case _:
-						}
 						this.assertsError++;
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
-						mark = PicoTestResultMark.Ignore;
+					case PicoTestAssertResult.Invalid(message,callInfo):
 				}
 			}
-			switch (mark) {
+			switch (result.mark()) {
 				case PicoTestResultMark.Empty:
 					this.testsEmpty++;
 				case PicoTestResultMark.Success:
@@ -65,6 +44,8 @@ class PicoTestResultSummary {
 					this.testsError++;
 				case PicoTestResultMark.Ignore:
 					this.testsIgnore++;
+				case PicoTestResultMark.Invalid:
+					this.testsInvalid++;
 			}
 		}
 		return this;
@@ -78,6 +59,7 @@ class PicoTestResultSummary {
 		if (testsError > 0) tests.push('Error: $testsError');
 		if (testsIgnore > 0) tests.push('Ignore: $testsIgnore');
 		if (testsEmpty > 0) tests.push('Empty: $testsEmpty');
+		if (testsInvalid > 0) tests.push('Invalid: $testsInvalid');
 		if (assertsSuccess > 0) asserts.push('success: $assertsSuccess');
 		if (assertsFailure > 0) asserts.push('failure: $assertsFailure');
 		if (assertsError > 0) asserts.push('error: $assertsError');
@@ -89,12 +71,4 @@ class PicoTestResultSummary {
 		s.push('----------------------------------------\n');
 		return s.join('\n');
 	}
-}
-
-private enum PicoTestResultMark {
-	Empty;
-	Success;
-	Failure;
-	Error;
-	Ignore;
 }

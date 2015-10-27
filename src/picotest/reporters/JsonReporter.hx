@@ -48,6 +48,8 @@ class JsonReporter implements IPicoTestReporter {
 				return {assertResult: "T", message: message, callInfo: hashCallInfo(callInfo)};
 			case PicoTestAssertResult.Ignore(message, callInfo):
 				return {assertResult: "I", message: message, callInfo: hashCallInfo(callInfo)};
+			case PicoTestAssertResult.Invalid(message, callInfo):
+				return {assertResult: "X", message: message, callInfo: hashCallInfo(callInfo)};
 		}
 	}
 
@@ -59,6 +61,12 @@ class JsonReporter implements IPicoTestReporter {
 				return PicoTestAssertResult.Failure(hashed.message, unhashCallInfo(hashed.callInfo, header));
 			case "E":
 				return PicoTestAssertResult.Error(hashed.message, unhashCallInfo(hashed.callInfo, header));
+			case "T":
+				return PicoTestAssertResult.Trace(hashed.message, unhashCallInfo(hashed.callInfo, header));
+			case "I":
+				return PicoTestAssertResult.Ignore(hashed.message, unhashCallInfo(hashed.callInfo, header));
+			case "X":
+				return PicoTestAssertResult.Invalid(hashed.message, unhashCallInfo(hashed.callInfo, header));
 		}
 		return PicoTestAssertResult.Success;
 	}

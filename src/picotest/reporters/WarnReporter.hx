@@ -29,7 +29,7 @@ class WarnReporter implements IPicoTestReporter {
 					case PicoTestAssertResult.Failure(message,callInfo):
 						warn(message, callInfo);
 					case PicoTestAssertResult.Error(message,callInfo):
-						warn('Error thrown: ${message}' , callInfo);
+						warn('[Error] ${message}' , callInfo);
 						var testRoot:PicoTestCallInfo = callInfo;
 						while (testRoot != null) {
 							switch (testRoot.callType) {
@@ -43,6 +43,9 @@ class WarnReporter implements IPicoTestReporter {
 						if (testRoot != callInfo) warn('(from here)', testRoot);
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
+						warn('[Ignore] ${message}' , callInfo);
+					case PicoTestAssertResult.Invalid(message,callInfo):
+						warn('[Invalid] ${message}' , callInfo);
 				}
 			}
 		}
