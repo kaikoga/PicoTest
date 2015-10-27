@@ -179,6 +179,11 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 #Release Notes
 
+- Version 0.5.0
+  - Try to output test method name which caused an error
+  - Output test summary
+  - Report empty tests
+  - Report invalid tests
 - Version 0.4.0
   - Parametrized test support
 - Version 0.3.1
