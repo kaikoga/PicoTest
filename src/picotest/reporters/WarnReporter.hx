@@ -46,6 +46,7 @@ class WarnReporter implements IPicoTestReporter {
 				}
 			}
 		}
+		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
 
 	private function warn(message:String, callInfo:PicoTestCallInfo):Void {
@@ -109,7 +110,7 @@ class WarnReporter implements IPicoTestReporter {
 			case PicoTestCallPosition.Unavailable:
 				return Context.makePosition({ file : "_", min : 0, max : 0 });
 			case PicoTestCallPosition.ClassPath(fileName, lineNumber):
-				PicoTest.stdout('$fileName: file not found in classpaths ${Context.getClassPath()}');
+				PicoTest.stdout('$fileName: file not found in classpaths ${Context.getClassPath()}\n');
 				return Context.makePosition({ file : fileName, min : 0, max : 0 });
 			case PicoTestCallPosition.Absolute(fileName, lineNumber):
 				return Context.makePosition({

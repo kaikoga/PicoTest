@@ -19,7 +19,7 @@ class PicoTestResult {
 		if (this._setup != null) this._setup();
 		this._setup = null;
 	}
-	
+
 	public function tearDownIfNeeded():Void {
 		if (this._tearDown != null) this._tearDown();
 		this._tearDown = null;
@@ -48,6 +48,16 @@ class PicoTestResult {
 		for (assertResult in assertResults) {
 			switch (assertResult) {
 				case PicoTestAssertResult.Error(_,_): return true;
+				default:
+			}
+		}
+		return false;
+	}
+
+	public function isIgnore():Bool {
+		for (assertResult in assertResults) {
+			switch (assertResult) {
+				case PicoTestAssertResult.Ignore(_,_): return true;
 				default:
 			}
 		}

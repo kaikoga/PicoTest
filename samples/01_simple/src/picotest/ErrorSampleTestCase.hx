@@ -37,6 +37,9 @@ class ErrorSampleTestCase {
 		throw "some error";
 	}
 
+	public function testEmpty() {
+	}
+
 	#if flash
 	public function testThrowErrorError() {
 		throw new Error();

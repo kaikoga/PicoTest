@@ -39,6 +39,8 @@ class TraceReporter implements IPicoTestReporter {
 					row += "E";
 				} else if (result.isFail()) {
 					row += "F";
+				} else if (result.isIgnore()) {
+					row += "I";
 				} else {
 					row += ".";
 				}
@@ -47,6 +49,7 @@ class TraceReporter implements IPicoTestReporter {
 			PicoTest.stdout(row + "\n");
 			if (text.length > 0) for(row in text) PicoTest.stdout(row + "\n");
 		}
+		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
 
 
