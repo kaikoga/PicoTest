@@ -48,6 +48,11 @@ class WarnReporter implements IPicoTestReporter {
 						warn('[Invalid] ${message}' , callInfo);
 				}
 			}
+			switch (result.mark()) {
+				case PicoTestResultMark.Empty:
+					warn('[Empty] Test is empty', PicoTestCallInfo.fromReflect(result.className, result.methodName));
+				case _:
+			}
 		}
 		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
