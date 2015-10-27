@@ -1,5 +1,7 @@
 package picotest.reporters;
 
+import picotest.PicoTestCallInfo;
+import picotest.PicoTestAssertResult;
 import picotest.PicoTestCallInfo.PicoTestCallPosition;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
@@ -15,6 +17,10 @@ class WarnReporter implements IPicoTestReporter {
 
 	}
 
+	private function showHeader(result:PicoTestResult):Bool {
+		return true;
+	}
+
 	public function report(results:Array<PicoTestResult>):Void {
 		for (result in results) {
 			for (assertResult in result.assertResults) {
@@ -23,7 +29,18 @@ class WarnReporter implements IPicoTestReporter {
 					case PicoTestAssertResult.Failure(message,callInfo):
 						warn(message, callInfo);
 					case PicoTestAssertResult.Error(message,callInfo):
-						warn(message, callInfo);
+						warn('Error thrown: ${message}' , callInfo);
+						var testRoot:PicoTestCallInfo = callInfo;
+						while (testRoot != null) {
+							switch (testRoot.callType) {
+								case PicoTestCallType.Method(className, methodName):
+									if (className == result.className && methodName == result.methodName) break;
+								case _:
+							}
+							testRoot = testRoot.from;
+						}
+						if (testRoot == null) testRoot = PicoTestCallInfo.fromReflect(result.className, result.methodName);
+						if (testRoot != callInfo) warn('(from here)', testRoot);
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
 				}

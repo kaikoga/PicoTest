@@ -8,6 +8,7 @@ class SampleTest {
 	public function new() {
 		var runner:PicoTestRunner = PicoTest.runner();
 		runner.load(BasicAssertionSampleTestCase);
+		runner.load(ErrorSampleTestCase);
 		runner.load(MarkingSampleTestCase);
 		runner.load(ParametrizedSampleTestCase, [[1, 1], [2, 2]]);
 		runner.load(ParametrizedSetupSampleTestCase);

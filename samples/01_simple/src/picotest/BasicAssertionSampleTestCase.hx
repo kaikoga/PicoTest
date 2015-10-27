@@ -1,9 +1,5 @@
 package picotest;
 
-#if flash
-import flash.errors.Error;
-#end
-
 import picotest.PicoAssert.*;
 
 /**
@@ -67,35 +63,4 @@ class BasicAssertionSampleTestCase {
 		assertNotEquals(TestEnum.Some(1), TestEnum.Some(1));
 	}
 
-	public function testThrow() {
-		assertThrows(
-			function() {
-				throw "some error";
-			},
-			function(error:Dynamic) {
-				assertEquals('some error', error);
-			}
-		);
-	}
-
-	public function testThrowFail() {
-		assertThrows(
-			function() {
-				throw "random error";
-			},
-			function(error:Dynamic) {
-				assertEquals('some error', error);
-			}
-		);
-	}
-
-	public function testThrowError() {
-		throw "some error";
-	}
-
-	#if flash
-	public function testThrowErrorError() {
-		throw new Error();
-	}
-	#end
 }

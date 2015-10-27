@@ -74,11 +74,20 @@ class PicoTestCallInfo {
 		return new PicoTestCallInfo().reflect(className, methodName);
 	}
 	public function reflect(className:String, methodName:String) {
-		var filePath:String = className.split(".").join("/");
+		var filePath:String = className.split(".").join("/") + ".hx";
 		this.position = PicoTestCallPosition.ClassPath(filePath, 1);
 		this.callType = PicoTestCallType.Method(className, methodName);
 		this.from = null;
 		return this;
+	}
+
+	public function isMethod(className:String, methodName:String):Bool {
+		switch (this.callType) {
+			case PicoTestCallType.Method(c, m):
+				return className == c && methodName == m;
+			case _:
+				return false;
+		}
 	}
 
 	public function printCallTarget():String {

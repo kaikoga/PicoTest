@@ -83,6 +83,7 @@ class JsonReporter implements IPicoTestReporter {
 			case PicoTestCallType.LocalFunction(index):
 				hashed.index = index;
 		}
+		if (callInfo.from != null) hashed.from = hashCallInfo(callInfo.from);
 		return hashed;
 	}
 
@@ -112,6 +113,7 @@ class JsonReporter implements IPicoTestReporter {
 			case i if (i != -1):
 				callInfo.callType = PicoTestCallType.LocalFunction(i);
 		}
+		if (hashed.from != null) callInfo.from = unhashCallInfo(hashed.from);
 		return callInfo;
 	}
 }
@@ -133,5 +135,6 @@ typedef HashedCallInfo = {
 	?lineNumber:Int,
 	?className:String,
 	?methodName:String,
-	?index:Int
+	?index:Int,
+	?from:HashedCallInfo
 }
