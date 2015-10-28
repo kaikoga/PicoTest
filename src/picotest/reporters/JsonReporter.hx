@@ -24,7 +24,7 @@ class JsonReporter implements IPicoTestReporter {
 		for (assertResult in result.assertResults) {
 			a.push(hashAssertResult(assertResult));
 		}
-		return {className:result.className, methodName:result.methodName, assertResults:a}
+		return {className:result.className, methodName:result.methodName, parameters:result.parameters, assertResults:a}
 	}
 
 	public static function unhashResult(hashed:HashedResult, header:String = null):PicoTestResult {
@@ -32,7 +32,7 @@ class JsonReporter implements IPicoTestReporter {
 		for (hashedAssertResult in hashed.assertResults) {
 			a.push(unhashAssertResult(hashedAssertResult, header));
 		}
-		return new PicoTestResult(hashed.className, hashed.methodName, a);
+		return new PicoTestResult(hashed.className, hashed.methodName, hashed.parameters, a);
 
 	}
 
@@ -129,6 +129,7 @@ class JsonReporter implements IPicoTestReporter {
 typedef HashedResult = {
 	className:String,
 	methodName:String,
+	?parameters:Array<String>,
 	assertResults:Array<HashedAssertResult>
 }
 

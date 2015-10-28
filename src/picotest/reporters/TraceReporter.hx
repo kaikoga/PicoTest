@@ -24,24 +24,24 @@ class TraceReporter implements IPicoTestReporter {
 					switch (assertResult) {
 						case PicoTestAssertResult.Success:
 						case PicoTestAssertResult.Failure(message, callInfo):
-							resultText.push('${callInfo.print()}: ${message}');
+							resultText.push('${callInfo.print()}${result.printParameters()}: ${message}');
 						case PicoTestAssertResult.Error(message, callInfo):
-							resultText.push('${callInfo.print()}: [Error] ${message}');
+							resultText.push('${callInfo.print()}${result.printParameters()}: [Error] ${message}');
 						case PicoTestAssertResult.Trace(message, callInfo):
 							for (line in message.split("\n")) {
-								resultText.push('${callInfo.print()}: [Trace] ${line}');
+								resultText.push('${callInfo.print()}${result.printParameters()}: [Trace] ${line}');
 							}
 						case PicoTestAssertResult.Ignore(message, callInfo):
-							resultText.push('${callInfo.print()}: [Ignore] ${message}');
+							resultText.push('${callInfo.print()}${result.printParameters()}: [Ignore] ${message}');
 						case PicoTestAssertResult.Invalid(message, callInfo):
-							resultText.push('${callInfo.print()}: [Invalid] ${message}');
+							resultText.push('${callInfo.print()}${result.printParameters()}: [Invalid] ${message}');
 					}
 				}
 				switch (result.mark()) {
 					case PicoTestResultMark.Empty:
 						row += "0";
 						var callInfo:PicoTestCallInfo = PicoTestCallInfo.fromReflect(result.className, result.methodName);
-						resultText.push('${callInfo.print()}: [Empty] Test is empty');
+						resultText.push('${callInfo.print()}${result.printParameters()}: [Empty] Test is empty');
 					case PicoTestResultMark.Success:
 						row += ".";
 					case PicoTestResultMark.Failure:

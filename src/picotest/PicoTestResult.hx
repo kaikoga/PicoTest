@@ -10,6 +10,7 @@ class PicoTestResult {
 
 	public var className(default, null):String;
 	public var methodName(default, null):String;
+	public var parameters:Array<String>;
 	public var assertResults(default, null):Array<PicoTestAssertResult>;
 	private var tasks:Array<IPicoTestTask>;
 	private var _setup:Void->Void;
@@ -25,9 +26,10 @@ class PicoTestResult {
 		this._tearDown = null;
 	}
 
-	public function new(className:String, methodName:String, assertResults:Array<PicoTestAssertResult> = null, setup:Void->Void = null, tearDown:Void->Void = null) {
+	public function new(className:String, methodName:String, parameters:Array<Dynamic> = null, assertResults:Array<PicoTestAssertResult> = null, setup:Void->Void = null, tearDown:Void->Void = null) {
 		this.className = className;
 		this.methodName = methodName;
+		this.parameters = if (parameters != null) parameters.map(function(d:Dynamic) return Std.string(d)); else null;
 		this.assertResults = if (assertResults != null) assertResults; else [];
 		this._setup = setup;
 		this._tearDown = tearDown;
@@ -109,5 +111,12 @@ class PicoTestResult {
 	public function completeTask(task:IPicoTestTask):Bool {
 		this.tasks.remove(task);
 		return this.tasks.length == 0;
+	}
+
+	public function printParameters():String {
+		if (parameters == null || parameters.length == 0) {
+			return '';
+		}
+		return '[${parameters.join(', ')}]';
 	}
 }

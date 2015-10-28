@@ -82,15 +82,16 @@ class PicoTestReader implements IPicoTestReader {
 				case TestType.Test(field, parameters):
 					for (setupArguments in setupParameters) {
 						for (arguments in parameters) {
+							var resultArguments:Array<Dynamic> = setupArguments.concat(arguments);
 							try {
 								var testCase:Dynamic = createInstance(testCaseClass);
 								var func:Void->Void = bind(testCase, field, arguments);
 								var setup:Void->Void = hasSetup ? bind(testCase, "setup", setupArguments) : null;
 								var tearDown:Void->Void = hasTearDown ? bind(testCase, "tearDown", []) : null;
-								task = new PicoTestTestTask(new PicoTestResult(className, field, null, setup, tearDown), func);
+								task = new PicoTestTestTask(new PicoTestResult(className, field, resultArguments, null, setup, tearDown), func);
 								runner.add(task);
 							} catch (message:String) {
-								task = new PicoTestInvalidTestTask(new PicoTestResult(className, field), message);
+								task = new PicoTestInvalidTestTask(new PicoTestResult(className, field, resultArguments), message);
 								runner.add(task);
 							}
 						}

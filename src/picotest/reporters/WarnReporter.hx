@@ -27,9 +27,9 @@ class WarnReporter implements IPicoTestReporter {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
 					case PicoTestAssertResult.Failure(message,callInfo):
-						warn(message, callInfo);
+						warn(message, result, callInfo);
 					case PicoTestAssertResult.Error(message,callInfo):
-						warn('[Error] ${message}' , callInfo);
+						warn('[Error] ${message}', result, callInfo);
 						var testRoot:PicoTestCallInfo = callInfo;
 						while (testRoot != null) {
 							switch (testRoot.callType) {
@@ -40,28 +40,29 @@ class WarnReporter implements IPicoTestReporter {
 							testRoot = testRoot.from;
 						}
 						if (testRoot == null) testRoot = PicoTestCallInfo.fromReflect(result.className, result.methodName);
-						if (testRoot != callInfo) warn('(from here)', testRoot);
+						if (testRoot != callInfo) warn('(from here)', null, testRoot);
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
-						warn('[Ignore] ${message}' , callInfo);
+						warn('[Ignore] ${message}', result, callInfo);
 					case PicoTestAssertResult.Invalid(message,callInfo):
-						warn('[Invalid] ${message}' , callInfo);
+						warn('[Invalid] ${message}', result, callInfo);
 				}
 			}
 			switch (result.mark()) {
 				case PicoTestResultMark.Empty:
-					warn('[Empty] Test is empty', PicoTestCallInfo.fromReflect(result.className, result.methodName));
+					warn('[Empty] Test is empty', result, PicoTestCallInfo.fromReflect(result.className, result.methodName));
 				case _:
 			}
 		}
 		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
 
-	private function warn(message:String, callInfo:PicoTestCallInfo):Void {
+	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo):Void {
+		var p:String = if (result == null) '' else result.printParameters();
 		#if macro
-		Context.warning('${callInfo.printCallTarget()}${callInfo.printCallType()}: ${message.split("\n").join("\n "+callInfo.printCallTarget())}', callPositionToPosition(callInfo.position));
+		Context.warning('${callInfo.printCallTarget()}${callInfo.printCallType()}$p: ${message.split("\n").join("\n "+callInfo.printCallTarget())}', callPositionToPosition(callInfo.position));
 		#else
-		PicoTest.stdout('${callInfo.print()}: $message\n');
+		PicoTest.stdout('${callInfo.print()}$p: $message\n');
 		#end
 	}
 
