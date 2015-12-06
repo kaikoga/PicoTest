@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross", "utility","unittest","testing"],
   "description": "A very versatile unit testing framework",
-  "version": "0.5.1",
-  "releasenote": "Print test parameters",
+  "version": "0.5.2",
+  "releasenote": "Small fixes",
   "contributors": ["kaikoga"],
   "dependencies": {
     "hamcrest": ""
