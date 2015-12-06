@@ -22,8 +22,8 @@ class PicoTestTestTask implements IPicoTestTask {
 	}
 
 	public function resume(runner:PicoTestRunner):PicoTestTaskStatus {
-		this._result.setupIfNeeded();
 		try {
+			this._result.setupIfNeeded();
 			this.func();
 		} catch (e:Dynamic) {
 			runner.error(e);
