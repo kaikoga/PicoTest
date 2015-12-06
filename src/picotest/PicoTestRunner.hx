@@ -176,7 +176,7 @@ class PicoTestRunner {
 	}
 
 	@:noDoc
-	public function success(assertResult:PicoTestAssertResult = null):Void {
+	public function success():Void {
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Success;
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(assertResult);

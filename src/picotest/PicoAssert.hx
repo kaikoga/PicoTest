@@ -21,6 +21,13 @@ class PicoAssert {
 	}
 
 	/**
+		Force generate an assertion success.
+	**/
+	public static function success():Void {
+		PicoTest.currentRunner.success();
+	}
+
+	/**
 		Force generate an assertion failure.
 	**/
 	public static function fail(message:String = null, ?p:PosInfos):Void {
