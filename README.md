@@ -179,6 +179,9 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 #Release Notes
 
+- Version 0.6.0
+  - Improved WarnReporter position reporting, will output both failure position and test method name also on test failures  
+  - Fixed ```assertMatch()``` which SEGV on cpp when matching class instances   
 - Version 0.5.2
   - Small fixes
 - Version 0.5.1
