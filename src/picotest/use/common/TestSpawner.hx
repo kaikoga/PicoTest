@@ -26,18 +26,18 @@ class TestSpawner implements ITestExecuter {
 		if (Context.defined(PicoTestMacros.PICOTEST_REPORT_DIR)) return Context.definedValue(PicoTestMacros.PICOTEST_REPORT_DIR);
 		return "bin/report";
 	}
-	
+
 	public function reportFile():String {
 		FileSystem.createDirectory(reportDir());
 		return '${reportDir()}/${name}.json';
 	}
-	
+
 	public function reportData():String {
 		var report:String = File.read(reportFile()).readAll().toString();
-		if (report == null || report == "") throw '${reportFile()}: report file not found';
+		if (report == null || report == "") throw '${reportFile()}: report file not found or empty';
 		return report;
 	}
-	
+
 	private function bin():String {
 		return Compiler.getOutput();
 	}
@@ -108,7 +108,7 @@ class TestSpawner implements ITestExecuter {
 				return kind;
 		}
 	}
-	
+
 	private function browser():String {
 		if (Context.defined(PicoTestMacros.PICOTEST_BROWSER)) return selectBrowser(Context.definedValue(PicoTestMacros.PICOTEST_BROWSER));
 		return selectBrowser(null);
@@ -134,7 +134,7 @@ class TestSpawner implements ITestExecuter {
 
 		args.push("-D");
 		args.push('${PicoTestExternalCommandHelper.PICOTEST_ANOTHER_NEKO_ARGS}=${PicoTestExternalCommandHelper.serializeBase64(anotherNekoArgs)}');
-		
+
 		Sys.command("haxe", args);
 		Sys.command("neko", [out]);
 	}

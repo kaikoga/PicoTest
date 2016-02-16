@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross", "utility","unittest","testing"],
   "description": "A very versatile unit testing framework",
-  "version": "0.6.0",
-  "releasenote": "Improved WarnReporter position reporting",
+  "version": "0.6.1",
+  "releasenote": "fixed issue with large report output on cpp",
   "contributors": ["kaikoga"],
   "dependencies": {
     "hamcrest": ""

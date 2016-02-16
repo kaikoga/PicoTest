@@ -14,9 +14,9 @@ class PicoTestExternalCommand {
 	private var cmd:String;
 	private var args:Array<String>;
 	private var outFile:String;
-	
+
 	private var process:Process;
-	
+
 	public function new(cmd:String, args:Array<String> = null, outFile:String = null):Void {
 		this.cmd = cmd;
 		this.args = (args != null) ? args : [];
@@ -35,13 +35,17 @@ class PicoTestExternalCommand {
 	}
 
 	private function joinProcess(writeStdout:Bool):Void {
-		var err:Int = this.process.exitCode();
-		var stdout:Bytes = try { process.stdout.readAll(); } catch (d:Dynamic) { err = -1; null; }
-		if (err != 0) {
-			throw 'Command $cmd ${args.join(" ")} returned $err: $stdout';
-		}
-		if (writeStdout) { 
-			PicoTestExternalCommandHelper.writeFile(stdout, this.outFile);
+		try {
+			var stdout:Bytes = process.stdout.readAll();
+			var err:Int = this.process.exitCode();
+			if (err != 0) {
+				throw 'Command $cmd ${args.join(" ")} returned $err: $stdout';
+			}
+			if (writeStdout) {
+				PicoTestExternalCommandHelper.writeFile(stdout, this.outFile);
+			}
+		} catch (d:Dynamic) {
+			throw 'Command $cmd ${args.join(" ")} failed';
 		}
 	}
 
@@ -62,7 +66,7 @@ class PicoTestExternalCommand {
 		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting).open();
 
 		while (picoServer.postData == null) {
-			try { picoServer.listen(); } catch(e:Dynamic) {} 
+			try { picoServer.listen(); } catch(e:Dynamic) {}
 		}
 
 		PicoTestExternalCommandHelper.writeFile(picoServer.postData, this.outFile);
