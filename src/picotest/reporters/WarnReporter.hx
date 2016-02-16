@@ -27,20 +27,9 @@ class WarnReporter implements IPicoTestReporter {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
 					case PicoTestAssertResult.Failure(message,callInfo):
-						warn(message, result, callInfo);
+						warn(message, result, callInfo, true);
 					case PicoTestAssertResult.Error(message,callInfo):
-						warn('[Error] ${message}', result, callInfo);
-						var testRoot:PicoTestCallInfo = callInfo;
-						while (testRoot != null) {
-							switch (testRoot.callType) {
-								case PicoTestCallType.Method(className, methodName):
-									if (className == result.className && methodName == result.methodName) break;
-								case _:
-							}
-							testRoot = testRoot.from;
-						}
-						if (testRoot == null) testRoot = PicoTestCallInfo.fromReflect(result.className, result.methodName);
-						if (testRoot != callInfo) warn('(from here)', null, testRoot);
+						warn('[Error] ${message}', result, callInfo, true);
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
 						warn('[Ignore] ${message}', result, callInfo);
@@ -57,7 +46,23 @@ class WarnReporter implements IPicoTestReporter {
 		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
 
-	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo):Void {
+	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo, printOrigin:Bool = false):Void {
+		printWarn(message, result, callInfo);
+
+		var testRoot:PicoTestCallInfo = callInfo;
+		while (testRoot != null) {
+			switch (testRoot.callType) {
+				case PicoTestCallType.Method(className, methodName):
+					if (className == result.className && methodName == result.methodName) break;
+				case _:
+			}
+			testRoot = testRoot.from;
+		}
+		if (testRoot == null) testRoot = PicoTestCallInfo.fromReflect(result.className, result.methodName);
+		if (testRoot != callInfo) printWarn('(from this test case)', result, testRoot);
+	}
+
+	private function printWarn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo):Void {
 		var p:String = if (result == null) '' else result.printParameters();
 		#if macro
 		Context.warning('${callInfo.printCallTarget()}${callInfo.printCallType()}$p: ${message.split("\n").join("\n "+callInfo.printCallTarget())}', callPositionToPosition(callInfo.position));
