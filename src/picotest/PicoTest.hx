@@ -1,12 +1,13 @@
 package picotest;
 
+import picotest.printers.VerboseTracePrinter;
 import picotest.out.PicoTestOutput;
 import picotest.out.IPicoTestOutput;
 import picotest.macros.PicoTestMacros;
 import picotest.reporters.JsonReporter;
 import haxe.PosInfos;
 import picotest.reporters.TraceReporter;
-import picotest.printers.TracePrinter;
+import picotest.printers.SimpleTracePrinter;
 
 class PicoTest {
 
@@ -44,11 +45,11 @@ class PicoTest {
 
 		#if picotest_report
 		haxe.Log.trace = emptyTrace;
-		runner.printers = [new TracePrinter()];
+		runner.printers = [new VerboseTracePrinter()];
 		runner.reporters = [new JsonReporter()];
 		stdout('{ "__picotest_report__": "');
 		#else
-		runner.printers = [new TracePrinter()];
+		runner.printers = [new VerboseTracePrinter()];
 		runner.reporters = [new TraceReporter()];
 		#end
 

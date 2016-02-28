@@ -1,12 +1,12 @@
 package picotest.printers;
 
-class TracePrinter implements IPicoTestPrinter {
+class VerboseTracePrinter implements IPicoTestPrinter {
 
 	public function new():Void {
 
 	}
 
-	public function printAssertResult(assertResult:PicoTestAssertResult):Void {
+	public function printAssertResult(result:PicoTestResult, assertResult:PicoTestAssertResult):Void {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
 				PicoTest.stdout(".");
@@ -23,6 +23,6 @@ class TracePrinter implements IPicoTestPrinter {
 	}
 
 	public function print(result:PicoTestResult):Void {
-		// PicoTest.stdout("\n");
+		PicoTest.stdout('\n${result.className}.${result.methodName}${result.printParameters()}\n');
 	}
 }
