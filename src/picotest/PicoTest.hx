@@ -129,13 +129,16 @@ class PicoTest {
 		for (line in lines) println(line);
 	}
 
+	// FIXME we think we'll have to use WebSocket on js_html
+	private static var remoteRequestIndex:Int = 0;
+
 	public static function stdoutRemote(value:String):Void {
-		sendRemote(value, "/result");
+		sendRemote(value, '/result/$remoteRequestIndex');
+		remoteRequestIndex++;
 	}
 
 	public static function closeRemote():Void {
-		// FIXME wait until xhr completes on JS
-		sendRemote("", "/eof");
+		sendRemote("", '/eof/$remoteRequestIndex');
 	}
 
 	public static function sendRemote(value:String, name:String):Void {

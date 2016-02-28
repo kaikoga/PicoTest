@@ -65,21 +65,28 @@ class PicoTestExternalCommand {
 
 		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting).open();
 
-		var result:String = "";
-		var eof:Bool = false;
-		while (!eof) {
+		var result:Array<String> = [];
+		var dataCount:Int = 0;
+		var eof:Int = -1;
+		while (dataCount != eof) {
 			try {
 				picoServer.listen();
-				switch (picoServer.postUri) {
-					case "/eof":
-						eof = true;
-					default:
-						result += picoServer.postData.toString();
+				switch (picoServer.postUri.split("/")) {
+					case ["", "eof", num] if (Std.parseInt(num) != null):
+						var index:Int = Std.parseInt(num);
+						eof = index;
+						dataCount++;
+					case ["", "result", num] if (Std.parseInt(num) != null):
+						var index:Int = Std.parseInt(num);
+						result[index] = picoServer.postData.toString();
+						dataCount++;
+					case _:
+						break;
 				}
 			} catch(e:Dynamic) {}
 		}
 
-		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result), this.outFile);
+		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result.join("")), this.outFile);
 		picoServer.close();
 
 		this.joinProcess(false);
