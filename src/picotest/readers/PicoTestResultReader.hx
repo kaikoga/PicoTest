@@ -10,7 +10,7 @@ class PicoTestResultReader {
 	}
 
 	public function read(runner:PicoTestRunner, report:String, header:String):Void {
-		var json:Array<HashedResult> = Json.parse(report);
+		var json:Array<HashedResult> = Json.parse(report).__picotest_result__;
 		for (hashedResult in json) {
 			var result:PicoTestResult = JsonReporter.unhashResult(hashedResult, header);
 			runner.addResult(result);

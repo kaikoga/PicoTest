@@ -16,7 +16,7 @@ class JsonReporter implements IPicoTestReporter {
 			json.push(hashResult(result));
 		}
 
-		PicoTest.stdout(Json.stringify(json, null, "  ") + "\n");
+		PicoTest.stdout('",\n"__picotest_result__":${Json.stringify(json, null, "  ")}\n}\n');
 	}
 
 	public static function hashResult(result:PicoTestResult):HashedResult {

@@ -38,17 +38,23 @@ class PicoTest {
 	public static function runner():PicoTestRunner {
 		var runner = new PicoTestRunner();
 
+		#if picotest_remote
+		stdout = stdoutRemote;
+		var onComplete = runner.onComplete;
+		runner.onComplete = function() {
+			closeRemote();
+			onComplete();
+		}
+		#end
+
 		#if picotest_report
 		haxe.Log.trace = emptyTrace;
-		runner.printers = [];
+		runner.printers = [new TracePrinter()];
 		runner.reporters = [new JsonReporter()];
+		stdout('{ "__picotest_report__": "');
 		#else
 		runner.printers = [new TracePrinter()];
 		runner.reporters = [new TraceReporter()];
-		#end
-
-		#if picotest_remote
-		stdout = stdoutRemote;
 		#end
 
 		return runner;
@@ -117,22 +123,32 @@ class PicoTest {
 		Low-level cross-platform output without decoration.
 	**/
 	public static dynamic function stdout(value:String):Void {
+		// FIXME flush output in sys platforms
 		var lines:Array<String> = (_currentLine + value).split("\n");
 		_currentLine = lines.pop();
 		for (line in lines) println(line);
 	}
 
-	public static dynamic function stdoutRemote(value:String):Void {
+	public static function stdoutRemote(value:String):Void {
+		sendRemote(value, "/result");
+	}
+
+	public static function closeRemote():Void {
+		// FIXME wait until xhr completes on JS
+		sendRemote("", "/eof");
+	}
+
+	public static function sendRemote(value:String, name:String):Void {
 		// we use HTTP POST compatible format, as JS doesn't support raw sockets
 		#if sys
 		var socket:Socket = new Socket();
 		socket.connect(new Host("127.0.0.1"), 8001);
-		socket.write("POST result .\r\n\r\n");
+		socket.write('POST /eof HTTP/picotest\r\n\r\n');
 		socket.output.write(Bytes.ofString(value));
 		socket.close();
 		#elseif js
 		var xhr:XMLHttpRequest = new XMLHttpRequest();
-		xhr.open("POST", "result");
+		xhr.open("POST", name);
 		xhr.send(value);
 		#end
 	}

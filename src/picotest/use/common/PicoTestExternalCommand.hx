@@ -65,11 +65,21 @@ class PicoTestExternalCommand {
 
 		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting).open();
 
-		while (picoServer.postData == null) {
-			try { picoServer.listen(); } catch(e:Dynamic) {}
+		var result:String = "";
+		var eof:Bool = false;
+		while (!eof) {
+			try {
+				picoServer.listen();
+				switch (picoServer.postUri) {
+					case "/eof":
+						eof = true;
+					default:
+						result += picoServer.postData.toString();
+				}
+			} catch(e:Dynamic) {}
 		}
 
-		PicoTestExternalCommandHelper.writeFile(picoServer.postData, this.outFile);
+		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result), this.outFile);
 		picoServer.close();
 
 		this.joinProcess(false);

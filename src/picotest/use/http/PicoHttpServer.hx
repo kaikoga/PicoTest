@@ -14,7 +14,8 @@ class PicoHttpServer {
 
 	public var available(default, null):Bool;
 
-	public var postData:Bytes;// FIXME
+	public var postUri:String;
+	public var postData:Bytes;
 
 	private var server:Socket;
 	private var setting:PicoHttpServerSetting;
@@ -63,6 +64,7 @@ class PicoHttpServer {
 					input.close();
 				}
 			case PicoHttpMethod.POST:
+				this.postUri = request.uri;
 				this.postData = request.body;
 			case PicoHttpMethod.INVALID:
 				socket.output.write(Bytes.ofString('HTTP/1.0 500 Internal Error\r\n\r\n'));
@@ -98,10 +100,10 @@ class PicoHttpRequest {
 
 	public var contentLength(default, null):Int;
 	public var body(default, null):Bytes;
-	
+
 	public function new():Void {
 	}
-	
+
 	private static function readMethod(str:String):PicoHttpMethod {
 		switch (str) {
 			case "GET": return PicoHttpMethod.GET;
@@ -109,7 +111,7 @@ class PicoHttpRequest {
 			case _: return PicoHttpMethod.INVALID;
 		}
 	}
-	
+
 	public function read(input:Input):PicoHttpRequest {
 		var header:String = input.readLine();
 		switch (header.split(" ")) {
