@@ -10,9 +10,7 @@ class PicoTestFlashOutput implements IPicoTestOutput {
 	}
 
 	public function stdout(value:String):Void {
-		var lines:Array<String> = (_currentLine + value).split("\n");
-		_currentLine = lines.pop();
-		for (line in lines) Lib.trace(line);
+		PicoTestOutputUtils.cachedOutput(value, function(line:String) Lib.trace(line));
 	}
 
 	public function close():Void {

@@ -13,7 +13,7 @@ class PicoTestJsOutput implements IPicoTestOutput {
 			untyped process.stdout.write(value);
 		} catch (e:Dynamic) {
 			// fallback to haxe std trace
-			untyped js.Boot.__trace(cast line, null);
+			PicoTestOutputUtils.cachedOutput(value, function(line:String) untyped js.Boot.__trace(cast line, null));
 		}
 
 	}

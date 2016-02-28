@@ -10,9 +10,7 @@ class PicoTestMacroOutput implements IPicoTestOutput {
 	}
 
 	public function stdout(value:String):Void {
-		var lines:Array<String> = (_currentLine + value).split("\n");
-		_currentLine = lines.pop();
-		for (line in lines) PicoTestMacros.println(line);
+		PicoTestOutputUtils.cachedOutput(value, function(line:String) PicoTestMacros.println(line));
 	}
 
 	public function close():Void {
