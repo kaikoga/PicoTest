@@ -122,8 +122,8 @@ class PicoMatcher {
 	public static function matchStruct(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		var eFields:Array<String> = Reflect.fields(expected);
 		var aFields:Array<String> = Reflect.fields(actual);
-		eFields.sort(function(a, b) return Reflect.compare(a, b));
-		aFields.sort(function(a, b) return Reflect.compare(a, b));
+		eFields.sort(Reflect.compare);
+		aFields.sort(Reflect.compare);
 		var mismatches:Array<MatchComponent> = [];
 		var eJoin:String = eFields.join(",");
 		var aJoin:String = aFields.join(",");

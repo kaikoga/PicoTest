@@ -23,7 +23,9 @@ class PicoTestReader implements IPicoTestReader {
 
 		var task:IPicoTestTask;
 
-		for (field in Type.getInstanceFields(testCaseClass)) {
+		var fields:Array<String> = Type.getInstanceFields(testCaseClass);
+		fields.sort(Reflect.compare);
+		for (field in fields) {
 			var meta:Dynamic<Array<Dynamic>>;
 			if (Reflect.hasField(allMeta, field)) {
 				meta = Reflect.field(allMeta, field);
