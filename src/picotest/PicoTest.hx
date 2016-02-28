@@ -1,20 +1,12 @@
 package picotest;
 
-import haxe.io.Bytes;
+import picotest.out.PicoTestOutput;
+import picotest.out.IPicoTestOutput;
 import picotest.macros.PicoTestMacros;
 import picotest.reporters.JsonReporter;
 import haxe.PosInfos;
 import picotest.reporters.TraceReporter;
 import picotest.printers.TracePrinter;
-
-#if sys
-import sys.net.Host;
-import sys.net.Socket;
-#end
-
-#if js
-import js.html.XMLHttpRequest;
-#end
 
 class PicoTest {
 
@@ -29,6 +21,8 @@ class PicoTest {
 	@:allow(picotest.PicoTestRunner)
 	public static var currentRunner(default, null):PicoTestRunner;
 
+	private static var output:IPicoTestOutput;
+
 	private function new() {
 	}
 
@@ -38,11 +32,12 @@ class PicoTest {
 	public static function runner():PicoTestRunner {
 		var runner = new PicoTestRunner();
 
+		output = new PicoTestOutput();
+
 		#if picotest_remote
-		stdout = stdoutRemote;
 		var onComplete = runner.onComplete;
 		runner.onComplete = function() {
-			closeRemote();
+			output.close();
 			onComplete();
 		}
 		#end
@@ -93,67 +88,11 @@ class PicoTest {
 		PicoTestMacros.readResult(report, header = null);
 	}
 
-	private static function println(line:String):Void {
-		PicoTestMacros.println(line);
-	}
-	#else
-	private static function println(line:String):Void {
-		#if flash
-		flash.Lib.trace(line);
-		#elseif neko
-		untyped $print('$line\n');
-		#elseif js
-		untyped js.Boot.__trace(cast line, null);
-		#elseif php
-		untyped __call__('_hx_trace', line, null);
-		#elseif cpp
-		untyped __cpp__('puts(line.__s)');
-		#elseif cs
-		untyped __cs__("System.Console.WriteLine(line);");
-		#elseif java
-		untyped __java__("java.lang.System.out.println(line);");
-		#elseif python
-		python.Lib.println(line);
-		#end
-	}
 	#end
 
-	private static var _currentLine:String = "";
-	/**
-		Low-level cross-platform output without decoration.
-	**/
-	public static dynamic function stdout(value:String):Void {
-		// FIXME flush output in sys platforms
-		var lines:Array<String> = (_currentLine + value).split("\n");
-		_currentLine = lines.pop();
-		for (line in lines) println(line);
-	}
-
-	// FIXME we think we'll have to use WebSocket on js_html
-	private static var remoteRequestIndex:Int = 0;
-
-	public static function stdoutRemote(value:String):Void {
-		sendRemote(value, '/result/$remoteRequestIndex');
-		remoteRequestIndex++;
-	}
-
-	public static function closeRemote():Void {
-		sendRemote("", '/eof/$remoteRequestIndex');
-	}
-
-	public static function sendRemote(value:String, name:String):Void {
-		// we use HTTP POST compatible format, as JS doesn't support raw sockets
-		#if sys
-		var socket:Socket = new Socket();
-		socket.connect(new Host("127.0.0.1"), 8001);
-		socket.write('POST /eof HTTP/picotest\r\n\r\n');
-		socket.output.write(Bytes.ofString(value));
-		socket.close();
-		#elseif js
-		var xhr:XMLHttpRequest = new XMLHttpRequest();
-		xhr.open("POST", name);
-		xhr.send(value);
-		#end
+	public static function stdout(value:String):Void {
+		output.stdout(value);
 	}
 
 }
+
