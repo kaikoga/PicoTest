@@ -47,7 +47,6 @@ class PicoTest {
 		haxe.Log.trace = emptyTrace;
 		runner.printers = [new VerboseTracePrinter()];
 		runner.reporters = [new JsonReporter()];
-		stdout('{ "__picotest_report__": "');
 		#else
 		runner.printers = [new VerboseTracePrinter()];
 		runner.reporters = [new TraceReporter()];

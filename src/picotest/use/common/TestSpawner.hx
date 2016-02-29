@@ -29,7 +29,7 @@ class TestSpawner implements ITestExecuter {
 
 	public function reportFile():String {
 		FileSystem.createDirectory(reportDir());
-		return '${reportDir()}/${name}.json';
+		return '${reportDir()}/${name}.picoreport';
 	}
 
 	public function reportData():String {

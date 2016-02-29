@@ -6,6 +6,8 @@ import picotest.PicoTestAssertResult;
 
 class JsonReporter implements IPicoTestReporter {
 
+	inline public static var PICOTEST_RESULT_HEADER:String = "__picotest_result__:";
+
 	public function new():Void {
 
 	}
@@ -16,7 +18,7 @@ class JsonReporter implements IPicoTestReporter {
 			json.push(hashResult(result));
 		}
 
-		PicoTest.stdout('",\n"__picotest_result__":${Json.stringify(json, null, "  ")}\n}\n');
+		PicoTest.stdout('\n${PICOTEST_RESULT_HEADER}${Json.stringify(json, null, "  ")}\n');
 	}
 
 	public static function hashResult(result:PicoTestResult):HashedResult {

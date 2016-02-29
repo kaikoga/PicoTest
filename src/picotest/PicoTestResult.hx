@@ -117,6 +117,6 @@ class PicoTestResult {
 		if (parameters == null || parameters.length == 0) {
 			return '';
 		}
-		return '[${parameters.join(', ')}]';
+		return '[${parameters.join(', ').split("\n").join("\\n")}]';
 	}
 }
