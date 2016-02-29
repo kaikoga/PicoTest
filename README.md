@@ -179,6 +179,9 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 #Release Notes
 
+- Version 0.7.0
+  - Show output progress
+  - output progress format changed
 - Version 0.6.1
   - Fixed issue with large report output on cpp
 - Version 0.6.0

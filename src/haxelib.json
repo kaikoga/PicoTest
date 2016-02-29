@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross", "utility","unittest","testing"],
   "description": "A very versatile unit testing framework",
-  "version": "0.6.1",
-  "releasenote": "fixed issue with large report output on cpp",
+  "version": "0.7.0",
+  "releasenote": "improved progress output",
   "contributors": ["kaikoga"],
   "dependencies": {
     "hamcrest": ""
