@@ -182,6 +182,8 @@ As a downside, test output will likely lose some readablility.
 
 #Release Notes
 
+- Version 0.7.1
+  - introducing ```-D picotest_safemode```
 - Version 0.7.0
   - Show output progress
   - output progress format changed
