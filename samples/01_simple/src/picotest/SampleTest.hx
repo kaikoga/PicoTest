@@ -18,7 +18,10 @@ class SampleTest {
 		EXOTIC = FORCE_EXOTIC;
 		#end
 
-		#if cpp
+		#if cs
+		// although some mono version can run this, some mono version just segv
+		MALICIOUS = FORCE_MALICIOUS;
+		#elseif cpp
 		// we are sure cpp will segv and stop, preventing further compiling
 		MALICIOUS = FORCE_MALICIOUS;
 		#elseif php
