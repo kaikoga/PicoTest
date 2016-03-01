@@ -1,5 +1,6 @@
 package picotest;
 
+import haxe.Int64;
 import haxe.Json;
 import picotest.PicoMatcher.MatchResult;
 import haxe.PosInfos;
@@ -16,8 +17,24 @@ import org.hamcrest.MatcherAssert;
 **/
 class PicoAssert {
 
-	private static function format( d:Dynamic ) {
+	public static function string<T>(d:Dynamic, other:Dynamic = null):String {
+		#if picotest_safemode
+		var result:String = 
+		if (d == null) '$null';
+		else if (Std.is(d, String)) '"$d"'
+		else if (Std.is(d, Float)) '$d'
+		else if (Std.is(d, Int)) '$d'
+		else if (Std.is(d, Bool)) '$d'
+		else {
+			var className:Class<T> = Type.getClass(d);
+			if (className != null) '[object $className]'
+			else '{anon}';
+		}
+		if (other != null && d != other && result == string(other)) return 'another $result';
+		return result;
+		#else
 		return if (Std.is(d, String)) '"$d"' else '$d';
+		#end
 	}
 
 	/**
@@ -62,7 +79,7 @@ class PicoAssert {
 		Assert that `expected` and `actual` equals each other in Haxe standard equality.
 	**/
 	public static function assertEquals<T>(expected:T, actual:T, message:String = null, ?p:PosInfos):Void {
-		if (message == null) message = 'Expected ${format(expected)} but was ${format(actual)}';
+		if (message == null) message = 'Expected ${string(expected)} but was ${string(actual, expected)}';
 		if (equals(expected, actual)) PicoTest.currentRunner.success();
 		else PicoTest.currentRunner.failure(message, p);
 	}
@@ -71,7 +88,7 @@ class PicoAssert {
 		Assert that `expected` and `actual` does not equal each other in Haxe standard equality.
 	**/
 	public static function assertNotEquals<T>(expected:T, actual:T, message:String = null, ?p:PosInfos):Void {
-		if (message == null) message = 'Expected not ${format(expected)} but was ${format(actual)}';
+		if (message == null) message = 'Expected not ${string(expected)} but was equal ${string(actual, expected)}';
 		if (!equals(expected, actual)) PicoTest.currentRunner.success();
 		else PicoTest.currentRunner.failure(message, p);
 	}

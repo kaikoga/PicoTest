@@ -4,3 +4,4 @@
 -debug
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
+-D picotest_safemode

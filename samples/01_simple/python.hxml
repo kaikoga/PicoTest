@@ -5,4 +5,5 @@
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
 -python bin/test.py
+-D picotest_safemode
 -D picotest_thread

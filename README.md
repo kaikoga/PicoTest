@@ -154,20 +154,23 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 ##Cross
 
-```-D picotest_nodep``` Remove hamcrest supports
-```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
-```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)  
-```-D picotest_report=json``` output report file (used internally by ```PicoTest.warn()```)  
+- ```-D picotest_safemode``` treats test target objects "dangerous",
+and avoid calling methods of test object (like ```toString()```) to prevent infinite loops (Yes, they will happen! see [https://github.com/HaxeFoundation/haxe/issues/4398](https://github.com/HaxeFoundation/haxe/issues/4398)).
+As a downside, test output will likely lose some readablility.
+- ```-D picotest_nodep``` Remove hamcrest supports
+- ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
+- ```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)
+- ```-D picotest_report=json``` output report file (used internally by ```PicoTest.warn()```)
 
 ##Flash
 
-```-D picotest_fp``` Path to executable of Flash Player (default per OS)  
-```-D picotest_flog``` Path to flashlog.txt (default per OS)
+- ```-D picotest_fp``` Path to executable of Flash Player (default per OS)
+- ```-D picotest_flog``` Path to flashlog.txt (default per OS)
 
 ##JavaScript
 
-```-D picotest_browser``` Specify browser to run tests in (TODO)  
-```-D picotest_remote_port``` A local port to receive test result from browser (default ```8001```)  
+- ```-D picotest_browser``` Specify browser to run tests in (TODO)
+- ```-D picotest_remote_port``` A local port to receive test result from browser (default ```8001```)
 
 #Planned Features
 

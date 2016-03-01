@@ -192,16 +192,19 @@ class PicoTestRunner {
 	@:noDoc
 	public function error(d:Dynamic):Void {
 		var message:String = Std.string(d);
-		var callStack:Array<StackItem> =
+		// d is null on cs stack overflow
+		var callStack:Array<StackItem> = if (d == null) [] else
 			#if flash
-		if (Std.is(d, Error)) {
-			this.buildFlashCallStack(cast (d, Error).getStackTrace());
-		} else {
+			if (Std.is(d, Error)) {
+				this.buildFlashCallStack(cast (d, Error).getStackTrace());
+			} else {
+				CallStack.exceptionStack();
+			}
+			#else
 			CallStack.exceptionStack();
-		}
-		#else
-		CallStack.exceptionStack();
-		#end
+			#end
+		var MAX_CALLSTACK = 32; // must limit, maybe macro will stack overflow on parsing jsonized java call stack info (which is HUGE)
+		callStack.splice(MAX_CALLSTACK, callStack.length); 
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Error(message, PicoTestCallInfo.fromCallStack(callStack));
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);

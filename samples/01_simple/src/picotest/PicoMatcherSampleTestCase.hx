@@ -14,6 +14,7 @@ class PicoMatcherSampleTestCase {
 		assertMatch(1.0, 1);
 		assertMatch(Math.NaN, Math.NaN);
 		assertMatch(true, true);
+		assertMatch("a", "a");
 		assertMatch(TestEnum.Default, TestEnum.Default);
 		assertMatch(TestEnum.Some(1), TestEnum.Some(1));
 		assertMatch([1, 2], [1, 2]);
@@ -57,6 +58,9 @@ class PicoMatcherSampleTestCase {
 		assertMatch(true, false);
 		assertMatch(true, null);
 		assertMatch(null, false);
+		assertMatch("a", "b");
+		assertMatch("a", null);
+		assertMatch(null, "b");
 		assertMatch(TestEnum.Default, TestEnum.Another);
 		assertMatch(TestEnum.Default, null);
 		assertMatch(null, TestEnum.Another);

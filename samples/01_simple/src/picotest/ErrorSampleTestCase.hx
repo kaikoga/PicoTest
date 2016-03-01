@@ -7,7 +7,7 @@ import flash.errors.Error;
 import picotest.PicoAssert.*;
 
 /**
-	Example which makes basic assertions.
+	Example which involves error handlings.
 */
 class ErrorSampleTestCase {
 

@@ -6,5 +6,6 @@
 --macro picotest.PicoTest.warn()
 -swf bin/test.swf
 -D fdb
+-D picotest_safemode
 -D picotest_fp="Flash Player Debugger"
 -D picotest_flog=~/Library/Preferences/Macromedia/Flash\ Player/Logs/flashlog.txt

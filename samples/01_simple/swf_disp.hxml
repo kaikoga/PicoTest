@@ -5,3 +5,4 @@
 -main picotest.SampleTest
 -D fdb
 -swf bin/test.swf
+-D picotest_safemode

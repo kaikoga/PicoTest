@@ -40,47 +40,47 @@ class PicoMatcher {
 					return match;
 			}
 		}
-		return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+		return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 	}
 
 	public static function matchNull(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (expected == null || actual == null) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 		}
 		return MatchResult.Unknown;
 	}
 
 	public static function matchInt(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Std.is(expected, Int) && Std.is(actual, Int)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 		}
 		return MatchResult.Unknown;
 	}
 
 	public static function matchFloat(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Std.is(expected, Float) && Std.is(actual, Float)) {
-			return (expected == actual || (Math.isNaN(expected) && Math.isNaN(actual))) ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return (expected == actual || (Math.isNaN(expected) && Math.isNaN(actual))) ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 		}
 		return MatchResult.Unknown;
 	}
 
 	public static function matchBool(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Std.is(expected, Bool) && Std.is(actual, Bool)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 		}
 		return MatchResult.Unknown;
 	}
 
 	public static function matchString(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Std.is(expected, String) && Std.is(actual, String)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 		}
 		return MatchResult.Unknown;
 	}
 
 	public static function matchEnum(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
 		if (Reflect.isEnumValue(expected) && Reflect.isEnumValue(actual)) {
-			return Type.enumEq(expected, actual) ? MatchResult.Match : MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+			return Type.enumEq(expected, actual) ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 		}
 		return MatchResult.Unknown;
 	}
@@ -92,7 +92,7 @@ class PicoMatcher {
 			if (expected == e && actual == a) {
 				return MatchResult.Match;
 			} else if (expected == e || actual == a) {
-				return MatchResult.Mismatch(Std.string(expected), Std.string(actual));
+				return MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
 			}
 		}
 		matched.push([expected, actual]);
