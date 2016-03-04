@@ -5,3 +5,4 @@
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
 -D picotest_safemode
+-D picotest_show_stack

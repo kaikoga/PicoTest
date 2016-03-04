@@ -6,5 +6,6 @@
 --macro picotest.PicoTest.warn()
 -cs bin/cs
 -D picotest_safemode
+-D picotest_show_stack
 -D picotest_nodep
 -D picotest_thread

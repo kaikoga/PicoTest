@@ -6,3 +6,4 @@
 --macro picotest.PicoTest.warn()
 -php bin/php
 -D picotest_safemode
+-D picotest_show_stack

@@ -203,8 +203,11 @@ class PicoTestRunner {
 			#else
 			CallStack.exceptionStack();
 			#end
-		var MAX_CALLSTACK = 32; // must limit, maybe macro will stack overflow on parsing jsonized java call stack info (which is HUGE)
-		callStack.splice(MAX_CALLSTACK, callStack.length); 
+		var LIMIT_CALLSTACK:Int = 16; // must limit, maybe macro will stack overflow on parsing jsonized java call stack info (which is HUGE)
+		if (callStack.length > LIMIT_CALLSTACK * 2) {
+			callStack = callStack.slice(0, LIMIT_CALLSTACK).concat(callStack.slice(callStack.length - LIMIT_CALLSTACK));
+			callStack.insert(LIMIT_CALLSTACK, StackItem.Module("<stack info truncated>"));
+		}
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Error(message, PicoTestCallInfo.fromCallStack(callStack));
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);

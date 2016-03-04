@@ -48,18 +48,30 @@ class WarnReporter implements IPicoTestReporter {
 
 	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo, printOrigin:Bool = false):Void {
 		printWarn(message, result, callInfo);
-
-		var testRoot:PicoTestCallInfo = callInfo;
-		while (testRoot != null) {
-			switch (testRoot.callType) {
-				case PicoTestCallType.Method(className, methodName):
-					if (className == result.className && methodName == result.methodName) break;
-				case _:
-			}
-			testRoot = testRoot.from;
+		switch (callInfo.callType) {
+			case PicoTestCallType.Method(className, methodName)
+			if (className == result.className && methodName == result.methodName):
+				return;
+			case _:
 		}
-		if (testRoot == null) testRoot = PicoTestCallInfo.fromReflect(result.className, result.methodName);
-		if (testRoot != callInfo) printWarn('(from this test case)', result, testRoot);
+
+		var stack:PicoTestCallInfo = callInfo.from;
+		while (stack != null) {
+			switch (stack.callType) {
+				case PicoTestCallType.Method(className, methodName)
+				if (className == result.className && methodName == result.methodName):
+					printWarn('(from this test case)', result, stack);
+					return;
+				case _:
+					#if picotest_show_stack
+					printWarn('(from here)', result, stack);
+					#end
+			}
+			stack = stack.from;
+		}
+
+		var imaginaryRoot:PicoTestCallInfo = PicoTestCallInfo.fromReflect(result.className, result.methodName);
+		printWarn('(from this test case)', result, imaginaryRoot);
 	}
 
 	private function printWarn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo):Void {

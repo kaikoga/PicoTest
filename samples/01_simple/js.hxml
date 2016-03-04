@@ -7,3 +7,4 @@
 -js bin/test.js
 -D source-map-content
 -D picotest_safemode
+-D picotest_show_stack

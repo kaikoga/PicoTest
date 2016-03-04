@@ -6,3 +6,4 @@
 -D fdb
 -swf bin/test.swf
 -D picotest_safemode
+-D picotest_show_stack
