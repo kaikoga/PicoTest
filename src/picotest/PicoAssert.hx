@@ -94,6 +94,24 @@ class PicoAssert {
 	}
 
 	/**
+		Assert that `expected` and `actual` equals each other in Haxe standard equality.
+	**/
+	public static function assertNull<T>(actual:T, message:String = null, ?p:PosInfos):Void {
+		if (message == null) message = 'Expected null but was ${string(actual)}';
+		if (actual == null) PicoTest.currentRunner.success();
+		else PicoTest.currentRunner.failure(message, p);
+	}
+
+	/**
+		Assert that `expected` and `actual` does not equal each other in Haxe standard equality.
+	**/
+	public static function assertNotNull<T>(actual:T, message:String = null, ?p:PosInfos):Void {
+		if (message == null) message = 'Expected not null but was ${string(actual)}';
+		if (actual != null) PicoTest.currentRunner.success();
+		else PicoTest.currentRunner.failure(message, p);
+	}
+
+	/**
 		Assert that given `func` throws an error, which could be target of further assertions in `checkSuccess`.
 	**/
 	public static function assertThrows(func:Void->Void, ?checkSuccess:Dynamic->Void, ?p:PosInfos):Void {

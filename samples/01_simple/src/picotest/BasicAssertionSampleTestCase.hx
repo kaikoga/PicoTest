@@ -63,4 +63,24 @@ class BasicAssertionSampleTestCase {
 		assertNotEquals(TestEnum.Some(1), TestEnum.Some(1));
 	}
 
+	public function testAssertNull() {
+		assertNull(null);
+		assertNull([][0]);
+	}
+
+	public function testAssertNullFail() {
+		assertNull("");
+		assertNull([""][0]);
+	}
+
+	public function testAssertNotNull() {
+		assertNotNull("");
+		assertNotNull([""][0]);
+	}
+
+	public function testAssertNotNullFail() {
+		assertNotNull(null);
+		assertNotNull([][0]);
+	}
+
 }
