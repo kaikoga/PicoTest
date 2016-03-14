@@ -18,8 +18,22 @@ import org.hamcrest.MatcherAssert;
 class PicoAssert {
 
 	public static function string<T>(d:Dynamic, other:Dynamic = null):String {
+		var result:String =
 		#if picotest_safemode
-		var result:String = 
+		safeString(d);
+		#else
+		try {
+			if (Std.is(d, String)) '"$d"' else '$d';
+		} catch (x:Dynamic) {
+			safeString(x);
+		}
+		#end
+		if (other != null && d != other && result == string(other)) return 'another $result';
+		return result;
+	}
+
+	inline private static function safeString<T>(d:Dynamic):String {
+		var result:String =
 		if (d == null) '$null';
 		else if (Std.is(d, String)) '"$d"'
 		else if (Std.is(d, Float)) '$d'
@@ -30,11 +44,7 @@ class PicoAssert {
 			if (className != null) '[object $className]'
 			else '{anon}';
 		}
-		if (other != null && d != other && result == string(other)) return 'another $result';
 		return result;
-		#else
-		return if (Std.is(d, String)) '"$d"' else '$d';
-		#end
 	}
 
 	/**

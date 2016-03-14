@@ -37,6 +37,22 @@ class ErrorSampleTestCase {
 		throw "some error";
 	}
 
+	public function testToStringThrowsNull() {
+		assertNotNull(new ObjectToStringThrowsNull());
+	}
+
+	public function testToStringThrowsNullFail() {
+		assertNull(new ObjectToStringThrowsNull());
+	}
+
+	public function testToStringThrowsSelf() {
+		assertNotNull(new ObjectToStringThrowsSelf());
+	}
+
+	public function testToStringThrowsSelfFail() {
+		assertNull(new ObjectToStringThrowsSelf());
+	}
+
 	public function testEmpty() {
 	}
 
@@ -59,4 +75,16 @@ class ErrorSampleTestCase {
 		throw "some internal error";
 	}
 
+}
+
+class ObjectToStringThrowsNull {
+	public function new() {}
+
+	public function toString():String throw null;
+}
+
+class ObjectToStringThrowsSelf {
+	public function new() {}
+
+	public function toString():String throw this;
 }
