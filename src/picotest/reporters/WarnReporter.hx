@@ -32,7 +32,9 @@ class WarnReporter implements IPicoTestReporter {
 						warn('[Error] ${message}', result, callInfo, true);
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
+					#if picotest_showignore
 						warn('[Ignore] ${message}', result, callInfo);
+					#end
 					case PicoTestAssertResult.Invalid(message,callInfo):
 						warn('[Invalid] ${message}', result, callInfo);
 				}

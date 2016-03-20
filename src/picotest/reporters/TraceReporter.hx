@@ -32,7 +32,9 @@ class TraceReporter implements IPicoTestReporter {
 								resultText.push('${callInfo.print()}${result.printParameters()}: [Trace] ${line}');
 							}
 						case PicoTestAssertResult.Ignore(message, callInfo):
+							#if picotest_showignore
 							resultText.push('${callInfo.print()}${result.printParameters()}: [Ignore] ${message}');
+							#end
 						case PicoTestAssertResult.Invalid(message, callInfo):
 							resultText.push('${callInfo.print()}${result.printParameters()}: [Invalid] ${message}');
 					}
