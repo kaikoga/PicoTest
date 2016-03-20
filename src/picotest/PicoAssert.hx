@@ -25,7 +25,7 @@ class PicoAssert {
 		try {
 			if (Std.is(d, String)) '"$d"' else '$d';
 		} catch (x:Dynamic) {
-			safeString(x);
+			'(throws ${safeString(x)})';
 		}
 		#end
 		if (other != null && d != other && result == string(other)) return 'another $result';
