@@ -12,7 +12,7 @@ class SampleTest {
 	public static var FORCE_MALICIOUS:Bool = false;
 
 	public function new() {
-		#if !picotest_safemode
+		#if !picotest_safe_mode
 		// these tests could only be safely handled in safe mode, will do all bad things otherwise
 		// (eating all your memory in neko, for example)
 		EXOTIC = FORCE_EXOTIC;

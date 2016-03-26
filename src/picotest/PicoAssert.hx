@@ -19,7 +19,7 @@ class PicoAssert {
 
 	public static function string<T>(d:Dynamic, other:Dynamic = null):String {
 		var result:String =
-		#if picotest_safemode
+		#if picotest_safe_mode
 		safeString(d);
 		#else
 		try {

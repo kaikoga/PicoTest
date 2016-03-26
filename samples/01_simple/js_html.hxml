@@ -7,5 +7,5 @@
 --macro picotest.PicoTest.warn()
 -js bin/test.js
 -D source-map-content
--D picotest_safemode
+-D picotest_safe_mode
 -D picotest_show_stack

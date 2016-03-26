@@ -5,7 +5,7 @@
 -main picotest.SampleTest
 --macro picotest.PicoTest.warn()
 -java bin/java
--D picotest_safemode
+-D picotest_safe_mode
 -D picotest_show_stack
 -D picotest_nodep
 -D picotest_thread
