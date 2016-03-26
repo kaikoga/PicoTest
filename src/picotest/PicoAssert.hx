@@ -40,8 +40,8 @@ class PicoAssert {
 		else if (Std.is(d, Int)) '$d'
 		else if (Std.is(d, Bool)) '$d'
 		else {
-			var className:Class<T> = Type.getClass(d);
-			if (className != null) '[object $className]'
+			var klass:Class<T> = Type.getClass(d);
+			if (klass != null) '[object ${Type.getClassName(klass)}]'
 			else '{anon}';
 		}
 		return result;
