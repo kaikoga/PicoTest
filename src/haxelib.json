@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross", "utility","unittest","testing"],
   "description": "A very versatile unit testing framework",
-  "version": "0.7.3",
-  "releasenote": "introducing picotest_showignore",
+  "version": "0.7.4",
+  "releasenote": "bugfix",
   "contributors": ["kaikoga"],
   "dependencies": {
     "hamcrest": ""

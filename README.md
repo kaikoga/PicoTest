@@ -154,11 +154,11 @@ Add ```--macro picotest.use.JsBrowserSpawner.toSpawn()``` to run JavaScript test
 
 ##Cross
 
-- ```-D picotest_safemode``` treats test target objects "dangerous",
+- ```-D picotest_safe_mode``` treats test target objects "dangerous",
 and avoid calling methods of test object (like ```toString()```) to prevent infinite loops (Yes, they will happen! see [https://github.com/HaxeFoundation/haxe/issues/4398](https://github.com/HaxeFoundation/haxe/issues/4398)).
 As a downside, test output will likely lose some readablility.
-- ```-D picotest_showstack``` Prints more call stack info. Will be truncated if too long
-- ```-D picotest_showignore``` Also prints ignored tests.
+- ```-D picotest_show_stack``` Prints more call stack info. Will be truncated if too long
+- ```-D picotest_show_ignore``` Also prints ignored tests.
 - ```-D picotest_nodep``` Remove hamcrest supports
 - ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
 - ```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)
@@ -184,14 +184,17 @@ As a downside, test output will likely lose some readablility.
 
 #Release Notes
 
+- Version 0.7.4
+  - ```-D picotest_``` flags are properly snake_cased
+  - small bugfixes
 - Version 0.7.3
-  - introducing ```-D picotest_safemode```
+  - introducing ```-D picotest_safe_mode```
   - handling when ```toString()``` throws
 - Version 0.7.2
   - introducing ```assertNull() and assertNotNull()```
-  - prints more call stack info if ```-D picotest_showstack```
+  - prints more call stack info if ```-D picotest_show_stack```
 - Version 0.7.1
-  - introducing ```-D picotest_safemode```
+  - introducing ```-D picotest_safe_mode```
 - Version 0.7.0
   - Show output progress
   - output progress format changed
