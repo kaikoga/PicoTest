@@ -40,7 +40,7 @@ class PicoTestTriggeredTestTask extends PicoTestTestTask {
 					runner.prepend(this);
 				case PicoTestTriggeredTestTaskState.Called:
 					this.state = PicoTestTriggeredTestTaskState.Twice(p);
-				case PicoTestTriggeredTestTaskState.Twice:
+				case PicoTestTriggeredTestTaskState.Twice(_):
 				case PicoTestTriggeredTestTaskState.Timeout:
 					this.state = PicoTestTriggeredTestTaskState.TooLate(p);
 				case PicoTestTriggeredTestTaskState.TooLate(_):
@@ -52,7 +52,7 @@ class PicoTestTriggeredTestTask extends PicoTestTestTask {
 		if (timeoutFunc == null) {
 			this.timeoutFunc = function():Void { PicoAssert.fail("Callback reached timeout", p); };
 		}
-		
+
 		return function():Void {
 			switch (this.state) {
 				case PicoTestTriggeredTestTaskState.Initial(_):
