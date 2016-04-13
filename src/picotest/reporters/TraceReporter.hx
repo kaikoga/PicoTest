@@ -28,9 +28,11 @@ class TraceReporter implements IPicoTestReporter {
 						case PicoTestAssertResult.Error(message, callInfo):
 							resultText.push('${callInfo.print()}${result.printParameters()}: [Error] ${message}');
 						case PicoTestAssertResult.Trace(message, callInfo):
+							#if picotest_show_trace
 							for (line in message.split("\n")) {
 								resultText.push('${callInfo.print()}${result.printParameters()}: [Trace] ${line}');
 							}
+							#end
 						case PicoTestAssertResult.Ignore(message, callInfo):
 							#if picotest_show_ignore
 							resultText.push('${callInfo.print()}${result.printParameters()}: [Ignore] ${message}');

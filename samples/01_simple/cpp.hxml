@@ -7,4 +7,6 @@
 -cpp bin/cpp
 -D picotest_safe_mode
 -D picotest_show_stack
+-D picotest_show_ignore
+-D picotest_show_trace
 -D picotest_thread

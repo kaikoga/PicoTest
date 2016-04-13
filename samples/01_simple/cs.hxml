@@ -7,5 +7,7 @@
 -cs bin/cs
 -D picotest_safe_mode
 -D picotest_show_stack
+-D picotest_show_ignore
+-D picotest_show_trace
 -D picotest_nodep
 -D picotest_thread

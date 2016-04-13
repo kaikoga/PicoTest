@@ -159,6 +159,7 @@ and avoid calling methods of test object (like ```toString()```) to prevent infi
 As a downside, test output will likely lose some readablility.
 - ```-D picotest_show_stack``` Prints more call stack info. Will be truncated if too long
 - ```-D picotest_show_ignore``` Also prints ignored tests.
+- ```-D picotest_show_trace``` Also prints trace() calls.
 - ```-D picotest_nodep``` Remove hamcrest supports
 - ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
 - ```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)
@@ -184,6 +185,8 @@ As a downside, test output will likely lose some readablility.
 
 #Release Notes
 
+- Version 0.7.5
+  - introducing ```-D picotest_show_trace```
 - Version 0.7.4
   - ```-D picotest_``` flags are properly snake_cased
   - small bugfixes

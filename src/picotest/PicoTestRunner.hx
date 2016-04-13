@@ -183,7 +183,7 @@ class PicoTestRunner {
 	}
 
 	@:noDoc
-	public function failure(message:String = null, p:PosInfos):Void {
+	public function failure(message:String = null, ?p:PosInfos):Void {
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Failure(message, PicoTestCallInfo.fromPosInfos(p));
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
@@ -214,7 +214,7 @@ class PicoTestRunner {
 	}
 
 	@:noDoc
-	public function trace(v:Dynamic = null, p:PosInfos):Void {
+	public function trace(v:Dynamic = null, ?p:PosInfos):Void {
 		var message:String = Std.string(v);
 		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Trace(message, PicoTestCallInfo.fromPosInfos(p));
 		currentTaskResult.assertResults.push(assertResult);

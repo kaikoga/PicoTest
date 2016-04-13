@@ -8,5 +8,7 @@
 -D fdb
 -D picotest_safe_mode
 -D picotest_show_stack
+-D picotest_show_ignore
+-D picotest_show_trace
 -D picotest_fp="Flash Player Debugger"
 -D picotest_flog=~/Library/Preferences/Macromedia/Flash\ Player/Logs/flashlog.txt
