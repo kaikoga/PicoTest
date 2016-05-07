@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["cross", "utility","unittest","testing"],
   "description": "A very versatile unit testing framework",
-  "version": "0.7.5",
-  "releasenote": "introducing picotest_show_trace",
+  "version": "0.7.6",
+  "releasenote": "suppress file not found warnings",
   "contributors": ["kaikoga"],
   "dependencies": {
     "hamcrest": ""

@@ -111,6 +111,17 @@ class WarnReporter implements IPicoTestReporter {
 		return {min:min, max:max};
 	}
 
+	private var notFoundFileNames:Array<String> = [];
+	private function fileNotFoundWarning(fileName:String):Void {
+		if (notFoundFileNames.indexOf(fileName) >= 0) return;
+		notFoundFileNames.push(fileName);
+		if (notFoundFileNames.length == 0) {
+			PicoTest.stdout('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
+		} else {
+			PicoTest.stdout('($fileName: file not found in classpaths)\n');
+		}
+	}
+
 	private function callPositionToPosition(callPos:PicoTestCallPosition):Position {
 		#if macro
 		var file:String = "";
@@ -128,7 +139,7 @@ class WarnReporter implements IPicoTestReporter {
 					callPos = PicoTestCallPosition.Absolute(file, lineNumber);
 				} catch (d:Dynamic) {
 					file = "";
-					Context.warning('(File [$fileName] not found in classpaths ${Context.getClassPath()})', Context.makePosition({ file : fileName, min : 0, max : 0 }));
+					fileNotFoundWarning(fileName);
 				}
 			case PicoTestCallPosition.Absolute(fileName, lineNumber):
 				file = fileName;
@@ -141,7 +152,7 @@ class WarnReporter implements IPicoTestReporter {
 			case PicoTestCallPosition.Unavailable:
 				return Context.makePosition({ file : "_", min : 0, max : 0 });
 			case PicoTestCallPosition.ClassPath(fileName, lineNumber):
-				PicoTest.stdout('$fileName: file not found in classpaths ${Context.getClassPath()}\n');
+				fileNotFoundWarning(fileName);
 				return Context.makePosition({ file : fileName, min : 0, max : 0 });
 			case PicoTestCallPosition.Absolute(fileName, lineNumber):
 				return Context.makePosition({
