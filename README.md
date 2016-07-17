@@ -185,6 +185,8 @@ As a downside, test output will likely lose some readablility.
 
 #Release Notes
 
+- Version 0.7.7
+  - made a lot faster
 - Version 0.7.6
   - suppress file not found warnings
 - Version 0.7.5

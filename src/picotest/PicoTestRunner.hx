@@ -122,9 +122,12 @@ class PicoTestRunner {
 	public function resume():Bool {
 		if (this.completed) return false;
 
-		if (this.tasks.length > 0) {
+		var endStamp:Float = haxe.Timer.stamp() + 0.01;
+		do {
+			if (this.tasks.length == 0) break;
 			this.runTask(this.tasks.shift());
-		}
+		} while (endStamp > haxe.Timer.stamp());
+
 		if (this.tasks.length > 0) {
 			return true;
 		}
