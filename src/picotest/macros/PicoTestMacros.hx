@@ -43,10 +43,10 @@ class PicoTestMacros {
 	private static function set_spawner(value:TestSpawner):TestSpawner {
 		spawner = value;
 		if (spawner.forceRemote) {
-			Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE);
+			Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE, "1");
 		}
 		return value;
-	} 
+	}
 
 	private static var _testTarget:TestTarget = null;
 	private static var testTarget(get, never):TestTarget;
@@ -83,38 +83,28 @@ class PicoTestMacros {
 		runner.run();
 	}
 
-	private static function guessLimeSpawner():TestSpawner {
-		switch (testTarget) {
-			case TestTarget.Flash:
-				return new LimeFlashSpawner();
-			case TestTarget.Js:
-				return new LimeJsBrowserSpawner('html5');
-			case TestTarget.Neko:
-				return new LimeSpawner('neko');
-			case TestTarget.Cpp:
-				return new LimeSpawner(Sys.systemName().toLowerCase());
-			default:
-				return null;
-		}
-
-	}
-
-	private static function guessHaxeSpawner():TestSpawner {
+	private static function guessSpawner():TestSpawner {
 		var spawnerType:Array<String> = [testTarget.toString(), null];
-		switch (testTarget) {
-			case TestTarget.Flash:
-				spawnerType[1] = "sa";
-			case TestTarget.Neko:
-			case TestTarget.Js:
-				spawnerType[1] = "node";
-			case TestTarget.Php:
-			case TestTarget.Cpp:
-			case TestTarget.Java:
-			case TestTarget.Cs:
-				if (Sys.systemName() != "Windows") spawnerType[1] = "mono";
-			case TestTarget.Python:
-			default:
-				throw 'target ${testTarget.toString()} not supported';
+		if (spawnerType[1] == null) {
+			if (Context.defined("lime")) {
+				spawnerType[1] = "lime";
+			} else {
+				switch (testTarget) {
+					case TestTarget.Flash:
+						spawnerType[1] = "sa";
+					case TestTarget.Neko:
+					case TestTarget.Js:
+						spawnerType[1] = "node";
+					case TestTarget.Php:
+					case TestTarget.Cpp:
+					case TestTarget.Java:
+					case TestTarget.Cs:
+						if (Sys.systemName() != "Windows") spawnerType[1] = "mono";
+					case TestTarget.Python:
+					default:
+						throw 'target ${testTarget.toString()} not supported';
+				}
+			}
 		}
 
 
@@ -124,6 +114,14 @@ class PicoTestMacros {
 		var bin:String = Compiler.getOutput();
 
 		switch (spawnerType) {
+			case ["flash", "lime"]:
+				return new LimeFlashSpawner();
+			case ["js", "lime"]:
+				return new LimeJsBrowserSpawner('html5');
+			case ["neko", "lime"]:
+				return new LimeSpawner('neko');
+			case ["cpp", "lime"]:
+				return new LimeSpawner(Sys.systemName().toLowerCase());
 			case ["flash", _]:
 				return new FlashStandaloneSpawner();
 			case ["neko", _]:
@@ -145,11 +143,6 @@ class PicoTestMacros {
 			default:
 				return null;
 		}
-	}
-
-	private static function guessSpawner():TestSpawner {
-		if (Context.defined("lime")) return guessLimeSpawner();
-		return guessHaxeSpawner();
 	}
 
 	private static var _lineNum:Int = 1;
