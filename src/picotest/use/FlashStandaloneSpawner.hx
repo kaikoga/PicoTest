@@ -4,8 +4,6 @@ package picotest.use;
 
 import picotest.use.common.PicoTestExternalCommand;
 import picotest.use.common.TestSpawner;
-import picotest.macros.PicoTestMacros;
-import haxe.macro.Compiler;
 
 class FlashStandaloneSpawner extends TestSpawner {
 
@@ -16,12 +14,6 @@ class FlashStandaloneSpawner extends TestSpawner {
 	override public function execute():Void {
 		PicoTestExternalCommand.open(flashPlayer(), bin(), true).execute();
 		new PicoTestExternalCommand('cp', [flashLog(), reportFile()]).execute();
-	}
-
-	public static function toSpawn():FlashStandaloneSpawner {
-		var spawner:FlashStandaloneSpawner = new FlashStandaloneSpawner(); 
-		PicoTestMacros.spawner = spawner;
-		return spawner;
 	}
 }
 

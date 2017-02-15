@@ -1,6 +1,7 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
+import picotest.use.JsBrowserSpawner;
 import picotest.readers.PicoTestResultReader;
 import picotest.use.LimeFlashSpawner;
 import picotest.use.LimeJsBrowserSpawner;
@@ -60,14 +61,14 @@ class PicoTestMacros {
 		return _testTarget;
 	}
 
-	public static function setup():Void {
+	public static function setup(spawnerVariant:String = null):Void {
 		Compiler.define(PICOTEST_REPORT, PICOTEST_REPORT_JSON);
-		if (spawner == null) spawner = guessSpawner();
+		if (spawner == null) spawner = guessSpawner(spawnerVariant);
 		if (spawner.forceRemote) Compiler.define(PICOTEST_REPORT_REMOTE, "1");
 	}
 
-	public static function warn():Void {
-		setup();
+	public static function warn(spawnerVariant:String = null):Void {
+		setup(spawnerVariant);
 		Context.onAfterGenerate(runTests);
 	}
 
@@ -83,23 +84,22 @@ class PicoTestMacros {
 		runner.run();
 	}
 
-	private static function guessSpawner():TestSpawner {
-		var spawnerType:Array<String> = [testTarget.toString(), null];
-		if (spawnerType[1] == null) {
+	private static function guessSpawner(spawnerVariant:String = null):TestSpawner {
+		if (spawnerVariant == null) {
 			if (Context.defined("lime")) {
-				spawnerType[1] = "lime";
+				spawnerVariant = "lime";
 			} else {
 				switch (testTarget) {
 					case TestTarget.Flash:
-						spawnerType[1] = "sa";
+						spawnerVariant = "sa";
 					case TestTarget.Neko:
 					case TestTarget.Js:
-						spawnerType[1] = "node";
+						spawnerVariant = "node";
 					case TestTarget.Php:
 					case TestTarget.Cpp:
 					case TestTarget.Java:
 					case TestTarget.Cs:
-						if (Sys.systemName() != "Windows") spawnerType[1] = "mono";
+						if (Sys.systemName() != "Windows") spawnerVariant = "mono";
 					case TestTarget.Python:
 					default:
 						throw 'target ${testTarget.toString()} not supported';
@@ -107,13 +107,7 @@ class PicoTestMacros {
 			}
 		}
 
-
-		var args:Array<String> = Sys.args();
-		var main:String = args[args.indexOf("-main") + 1];
-		var mainClass:String = main.split(".").pop();
-		var bin:String = Compiler.getOutput();
-
-		switch (spawnerType) {
+		switch [testTarget.toString(), spawnerVariant] {
 			case ["flash", "lime"]:
 				return new LimeFlashSpawner();
 			case ["js", "lime"]:
@@ -126,6 +120,8 @@ class PicoTestMacros {
 				return new FlashStandaloneSpawner();
 			case ["neko", _]:
 				return new NekoSpawner();
+			case ["js", "browser"]:
+				return new JsBrowserSpawner();
 			case ["js", "node"]:
 				return new JsNodeSpawner();
 			case ["php", _]:
@@ -141,7 +137,7 @@ class PicoTestMacros {
 			case ["python", _]:
 				return new PythonSpawner();
 			default:
-				return null;
+				throw 'spawner ${spawnerVariant} not found for target ${testTarget.toString()}';
 		}
 	}
 

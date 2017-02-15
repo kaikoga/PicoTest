@@ -4,7 +4,6 @@ package picotest.use;
 
 import picotest.use.common.PicoTestExternalCommand;
 import picotest.use.common.TestSpawner;
-import picotest.macros.PicoTestMacros;
 
 class LimeFlashSpawner extends TestSpawner {
 
@@ -15,12 +14,6 @@ class LimeFlashSpawner extends TestSpawner {
 	override public function execute():Void {
 		new PicoTestExternalCommand('lime', ['run', 'flash']).execute();
 		new PicoTestExternalCommand('cp', [flashLog(), reportFile()]).execute();
-	}
-
-	public static function toSpawn():LimeFlashSpawner {
-		var spawner:LimeFlashSpawner = new LimeFlashSpawner(); 
-		PicoTestMacros.spawner = spawner;
-		return spawner;
 	}
 }
 

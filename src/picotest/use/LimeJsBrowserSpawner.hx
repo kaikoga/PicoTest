@@ -3,8 +3,6 @@ package picotest.use;
 #if (macro || macro_doc_gen)
 
 import picotest.use.common.TestSpawner;
-import haxe.macro.Compiler;
-import picotest.macros.PicoTestMacros;
 
 class LimeJsBrowserSpawner extends TestSpawner {
 
@@ -34,12 +32,6 @@ class LimeJsBrowserSpawner extends TestSpawner {
 			reportFile: reportFile()
 		});
 
-	}
-
-	public static function toSpawn(limeTarget:String):LimeJsBrowserSpawner {
-		var spawner:LimeJsBrowserSpawner = new LimeJsBrowserSpawner(limeTarget); 
-		PicoTestMacros.spawner = spawner;
-		return spawner;
 	}
 }
 

@@ -3,7 +3,7 @@
 -lib hamcrest
 -debug
 -main picotest.SampleTest
---macro picotest.PicoTest.warn()
+--macro picotest.PicoTest.warn("node")
 -js bin/test.js
 -D source-map-content
 -D picotest_safe_mode

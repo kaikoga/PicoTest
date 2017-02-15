@@ -61,16 +61,18 @@ class PicoTest {
 	#if (macro || macro_doc_gen)
 	/**
 		Run tests after compile and emits result as compiler warnings.
+		How to run tests is defined with spawnerVariant argument.
 	**/
-	public static function warn():Void {
-		PicoTestMacros.warn();
+	public static function warn(spawnerVariant:String = null):Void {
+		PicoTestMacros.warn(spawnerVariant);
 	}
 
 	/**
 		Build tests for executing in runTests().
+		How to run tests is defined with spawnerVariant argument.
 	**/
-	public static function setup():Void {
-		PicoTestMacros.setup();
+	public static function setup(spawnerVariant:String = null):Void {
+		PicoTestMacros.setup(spawnerVariant);
 	}
 
 	/**

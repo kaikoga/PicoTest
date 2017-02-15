@@ -4,8 +4,6 @@ package picotest.use;
 
 import picotest.use.common.PicoTestExternalCommandHelper;
 import picotest.use.common.TestSpawner;
-import haxe.macro.Compiler;
-import picotest.macros.PicoTestMacros;
 import haxe.io.Bytes;
 
 class JsBrowserSpawner extends TestSpawner {
@@ -45,13 +43,6 @@ class JsBrowserSpawner extends TestSpawner {
 			reportFile: reportFile()
 		});
 	}
-
-	public static function toSpawn():JsBrowserSpawner {
-		var spawner:JsBrowserSpawner = new JsBrowserSpawner();
-		PicoTestMacros.spawner = spawner;
-		return spawner;
-	}
-
 }
 
 #end
