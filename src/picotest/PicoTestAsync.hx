@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.result.PicoTestResult;
 import picotest.tasks.PicoTestDelayedTask;
 import picotest.tasks.PicoTestTriggeredTestTask;
 import picotest.tasks.PicoTestDelayedTestTask;
@@ -14,8 +15,8 @@ import haxe.Timer;
 	Static class containing async testing tools for PicoTest.
 	Note that in some platform settings calls to these methods will actually fail.
 
-	- On non-sys platforms (flash and js) and java, async callback is handled using standard `haxe.Timer.delay()`. 
-	- On sys platforms, if compiled with `-D picotest-thread`, async callback is handled internally using PicoTest task system. 
+	- On non-sys platforms (flash and js) and java, async callback is handled using standard `haxe.Timer.delay()`.
+	- On sys platforms, if compiled with `-D picotest-thread`, async callback is handled internally using PicoTest task system.
 	- Otherwise, attempts to create async callbacks will produce failure.
 **/
 class PicoTestAsync {

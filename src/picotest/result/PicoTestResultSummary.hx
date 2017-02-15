@@ -1,6 +1,4 @@
-package picotest;
-
-import picotest.PicoTestAssertResult;
+package picotest.result;
 
 class PicoTestResultSummary {
 

@@ -1,6 +1,7 @@
 package picotest.tasks;
 
 import haxe.ds.Option;
+import picotest.result.PicoTestResult;
 
 interface IPicoTestTask {
 	var result(get, never):Option<PicoTestResult>;

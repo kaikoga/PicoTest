@@ -1,5 +1,11 @@
 package picotest.reporters;
 
+import picotest.result.PicoTestAssertResult;
+import picotest.result.PicoTestCallInfo;
+import picotest.result.PicoTestResult;
+import picotest.result.PicoTestResultMark;
+import picotest.result.PicoTestResultSummary;
+
 class TraceReporter implements IPicoTestReporter {
 
 	public function new():Void {

@@ -2,6 +2,7 @@ package picotest.readers;
 
 import haxe.Json;
 import picotest.reporters.JsonReporter;
+import picotest.result.PicoTestResult;
 
 class PicoTestResultReader {
 

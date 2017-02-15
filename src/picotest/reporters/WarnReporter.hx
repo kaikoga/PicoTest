@@ -1,10 +1,13 @@
 package picotest.reporters;
 
-import picotest.PicoTestCallInfo;
-import picotest.PicoTestAssertResult;
-import picotest.PicoTestCallInfo.PicoTestCallPosition;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+import picotest.result.PicoTestAssertResult;
+import picotest.result.PicoTestCallInfo;
+import picotest.result.PicoTestCallInfo.PicoTestCallPosition;
+import picotest.result.PicoTestResult;
+import picotest.result.PicoTestResultMark;
+import picotest.result.PicoTestResultSummary;
 
 #if macro
 import sys.io.File;

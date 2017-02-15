@@ -1,4 +1,4 @@
-package picotest;
+package picotest.result;
 
 /**
 	Assertion result of PicoTest.

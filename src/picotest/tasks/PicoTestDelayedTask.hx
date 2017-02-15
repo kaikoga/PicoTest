@@ -1,7 +1,6 @@
 package picotest.tasks;
 
 import haxe.Timer;
-import haxe.ds.Option;
 
 class PicoTestDelayedTask extends PicoTestTask {
 

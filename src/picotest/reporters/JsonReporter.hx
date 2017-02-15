@@ -1,8 +1,9 @@
 package picotest.reporters;
 
-import picotest.PicoTestCallInfo;
 import haxe.Json;
-import picotest.PicoTestAssertResult;
+import picotest.result.PicoTestAssertResult;
+import picotest.result.PicoTestCallInfo;
+import picotest.result.PicoTestResult;
 
 class JsonReporter implements IPicoTestReporter {
 

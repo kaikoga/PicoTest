@@ -1,6 +1,7 @@
 package picotest.tasks;
 
 import haxe.PosInfos;
+import picotest.result.PicoTestResult;
 
 @:access(picotest.PicoTestRunner.runTask)
 class PicoTestTriggeredTestTask extends PicoTestTestTask {

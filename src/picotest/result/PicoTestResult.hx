@@ -1,7 +1,6 @@
-package picotest;
+package picotest.result;
 
 import picotest.tasks.IPicoTestTask;
-import picotest.PicoTestAssertResult;
 
 /**
 	Test method result of PicoTest.

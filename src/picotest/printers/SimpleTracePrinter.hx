@@ -1,5 +1,8 @@
 package picotest.printers;
 
+import picotest.result.PicoTestAssertResult;
+import picotest.result.PicoTestResult;
+
 class SimpleTracePrinter implements IPicoTestPrinter {
 
 	public function new():Void {

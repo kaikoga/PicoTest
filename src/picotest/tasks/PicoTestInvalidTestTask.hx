@@ -1,6 +1,7 @@
 package picotest.tasks;
 
 import haxe.ds.Option;
+import picotest.result.PicoTestResult;
 
 class PicoTestInvalidTestTask implements IPicoTestTask {
 
