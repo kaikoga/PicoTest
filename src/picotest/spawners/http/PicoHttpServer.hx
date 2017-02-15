@@ -1,11 +1,11 @@
-package picotest.use.http;
+package picotest.spawners.http;
 
 import sys.io.File;
 import sys.FileSystem;
 import sys.net.Host;
 import sys.net.Socket;
 import haxe.io.Bytes;
-import picotest.use.http.PicoHttpServer.PicoHttpRequest;
+import picotest.spawners.http.PicoHttpServer.PicoHttpRequest;
 import haxe.io.Input;
 
 #if sys

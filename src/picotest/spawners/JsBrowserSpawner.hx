@@ -1,9 +1,9 @@
-package picotest.use;
+package picotest.spawners;
 
 #if (macro || macro_doc_gen)
 
-import picotest.use.common.PicoTestExternalCommandHelper;
-import picotest.use.common.TestSpawner;
+import picotest.spawners.common.PicoTestExternalCommandHelper;
+import picotest.spawners.common.TestSpawner;
 import haxe.io.Bytes;
 
 class JsBrowserSpawner extends TestSpawner {
@@ -34,7 +34,7 @@ class JsBrowserSpawner extends TestSpawner {
 
 	override public function execute():Void {
 		PicoTestExternalCommandHelper.writeFile(htmlData(), htmlFile());
-		this.runInAnotherNeko('bin/report/bin/run_js_html.n', 'picotest.use.JsBrowserLauncher', {
+		this.runInAnotherNeko('bin/report/bin/run_js_html.n', 'picotest.spawners.JsBrowserLauncher', {
 			browser: browser(),
 			httpServerSetting: {
 				port: remotePort(),

@@ -1,4 +1,4 @@
-package picotest.use.common;
+package picotest.spawners.common;
 
 #if (macro || macro_doc_gen)
 

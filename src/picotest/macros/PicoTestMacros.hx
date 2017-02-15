@@ -1,21 +1,21 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
-import picotest.use.JsBrowserSpawner;
+import picotest.spawners.JsBrowserSpawner;
 import picotest.readers.PicoTestResultReader;
-import picotest.use.LimeFlashSpawner;
-import picotest.use.LimeJsBrowserSpawner;
-import picotest.use.NekoSpawner;
-import picotest.use.PythonSpawner;
-import picotest.use.PhpSpawner;
-import picotest.use.JsNodeSpawner;
-import picotest.use.JavaSpawner;
-import picotest.use.CsMonoSpawner;
-import picotest.use.CsSpawner;
-import picotest.use.CppSpawner;
-import picotest.use.LimeSpawner;
-import picotest.use.FlashStandaloneSpawner;
-import picotest.use.common.TestSpawner;
+import picotest.spawners.LimeFlashSpawner;
+import picotest.spawners.LimeJsBrowserSpawner;
+import picotest.spawners.NekoSpawner;
+import picotest.spawners.PythonSpawner;
+import picotest.spawners.PhpSpawner;
+import picotest.spawners.JsNodeSpawner;
+import picotest.spawners.JavaSpawner;
+import picotest.spawners.CsMonoSpawner;
+import picotest.spawners.CsSpawner;
+import picotest.spawners.CppSpawner;
+import picotest.spawners.LimeSpawner;
+import picotest.spawners.FlashStandaloneSpawner;
+import picotest.spawners.common.TestSpawner;
 import sys.io.File;
 import sys.FileSystem;
 import sys.io.Process;

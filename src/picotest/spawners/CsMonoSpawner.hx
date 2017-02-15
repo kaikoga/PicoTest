@@ -1,9 +1,9 @@
-package picotest.use;
+package picotest.spawners;
 
 #if (macro || macro_doc_gen)
 
-import picotest.use.common.PicoTestExternalCommand;
-import picotest.use.common.TestSpawner;
+import picotest.spawners.common.PicoTestExternalCommand;
+import picotest.spawners.common.TestSpawner;
 
 class CsMonoSpawner extends TestSpawner {
 

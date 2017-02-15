@@ -1,4 +1,4 @@
-package picotest.use.common;
+package picotest.spawners.common;
 
 import haxe.macro.Context;
 import sys.io.File;

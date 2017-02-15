@@ -1,10 +1,10 @@
-package picotest.use.common;
+package picotest.spawners.common;
 
 #if (sys || macro || macro_doc_gen)
 
-import picotest.use.common.PicoTestExternalCommandHelper;
+import picotest.spawners.common.PicoTestExternalCommandHelper;
 import haxe.io.Bytes;
-import picotest.use.http.PicoHttpServer;
+import picotest.spawners.http.PicoHttpServer;
 import sys.io.Process;
 
 //TODO
