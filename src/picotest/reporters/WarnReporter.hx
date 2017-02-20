@@ -91,27 +91,44 @@ class WarnReporter implements IPicoTestReporter {
 		#end
 	}
 
+	private var cachedFilePositions:Map<String, {min:Int, max:Int}> = new Map();
+
 	private function filePosition(file:String, line:Int):{min:Int, max:Int} {
+		var BULK_LINES:Int = 512;
+		var cacheKey:String = '$file:$line';
+
+		if (cachedFilePositions.exists(cacheKey)) return cachedFilePositions.get(cacheKey);
+
 		var min = 0;
 		var max = 0;
 		#if macro
 		var text:String = File.read(file).readAll().toString();
-		var ereg:EReg = ~/(\r\n|\r|\n)/;
 
-		for ( i in 0...line - 1 ) {
-			ereg.match( text );
-			var pos = ereg.matchedPos();
-			min += pos.pos + pos.len;
-			text = ereg.matchedRight();
+		while (line > 0) {
+			var bulk = line;
+			if (bulk > BULK_LINES) bulk = BULK_LINES;
+			line -= bulk;
+			var minEReg:EReg = new EReg('(.*(\\r\\n|\\r|\\n)){${bulk}}', "");
+			if (minEReg.matchSub(text, min)) {
+				var pos = minEReg.matchedPos();
+				min = pos.pos + pos.len;
+			} else {
+				min = 0;
+				break;
+			}
 		}
 
-		max = min +
-		if( ereg.match( text ) )
-			ereg.matchedPos().pos;
-		else
-			text.length;
+		var maxEReg:EReg = ~/\r|\n|\r\n/;
+		if (maxEReg.matchSub(text, min)) {
+			max = maxEReg.matchedPos().pos;
+		} else {
+			max = text.length;
+		}
 		#end
-		return {min:min, max:max};
+
+		var result = {min:min, max:max};
+		cachedFilePositions.set(cacheKey, result);
+		return result;
 	}
 
 	private var notFoundFileNames:Array<String> = [];
