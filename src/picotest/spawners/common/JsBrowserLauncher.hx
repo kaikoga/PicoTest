@@ -1,31 +1,32 @@
-package picotest.spawners;
+package picotest.spawners.common;
 
 import picotest.spawners.http.PicoHttpServer.PicoHttpServerSetting;
 
 #if neko
 
+import picotest.spawners.common.PicoTestExternalCommandHelper;
 import picotest.spawners.common.ITestExecuter;
 import picotest.spawners.common.PicoTestExternalCommand;
-import picotest.spawners.common.PicoTestExternalCommandHelper;
 
-class LimeJsBrowserLauncher implements ITestExecuter {
+class JsBrowserLauncher implements ITestExecuter {
 
 	public function new() {
 	}
 
 	public function execute():Void {
-		var args:LimeJsBrowserLauncherParams = PicoTestExternalCommandHelper.anotherNekoArgs();
+		var args:JsBrowserLauncherParams = PicoTestExternalCommandHelper.anotherNekoArgs();
 		PicoTestExternalCommand.open(args.browser, 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
 	}
 
 	public static function main():Void {
-		new LimeJsBrowserLauncher().execute();
+		new JsBrowserLauncher().execute();
 	}
+
 }
 
 #end
 
-typedef LimeJsBrowserLauncherParams = {
+typedef JsBrowserLauncherParams = {
 	browser:String,
 	httpServerSetting:PicoHttpServerSetting,
 	reportFile:String
