@@ -5,7 +5,8 @@ import picotest.result.PicoTestResult;
 
 interface IPicoTestPrinter {
 
+	function printTestCase(result:PicoTestResult):Void;
 	function printAssertResult(result:PicoTestResult, assertResult:PicoTestAssertResult):Void;
-	function print(result:PicoTestResult):Void;
+	function printTestResult(result:PicoTestResult):Void;
 
 }
