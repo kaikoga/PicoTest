@@ -36,6 +36,7 @@ class PicoTestRunner {
 	private var completed:Bool = false;
 
 	private var currentTask:IPicoTestTask;
+	private var resumeShowHeader:Bool = false;
 	@:noDoc
 	public var currentTaskResult(get, never):PicoTestResult;
 	private function get_currentTaskResult():PicoTestResult {
@@ -165,7 +166,17 @@ class PicoTestRunner {
 		this.currentTask = task;
 		var oldTrace:Dynamic->?PosInfos->Void = haxe.Log.trace;
 		haxe.Log.trace = function(v:Dynamic, ?p:PosInfos):Void { this.trace(v, p); };
+		switch [this.currentTask.status, this.currentTask.result] {
+			case [PicoTestTaskStatus.Initial, Option.Some(result)]:
+				for (printer in this.printers) printer.printTestCase(result, true);
+				this.resumeShowHeader = false;
+			case [_, Option.Some(result)]:
+				this.resumeShowHeader = true;
+			case _:
+				this.resumeShowHeader = false;
+		}
 		switch (this.currentTask.resume(this)) {
+			case PicoTestTaskStatus.Initial:
 			case PicoTestTaskStatus.Continue:
 				this.waitingTasks.push(task);
 			case PicoTestTaskStatus.Complete(result):
@@ -182,17 +193,25 @@ class PicoTestRunner {
 	}
 
 	@:noDoc
-	public function success():Void {
-		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Success;
+	private function addAssertResult(assertResult:PicoTestAssertResult):Void {
+		var resumeShowHeader = this.resumeShowHeader;
+		this.resumeShowHeader = false;
+		var currentTaskResult = this.currentTaskResult;
 		currentTaskResult.assertResults.push(assertResult);
-		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
+		for (printer in this.printers) {
+			if (resumeShowHeader) printer.printTestCase(currentTaskResult, false);
+			printer.printAssertResult(currentTaskResult, assertResult);
+		}
+	}
+
+	@:noDoc
+	public function success():Void {
+		addAssertResult(PicoTestAssertResult.Success);
 	}
 
 	@:noDoc
 	public function failure(message:String = null, ?p:PosInfos):Void {
-		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Failure(message, PicoTestCallInfo.fromPosInfos(p));
-		currentTaskResult.assertResults.push(assertResult);
-		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
+		addAssertResult(PicoTestAssertResult.Failure(message, PicoTestCallInfo.fromPosInfos(p)));
 	}
 
 	@:noDoc
@@ -214,31 +233,23 @@ class PicoTestRunner {
 			callStack = callStack.slice(0, LIMIT_CALLSTACK).concat(callStack.slice(callStack.length - LIMIT_CALLSTACK));
 			callStack.insert(LIMIT_CALLSTACK, StackItem.Module("<stack info truncated>"));
 		}
-		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Error(message, PicoTestCallInfo.fromCallStack(callStack));
-		currentTaskResult.assertResults.push(assertResult);
-		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
+		addAssertResult(PicoTestAssertResult.Error(message, PicoTestCallInfo.fromCallStack(callStack)));
 	}
 
 	@:noDoc
 	public function trace(v:Dynamic = null, ?p:PosInfos):Void {
 		var message:String = Std.string(v);
-		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Trace(message, PicoTestCallInfo.fromPosInfos(p));
-		currentTaskResult.assertResults.push(assertResult);
-		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
+		addAssertResult(PicoTestAssertResult.Trace(message, PicoTestCallInfo.fromPosInfos(p)));
 	}
 
 	@:noDoc
 	public function ignore(message:String, className:String, methodName:String):Void {
-		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Ignore(message, PicoTestCallInfo.fromReflect(className, methodName));
-		currentTaskResult.assertResults.push(assertResult);
-		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
+		addAssertResult(PicoTestAssertResult.Ignore(message, PicoTestCallInfo.fromReflect(className, methodName)));
 	}
 
 	@:noDoc
 	public function invalid(message:String, className:String, methodName:String):Void {
-		var assertResult:PicoTestAssertResult = PicoTestAssertResult.Invalid(message, PicoTestCallInfo.fromReflect(className, methodName));
-		currentTaskResult.assertResults.push(assertResult);
-		for (printer in this.printers) printer.printAssertResult(currentTaskResult, assertResult);
+		addAssertResult(PicoTestAssertResult.Invalid(message, PicoTestCallInfo.fromReflect(className, methodName)));
 	}
 
 	#if flash

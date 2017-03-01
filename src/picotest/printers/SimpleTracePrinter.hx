@@ -9,7 +9,7 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 
 	}
 
-	public function printTestCase(result:PicoTestResult):Void {
+	public function printTestCase(result:PicoTestResult, firstTime:Bool):Void {
 		// PicoTest.stdout("\n");
 	}
 

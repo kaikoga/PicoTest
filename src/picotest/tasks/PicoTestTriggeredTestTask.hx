@@ -11,6 +11,7 @@ class PicoTestTriggeredTestTask extends PicoTestTestTask {
 
 	public function new(result:PicoTestResult, func:Void->Void, timeoutFunc:Void->Void, ?p:PosInfos) {
 		super(result, func);
+		this._status = PicoTestTaskStatus.Continue;
 		this.timeoutFunc = timeoutFunc;
 		this.state = PicoTestTriggeredTestTaskState.Initial(p);
 	}

@@ -12,7 +12,7 @@ class PicoTestDelayedTask extends PicoTestTask {
 	}
 
 	override public function resume(runner:PicoTestRunner):PicoTestTaskStatus {
-		if (Timer.stamp() < waitUntil) return PicoTestTaskStatus.Continue;
+		if (Timer.stamp() < waitUntil) return this._status = PicoTestTaskStatus.Continue;
 		return super.resume(runner);
 	}
 }

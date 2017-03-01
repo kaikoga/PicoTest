@@ -9,8 +9,8 @@ class VerboseTracePrinter implements IPicoTestPrinter {
 
 	}
 
-	public function printTestCase(result:PicoTestResult):Void {
-		PicoTest.stdout('\n${result.className}.${result.methodName}${result.printParameters()}:\n');
+	public function printTestCase(result:PicoTestResult, firstTime:Bool):Void {
+		PicoTest.stdout('\n${result.className}.${result.methodName}${result.printParameters()}${firstTime ? ":\n" : " (async):\n  "}');
 	}
 
 	public function printAssertResult(result:PicoTestResult, assertResult:PicoTestAssertResult):Void {

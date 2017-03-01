@@ -9,11 +9,12 @@ class PicoTestDelayedTestTask extends PicoTestTestTask {
 
 	public function new(result:PicoTestResult, func:Void->Void, delayMs:Int) {
 		super(result, func);
+		this._status = PicoTestTaskStatus.Continue;
 		this.waitUntil = Timer.stamp() + delayMs / 1000;
 	}
 
 	override public function resume(runner:PicoTestRunner):PicoTestTaskStatus {
-		if (Timer.stamp() < waitUntil) return PicoTestTaskStatus.Continue;
+		if (Timer.stamp() < waitUntil) return this._status = PicoTestTaskStatus.Continue;
 		return super.resume(runner);
 	}
 
