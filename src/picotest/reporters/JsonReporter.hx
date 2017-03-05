@@ -43,6 +43,8 @@ class JsonReporter implements IPicoTestReporter {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
 				return {assertResult: "."};
+			case PicoTestAssertResult.Skip:
+				return {assertResult: "S"};
 			case PicoTestAssertResult.Failure(message, callInfo):
 				return {assertResult: "F", message: message, callInfo: hashCallInfo(callInfo)};
 			case PicoTestAssertResult.Error(message, callInfo):
@@ -60,6 +62,8 @@ class JsonReporter implements IPicoTestReporter {
 		switch (hashed.assertResult) {
 			case ".":
 				return PicoTestAssertResult.Success;
+			case "S":
+				return PicoTestAssertResult.Skip;
 			case "F":
 				return PicoTestAssertResult.Failure(hashed.message, unhashCallInfo(hashed.callInfo, header));
 			case "E":

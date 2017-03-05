@@ -46,6 +46,8 @@ class PicoTestResult {
 							mark = PicoTestResultMark.Success;
 						case _:
 					}
+				case PicoTestAssertResult.Skip:
+					mark = PicoTestResultMark.Skip;
 				case PicoTestAssertResult.Failure(message,callInfo):
 					switch (mark) {
 						case

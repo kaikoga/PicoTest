@@ -29,6 +29,7 @@ class WarnReporter implements IPicoTestReporter {
 			for (assertResult in result.assertResults) {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
+					case PicoTestAssertResult.Skip:
 					case PicoTestAssertResult.Failure(message,callInfo):
 						warn(message, result, callInfo, true);
 					case PicoTestAssertResult.Error(message,callInfo):

@@ -29,6 +29,7 @@ class TraceReporter implements IPicoTestReporter {
 				for (assertResult in result.assertResults) {
 					switch (assertResult) {
 						case PicoTestAssertResult.Success:
+						case PicoTestAssertResult.Skip:
 						case PicoTestAssertResult.Failure(message, callInfo):
 							resultText.push('${callInfo.print()}${result.printParameters()}: ${message}');
 						case PicoTestAssertResult.Error(message, callInfo):
@@ -54,6 +55,8 @@ class TraceReporter implements IPicoTestReporter {
 						resultText.push('${callInfo.print()}${result.printParameters()}: [Empty] Test is empty');
 					case PicoTestResultMark.Success:
 						row += ".";
+					case PicoTestResultMark.Skip:
+						row += "S";
 					case PicoTestResultMark.Failure:
 						row += "F";
 					case PicoTestResultMark.Error:

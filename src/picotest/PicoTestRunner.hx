@@ -162,6 +162,18 @@ class PicoTestRunner {
 	}
 
 	private function runTask(task:IPicoTestTask):Void {
+#if picotest_dryrun
+		this.currentTask = task;
+		addAssertResult(PicoTestAssertResult.Skip);
+		for (printer in this.printers) printer.printTestResult(currentTaskResult);
+		this.results.push(currentTaskResult);
+		this.currentTask = null;
+#else
+		doRunTask(task);
+#end
+	}
+
+	private function doRunTask(task:IPicoTestTask):Void {
 		PicoTest.currentRunner = this;
 		this.currentTask = task;
 		var oldTrace:Dynamic->?PosInfos->Void = haxe.Log.trace;

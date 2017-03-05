@@ -28,6 +28,7 @@ import picotest.reporters.WarnReporter;
 **/
 class PicoTestMacros {
 
+	inline public static var PICOTEST_DRYRUN:String = "picotest_dryrun";
 	inline public static var PICOTEST_REPORT:String = "picotest_report";
 	inline public static var PICOTEST_REPORT_JSON:String = "json";
 	inline public static var PICOTEST_REPORT_REMOTE:String = "picotest_remote";

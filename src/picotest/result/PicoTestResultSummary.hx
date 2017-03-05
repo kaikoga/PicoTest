@@ -4,6 +4,7 @@ class PicoTestResultSummary {
 
 	private var testsEmpty:Int = 0;
 	private var testsSuccess:Int = 0;
+	private var testsSkip:Int = 0;
 	private var testsFailure:Int = 0;
 	private var testsError:Int = 0;
 	private var testsIgnore:Int = 0;
@@ -22,6 +23,7 @@ class PicoTestResultSummary {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
 						this.assertsSuccess++;
+					case PicoTestAssertResult.Skip:
 					case PicoTestAssertResult.Failure(message,callInfo):
 						this.assertsFailure++;
 					case PicoTestAssertResult.Error(message,callInfo):
@@ -36,6 +38,8 @@ class PicoTestResultSummary {
 					this.testsEmpty++;
 				case PicoTestResultMark.Success:
 					this.testsSuccess++;
+				case PicoTestResultMark.Skip:
+					this.testsSkip++;
 				case PicoTestResultMark.Failure:
 					this.testsFailure++;
 				case PicoTestResultMark.Error:
@@ -53,6 +57,7 @@ class PicoTestResultSummary {
 		var tests:Array<String> = [];
 		var asserts:Array<String> = [];
 		if (testsSuccess > 0) tests.push('Success: $testsSuccess');
+		if (testsSkip > 0) tests.push('Skip: $testsSkip');
 		if (testsFailure > 0) tests.push('Failure: $testsFailure');
 		if (testsError > 0) tests.push('Error: $testsError');
 		if (testsIgnore > 0) tests.push('Ignore: $testsIgnore');

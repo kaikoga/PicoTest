@@ -17,6 +17,8 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
 				PicoTest.stdout(".");
+			case PicoTestAssertResult.Skip:
+				PicoTest.stdout("S");
 			case PicoTestAssertResult.Failure(_,_):
 				PicoTest.stdout("F");
 			case PicoTestAssertResult.Error(_,_):
