@@ -73,6 +73,9 @@ class PicoTestMacros {
 	}
 
 	public static function runTests():Void {
+		println('----------------------------------------');
+		println("PicoTest: spawning test runner...");
+		println('----------------------------------------');
 		spawner.execute();
 		readResult(spawner.reportData(), spawner.name);
 	}
