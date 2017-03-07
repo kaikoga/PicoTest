@@ -10,14 +10,16 @@ import haxe.PosInfos;
 #if sys
 
 @:noDoc
-class PicoTestSysAsync {
+class PicoTestSysAsync implements IPicoTestAsyncImpl {
 
-	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
+	public function new() return;
+
+	public function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
 		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
 	}
 
-	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
+	public function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
 		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
 		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult, func, timeoutFunc);
 		if (timeoutMs > 0) {
@@ -25,7 +27,6 @@ class PicoTestSysAsync {
 		}
 		return task.createCallback(PicoTest.currentRunner, p);
 	}
-
 }
 
 #end
