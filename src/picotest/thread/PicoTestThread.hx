@@ -1,4 +1,11 @@
 package picotest.thread;
+
+import picotest.thread.threadImpl.PicoTestCsThread;
+import picotest.thread.threadImpl.PicoTestHaxeThread;
+import picotest.thread.threadImpl.PicoTestJavaThread;
+import picotest.thread.threadImpl.PicoTestPythonThread;
+import picotest.thread.threadImpl.PicoTestThreadUnavailable;
+
 #if doc_gen
 extern class PicoTestThread {
 	public var context(default, null):PicoTestThreadContext;

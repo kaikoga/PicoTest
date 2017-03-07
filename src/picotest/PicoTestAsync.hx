@@ -1,15 +1,12 @@
 package picotest;
 
-import picotest.result.PicoTestResult;
-import picotest.tasks.PicoTestDelayedTask;
-import picotest.tasks.PicoTestTriggeredTestTask;
-import picotest.tasks.PicoTestDelayedTestTask;
+import picotest.asyncImpl.PicoTestAsyncUnavailable;
+import picotest.asyncImpl.PicoTestSysAsync;
+import picotest.asyncImpl.PicoTestTimerAsync;
 
 import haxe.PosInfos;
 
-#if (flash || js || (java && !picotest_thread))
-
-import haxe.Timer;
+#if doc_gen
 
 /**
 	Static class containing async testing tools for PicoTest.
@@ -19,70 +16,26 @@ import haxe.Timer;
 	- On sys platforms, if compiled with `-D picotest-thread`, async callback is handled internally using PicoTest task system.
 	- Otherwise, attempts to create async callbacks will produce failure.
 **/
-class PicoTestAsync {
+extern class PicoTestAsync {
 
 	/**
 		`func` will be called after `delayMs`.
 		Assertions in `func` are treated as part of current test method.
 	**/
-	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
-		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
-	}
+	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void;
 
 	/**
 		`func` will be called later, as long as returned callback is called prior `timeoutMs`.
 		When callback is not called in `timeoutMs`, `timeoutFunc` is called if specified, otherwise test will emit a failure.
 		Assertions in `func` and `timeoutFunc` are treated as part of current test method.
 	**/
-	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
-		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult, func, timeoutFunc);
-		if (timeoutMs > 0) {
-			Timer.delay(task.createTimeoutCallback(PicoTest.currentRunner, p), timeoutMs);
-		}
-		return task.createCallback(PicoTest.currentRunner, p);
-	}
+	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void;
 
 }
-
+#elseif (flash || js || (java && !picotest_thread))
+typedef PicoTestAsync = PicoTestTimerAsync;
 #elseif (sys && picotest_thread)
-
-class PicoTestAsync {
-
-	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
-		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		PicoTest.currentRunner.add(new PicoTestDelayedTestTask(taskResult, func, delayMs));
-	}
-
-	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
-		var taskResult:PicoTestResult = PicoTest.currentRunner.currentTaskResult;
-		var task:PicoTestTriggeredTestTask = new PicoTestTriggeredTestTask(taskResult, func, timeoutFunc);
-		if (timeoutMs > 0) {
-			PicoTest.currentRunner.add(new PicoTestDelayedTask(task.createTimeoutCallback(PicoTest.currentRunner, p), timeoutMs));
-		}
-		return task.createCallback(PicoTest.currentRunner, p);
-	}
-
-}
-
+typedef PicoTestAsync = PicoTestSysAsync;// wait it's Haxe 3.4 and we'll have Timer in here...
 #else
-
-import picotest.PicoAssert.*;
-
-@:noDoc
-class PicoTestAsync {
-
-	public static function assertLater<T>(func:Void->Void, delayMs:Int, ?p:PosInfos):Void {
-		fail("assertLater() not supported in platform", p);
-	}
-
-	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void {
-		fail("createCallback() not supported in platform", p);
-		return emptyCallback;
-	}
-
-	private static function emptyCallback():Void {}
-
-}
+typedef PicoTestAsync = PicoTestAsyncUnavailable;
 #end

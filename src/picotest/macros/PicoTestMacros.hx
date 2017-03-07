@@ -1,27 +1,25 @@
 package picotest.macros;
 
 #if (macro || macro_doc_gen)
-import picotest.spawners.JsBrowserSpawner;
-import picotest.readers.PicoTestResultReader;
-import picotest.spawners.LimeFlashSpawner;
-import picotest.spawners.LimeJsBrowserSpawner;
-import picotest.spawners.NekoSpawner;
-import picotest.spawners.PythonSpawner;
-import picotest.spawners.PhpSpawner;
-import picotest.spawners.JsNodeSpawner;
-import picotest.spawners.JavaSpawner;
-import picotest.spawners.CsMonoSpawner;
-import picotest.spawners.CsSpawner;
-import picotest.spawners.CppSpawner;
-import picotest.spawners.LimeSpawner;
-import picotest.spawners.FlashStandaloneSpawner;
-import picotest.spawners.common.TestSpawner;
-import sys.io.File;
-import sys.FileSystem;
-import sys.io.Process;
+
 import haxe.macro.Compiler;
 import haxe.macro.Context;
+import picotest.readers.PicoTestResultReader;
 import picotest.reporters.WarnReporter;
+import picotest.spawners.CppSpawner;
+import picotest.spawners.CsMonoSpawner;
+import picotest.spawners.CsSpawner;
+import picotest.spawners.FlashStandaloneSpawner;
+import picotest.spawners.JavaSpawner;
+import picotest.spawners.JsBrowserSpawner;
+import picotest.spawners.JsNodeSpawner;
+import picotest.spawners.LimeFlashSpawner;
+import picotest.spawners.LimeJsBrowserSpawner;
+import picotest.spawners.LimeSpawner;
+import picotest.spawners.NekoSpawner;
+import picotest.spawners.PhpSpawner;
+import picotest.spawners.PythonSpawner;
+import picotest.spawners.common.TestSpawner;
 
 /**
 	Macro definitions of PicoTest. Calling through `picotest.PicoTest` is recommended.
@@ -151,35 +149,4 @@ class PicoTestMacros {
 		_lineNum++;
 	}
 }
-@:noDoc
-@:enum abstract TestTarget(String) {
-	public var Flash = "flash";
-	public var As3 = "as3";
-	public var Neko = "neko";
-	public var Js = "js";
-	public var Php = "php";
-	public var Cpp = "cpp";
-	public var Java = "java";
-	public var Cs = "cs";
-	public var Python = "python";
-
-	public static var allTargets(get, never):Array<TestTarget>;
-	public static function get_allTargets():Array<TestTarget> {
-		return [
-			TestTarget.Flash,
-			TestTarget.As3,
-			TestTarget.Neko,
-			TestTarget.Js,
-			TestTarget.Php,
-			TestTarget.Cpp,
-			TestTarget.Java,
-			TestTarget.Cs,
-			TestTarget.Python
-		];
-	}
-	public function toString():String return this;
-}
-
-#else
-@:noDoc class PicoTestMacros { private function new() {} }
 #end

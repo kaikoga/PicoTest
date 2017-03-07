@@ -1,4 +1,4 @@
-package picotest.thread;
+package picotest.thread.threadImpl;
 
 #if (cpp || neko)
 
