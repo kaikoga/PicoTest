@@ -26,16 +26,6 @@ import picotest.spawners.common.TestSpawner;
 **/
 class PicoTestMacros {
 
-	inline public static var PICOTEST_DRYRUN:String = "picotest_dryrun";
-	inline public static var PICOTEST_REPORT:String = "picotest_report";
-	inline public static var PICOTEST_REPORT_JSON:String = "json";
-	inline public static var PICOTEST_REPORT_REMOTE:String = "picotest_remote";
-	inline public static var PICOTEST_REPORT_REMOTE_PORT:String = "picotest_remote_port";
-	inline public static var PICOTEST_REPORT_DIR:String = "picotest_report_dir";
-	inline public static var PICOTEST_BROWSER:String = "picotest_browser";
-	inline public static var PICOTEST_FP:String = "picotest_fp";
-	inline public static var PICOTEST_FLOG:String = "picotest_flog";
-
 	private function new() {
 	}
 
@@ -43,7 +33,7 @@ class PicoTestMacros {
 	private static function set_spawner(value:TestSpawner):TestSpawner {
 		spawner = value;
 		if (spawner.forceRemote) {
-			Compiler.define(PicoTestMacros.PICOTEST_REPORT_REMOTE, "1");
+			Compiler.define(PicoTestConfig.PICOTEST_REPORT_REMOTE, "1");
 		}
 		return value;
 	}
@@ -61,9 +51,9 @@ class PicoTestMacros {
 	}
 
 	public static function setup(spawnerVariant:String = null):Void {
-		Compiler.define(PICOTEST_REPORT, PICOTEST_REPORT_JSON);
+		Compiler.define(PicoTestConfig.PICOTEST_REPORT, PicoTestConfig.PICOTEST_REPORT_JSON);
 		if (spawner == null) spawner = guessSpawner(spawnerVariant);
-		if (spawner.forceRemote) Compiler.define(PICOTEST_REPORT_REMOTE, "1");
+		if (spawner.forceRemote) Compiler.define(PicoTestConfig.PICOTEST_REPORT_REMOTE, "1");
 	}
 
 	public static function warn(spawnerVariant:String = null):Void {

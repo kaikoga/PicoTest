@@ -4,7 +4,7 @@ package picotest.spawners.common;
 
 import sys.FileSystem;
 import sys.io.File;
-import picotest.macros.PicoTestMacros;
+import picotest.macros.PicoTestConfig;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 
@@ -23,7 +23,7 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	public function reportDir():String {
-		if (Context.defined(PicoTestMacros.PICOTEST_REPORT_DIR)) return Context.definedValue(PicoTestMacros.PICOTEST_REPORT_DIR);
+		if (Context.defined(PicoTestConfig.PICOTEST_REPORT_DIR)) return Context.definedValue(PicoTestConfig.PICOTEST_REPORT_DIR);
 		return "bin/report";
 	}
 
@@ -49,7 +49,7 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function flashPlayer():String {
-		if (Context.defined(PicoTestMacros.PICOTEST_FP)) return Context.definedValue(PicoTestMacros.PICOTEST_FP);
+		if (Context.defined(PicoTestConfig.PICOTEST_FP)) return Context.definedValue(PicoTestConfig.PICOTEST_FP);
 
 		switch (PicoTestExternalCommand.systemName()) {
 			case "Windows":
@@ -64,7 +64,7 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function flashLog():String {
-		if (Context.defined(PicoTestMacros.PICOTEST_FLOG)) return Context.definedValue(PicoTestMacros.PICOTEST_FLOG);
+		if (Context.defined(PicoTestConfig.PICOTEST_FLOG)) return Context.definedValue(PicoTestConfig.PICOTEST_FLOG);
 
 		switch (PicoTestExternalCommand.systemName()) {
 			case "Windows":
@@ -110,12 +110,12 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function browser():String {
-		if (Context.defined(PicoTestMacros.PICOTEST_BROWSER)) return selectBrowser(Context.definedValue(PicoTestMacros.PICOTEST_BROWSER));
+		if (Context.defined(PicoTestConfig.PICOTEST_BROWSER)) return selectBrowser(Context.definedValue(PicoTestConfig.PICOTEST_BROWSER));
 		return selectBrowser(null);
 	}
 
 	private function remotePort():Int {
-		if (Context.defined(PicoTestMacros.PICOTEST_REPORT_REMOTE_PORT)) return Std.parseInt(Context.definedValue(PicoTestMacros.PICOTEST_REPORT_REMOTE_PORT));
+		if (Context.defined(PicoTestConfig.PICOTEST_REPORT_REMOTE_PORT)) return Std.parseInt(Context.definedValue(PicoTestConfig.PICOTEST_REPORT_REMOTE_PORT));
 		return 8001;
 	}
 
