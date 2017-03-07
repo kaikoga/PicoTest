@@ -7,7 +7,7 @@ import picotest.tasks.PicoTestDelayedTestTask;
 
 import haxe.PosInfos;
 
-#if (sys && picotest_thread)
+#if sys
 
 @:noDoc
 class PicoTestSysAsync {

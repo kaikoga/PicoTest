@@ -1,5 +1,6 @@
 package picotest.reporters;
 
+import picotest.macros.PicoTestConfig;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
 import picotest.result.PicoTestAssertResult;
@@ -35,13 +36,13 @@ class WarnReporter implements IPicoTestReporter {
 					case PicoTestAssertResult.Error(message,callInfo):
 						warn('[Error] ${message}', result, callInfo, true);
 					case PicoTestAssertResult.Trace(message,callInfo):
-					#if picotest_show_trace
-						warn('[Trace] ${message}', result, callInfo);
-					#end
+						if (PicoTestConfig.showTrace) {
+							warn('[Trace] ${message}', result, callInfo);
+						}
 					case PicoTestAssertResult.Ignore(message,callInfo):
-					#if picotest_show_ignore
-						warn('[Ignore] ${message}', result, callInfo);
-					#end
+						if (PicoTestConfig.showIgnore) {
+							warn('[Ignore] ${message}', result, callInfo);
+						}
 					case PicoTestAssertResult.Invalid(message,callInfo):
 						warn('[Invalid] ${message}', result, callInfo);
 				}
@@ -72,9 +73,9 @@ class WarnReporter implements IPicoTestReporter {
 					printWarn('(from this test case)', result, stack);
 					return;
 				case _:
-					#if picotest_show_stack
-					printWarn('(from here)', result, stack);
-					#end
+					if (PicoTestConfig.showStack) {
+						printWarn('(from here)', result, stack);
+					}
 			}
 			stack = stack.from;
 		}

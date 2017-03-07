@@ -32,6 +32,7 @@ extern class PicoTestAsync {
 	public static function createCallback<T>(func:Void->Void, ?timeoutMs:Int, ?timeoutFunc:Void->Void, ?p:PosInfos):Void->Void;
 
 }
+// FIXME type selection must be coded
 #elseif (flash || js || (java && !picotest_thread))
 typedef PicoTestAsync = PicoTestTimerAsync;
 #elseif (sys && picotest_thread)

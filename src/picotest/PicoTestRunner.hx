@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.macros.PicoTestConfig;
 import haxe.ds.Option;
 import haxe.CallStack;
 import haxe.PosInfos;
@@ -107,14 +108,20 @@ class PicoTestRunner {
 		#if js
 		// TODO enable source map support
 		#end
-		#if (flash || js || (java && !picotest_thread))
-		rerun();
-		#else
+
+		#if (flash || js || java)
+		if (PicoTestConfig.timerAvailable) {
+			rerun();
+			return;
+		}
+		#end
+
+		#if (sys)
 		while (this.resume()) Sys.sleep(0.01);
 		#end
 	}
 
-	#if (flash || js || (java && !picotest_thread))
+	#if (flash || js || java)
 	private function rerun():Void {
 		if (this.resume()) Timer.delay(this.rerun, 10);
 	}
@@ -154,23 +161,25 @@ class PicoTestRunner {
 	}
 
 	public dynamic function onComplete():Void {
-		#if (flash && picotest_report)
-		try { System.exit(0); } catch (d:Dynamic) {}
+		#if flash
+		if (PicoTestConfig.report == PicoTestConfig.PICOTEST_REPORT_JSON) {
+			try { System.exit(0); } catch (d:Dynamic) {}
+		}
 		#elseif (sys && !macro)
 		Sys.exit(0);
 		#end
 	}
 
 	private function runTask(task:IPicoTestTask):Void {
-#if picotest_dryrun
-		this.currentTask = task;
-		addAssertResult(PicoTestAssertResult.Skip);
-		for (printer in this.printers) printer.printTestResult(currentTaskResult);
-		this.results.push(currentTaskResult);
-		this.currentTask = null;
-#else
-		doRunTask(task);
-#end
+		if (PicoTestConfig.dryRun) {
+			this.currentTask = task;
+			addAssertResult(PicoTestAssertResult.Skip);
+			for (printer in this.printers) printer.printTestResult(currentTaskResult);
+			this.results.push(currentTaskResult);
+			this.currentTask = null;
+		} else {
+			doRunTask(task);
+		}
 	}
 
 	private function doRunTask(task:IPicoTestTask):Void {

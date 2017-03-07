@@ -1,5 +1,6 @@
 package picotest.reporters;
 
+import picotest.macros.PicoTestConfig;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestCallInfo;
 import picotest.result.PicoTestResult;
@@ -35,15 +36,15 @@ class TraceReporter implements IPicoTestReporter {
 						case PicoTestAssertResult.Error(message, callInfo):
 							resultText.push('${callInfo.print()}${result.printParameters()}: [Error] ${message}');
 						case PicoTestAssertResult.Trace(message, callInfo):
-							#if picotest_show_trace
-							for (line in message.split("\n")) {
-								resultText.push('${callInfo.print()}${result.printParameters()}: [Trace] ${line}');
+							if (PicoTestConfig.showTrace) {
+								for (line in message.split("\n")) {
+									resultText.push('${callInfo.print()}${result.printParameters()}: [Trace] ${line}');
+								}
 							}
-							#end
 						case PicoTestAssertResult.Ignore(message, callInfo):
-							#if picotest_show_ignore
-							resultText.push('${callInfo.print()}${result.printParameters()}: [Ignore] ${message}');
-							#end
+							if (PicoTestConfig.showIgnore) {
+								resultText.push('${callInfo.print()}${result.printParameters()}: [Ignore] ${message}');
+							}
 						case PicoTestAssertResult.Invalid(message, callInfo):
 							resultText.push('${callInfo.print()}${result.printParameters()}: [Invalid] ${message}');
 					}

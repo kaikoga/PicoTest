@@ -1,9 +1,9 @@
 package picotest;
 
-import haxe.Int64;
 import haxe.Json;
-import picotest.PicoMatcher.MatchResult;
 import haxe.PosInfos;
+import picotest.macros.PicoTestConfig;
+import picotest.PicoMatcher.MatchResult;
 
 #if !picotest_nodep
 import org.hamcrest.AssertionException;
@@ -19,15 +19,15 @@ class PicoAssert {
 
 	public static function string<T>(d:Dynamic, other:Dynamic = null):String {
 		var result:String =
-		#if picotest_safe_mode
-		safeString(d);
-		#else
-		try {
-			if (Std.is(d, String)) '"$d"' else '$d';
-		} catch (x:Dynamic) {
-			'(throws ${safeString(x)})';
+		if (PicoTestConfig.safeMode) {
+			safeString(d);
+		} else {
+			try {
+				if (Std.is(d, String)) '"$d"' else '$d';
+			} catch (x:Dynamic) {
+				'(throws ${safeString(x)})';
+			}
 		}
-		#end
 		if (other != null && d != other && result == string(other)) return 'another $result';
 		return result;
 	}

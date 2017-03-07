@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.macros.PicoTestConfig;
 import picotest.printers.VerboseTracePrinter;
 import picotest.out.PicoTestOutput;
 import picotest.out.IPicoTestOutput;
@@ -34,22 +35,22 @@ class PicoTest {
 
 		output = new PicoTestOutput();
 
-		#if picotest_remote
-		var onComplete = runner.onComplete;
-		runner.onComplete = function() {
-			output.close();
-			onComplete();
+		if (PicoTestConfig.remote) {
+			var onComplete = runner.onComplete;
+			runner.onComplete = function() {
+				output.close();
+				onComplete();
+			}
 		}
-		#end
 
-		#if picotest_report
-		haxe.Log.trace = emptyTrace;
-		runner.printers = [new VerboseTracePrinter()];
-		runner.reporters = [new JsonReporter()];
-		#else
-		runner.printers = [new VerboseTracePrinter()];
-		runner.reporters = [new TraceReporter()];
-		#end
+		if (PicoTestConfig.report != null) {
+			haxe.Log.trace = emptyTrace;
+			runner.printers = [new VerboseTracePrinter()];
+			runner.reporters = [new JsonReporter()];
+		} else {
+			runner.printers = [new VerboseTracePrinter()];
+			runner.reporters = [new TraceReporter()];
+		}
 
 		return runner;
 	}

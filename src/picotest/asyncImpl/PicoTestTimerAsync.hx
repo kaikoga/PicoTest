@@ -7,7 +7,7 @@ import haxe.Timer;
 
 import haxe.PosInfos;
 
-#if (flash || js || (java && !picotest_thread))
+#if (flash || js || java)
 
 @:noDoc
 class PicoTestTimerAsync {
