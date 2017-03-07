@@ -5,7 +5,7 @@ package picotest.thread.threadImpl;
 @:noDoc typedef Thread = #if cpp cpp.vm.Thread; #elseif neko neko.vm.Thread; #end
 
 @:noDoc
-class PicoTestHaxeThread {
+class PicoTestHaxeThread implements IPicoTestThreadImpl {
 
 	private var native:Thread;
 	private var context:PicoTestThreadContext;
@@ -29,12 +29,8 @@ class PicoTestHaxeThread {
 		this.context.haltRequested();
 	}
 
-	@:allow(picotest.PicoTestRunner)
-	private var isHalted(get, never):Bool;
+	public var isHalted(get, never):Bool;
 	private function get_isHalted():Bool return this.context.isHalted;
-
-	public static var available(get, never):Bool;
-	private static function get_available():Bool return true;
 }
 
 #end

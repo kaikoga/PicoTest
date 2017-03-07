@@ -6,7 +6,7 @@ package picotest.thread.threadImpl;
 @:noDoc typedef CsThreadStart = cs.system.threading.ThreadStart;
 
 @:noDoc
-class PicoTestCsThread {
+class PicoTestCsThread implements IPicoTestThreadImpl {
 
 	private var native:CsThread;
 	private var context:PicoTestThreadContext;
@@ -32,12 +32,8 @@ class PicoTestCsThread {
 		this.context.haltRequested();
 	}
 
-	@:allow(picotest.PicoTestRunner)
-	private var isHalted(get, never):Bool;
+	public var isHalted(get, never):Bool;
 	private function get_isHalted():Bool return this.context.isHalted;
-
-	public static var available(get, never):Bool;
-	private static function get_available():Bool return true;
 }
 
 #end

@@ -5,7 +5,7 @@ package picotest.thread.threadImpl;
 @:noDoc typedef JavaThread = java.lang.Thread;
 
 @:noDoc
-class PicoTestJavaThread extends JavaThread {
+class PicoTestJavaThread extends JavaThread implements IPicoTestThreadImpl {
 
 	private var func:PicoTestThreadContext->Void;
 	private var context:PicoTestThreadContext;
@@ -31,12 +31,8 @@ class PicoTestJavaThread extends JavaThread {
 		this.context.haltRequested();
 	}
 
-	@:allow(picotest.PicoTestRunner)
-	private var isHalted(get, never):Bool;
+	public var isHalted(get, never):Bool;
 	private function get_isHalted():Bool return this.context.isHalted;
-
-	public static var available(get, never):Bool;
-	private static function get_available():Bool return true;
 }
 
 #end

@@ -1,33 +1,47 @@
 package picotest.thread;
 
+import picotest.thread.threadImpl.IPicoTestThreadImpl;
 import picotest.thread.threadImpl.PicoTestCsThread;
 import picotest.thread.threadImpl.PicoTestHaxeThread;
 import picotest.thread.threadImpl.PicoTestJavaThread;
 import picotest.thread.threadImpl.PicoTestPythonThread;
-import picotest.thread.threadImpl.PicoTestThreadUnavailable;
 
-#if doc_gen
-extern class PicoTestThread {
-	public var context(default, null):PicoTestThreadContext;
+class PicoTestThread implements IPicoTestThreadImpl {
 
-	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread;
+	private var impl:IPicoTestThreadImpl;
 
-	public function kill():Void;
+	private function new(impl:IPicoTestThreadImpl) this.impl = impl;
 
-	@:allow(picotest.PicoTestRunner)
-	private var isHalted(get, never):Bool;
-	private function get_isHalted():Bool;
+	public function kill():Void this.impl.kill();
+	public var isHalted(get, never):Bool;
+	private function get_isHalted():Bool return this.impl.isHalted;
 
 	public static var available(get, never):Bool;
+	private static function get_available():Bool return selectImpl() != null;
+
+	public static function create(callb:PicoTestThreadContext->Void):PicoTestThread {
+		var implFactory:(PicoTestThreadContext->Void)->IPicoTestThreadImpl = selectImpl();
+		if (implFactory != null) return new PicoTestThread(implFactory(callb));
+		throw "PicoTestThread not implemented in this platform";
+	}
+
+	private static function selectImpl():(PicoTestThreadContext->Void)->IPicoTestThreadImpl {
+		#if (cpp || neko)
+		return function(callb) return PicoTestHaxeThread.create(callb);
+		#end
+
+		#if python
+		return function(callb) return PicoTestPythonThread.create(callb);
+		#end
+
+		#if java
+		return function(callb) return PicoTestJavaThread.create(callb);
+		#end
+
+		#if cs
+		return function(callb) return PicoTestCsThread.create(callb);
+		#end
+
+		return null;
+	}
 }
-#elseif (cpp || neko)
-typedef PicoTestThread = PicoTestHaxeThread;
-#elseif python
-typedef PicoTestThread = PicoTestPythonThread;
-#elseif java
-typedef PicoTestThread = PicoTestJavaThread;
-#elseif cs
-typedef PicoTestThread = PicoTestCsThread;
-#else
-typedef PicoTestThread = PicoTestThreadUnavailable;
-#end

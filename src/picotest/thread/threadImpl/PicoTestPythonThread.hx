@@ -5,10 +5,12 @@ package picotest.thread.threadImpl;
 @:noDoc typedef PythonThread = python.lib.threading.Thread;
 
 @:noDoc
-abstract PicoTestPythonThread(PythonThread) {
+class PicoTestPythonThread implements IPicoTestThreadImpl {
+
+	private var native:PythonThread;
 
 	private function new(native:PythonThread) {
-		this = native;
+		this.native = native;
 	}
 
 	public static function create(callb:PicoTestThreadContext->Void):PicoTestPythonThread {
@@ -19,12 +21,8 @@ abstract PicoTestPythonThread(PythonThread) {
 		throw "PicoTestThread not implemented in this platform";
 	}
 
-	@:allow(picotest.PicoTestRunner)
-	private var isHalted(get, never):Bool;
+	public var isHalted(get, never):Bool;
 	private function get_isHalted():Bool return false;
-
-	public static var available(get, never):Bool;
-	private static function get_available():Bool return true;
 }
 
 #end
