@@ -1,4 +1,6 @@
-package picotest.out;
+package picotest.out.impl;
+
+#if macro
 
 import picotest.macros.PicoTestMacros;
 
@@ -17,3 +19,5 @@ class PicoTestMacroOutput implements IPicoTestOutput {
 		// do nothing
 	}
 }
+
+#end

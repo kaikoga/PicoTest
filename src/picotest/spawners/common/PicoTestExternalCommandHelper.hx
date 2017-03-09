@@ -1,6 +1,5 @@
 package picotest.spawners.common;
 
-import haxe.macro.Context;
 import sys.io.File;
 import haxe.Unserializer;
 import haxe.crypto.Base64;

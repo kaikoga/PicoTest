@@ -43,7 +43,7 @@ class PicoTest {
 			}
 		}
 
-		if (PicoTestConfig.report != null) {
+		if (PicoTestConfig.reportJson) {
 			haxe.Log.trace = emptyTrace;
 			runner.printers = [new VerboseTracePrinter()];
 			runner.reporters = [new JsonReporter()];

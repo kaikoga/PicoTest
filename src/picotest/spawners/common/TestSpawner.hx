@@ -23,7 +23,7 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	public function reportDir():String {
-		if (Context.defined(PicoTestConfig.PICOTEST_REPORT_DIR)) return Context.definedValue(PicoTestConfig.PICOTEST_REPORT_DIR);
+		if (PicoTestConfig.reportDir != null) return PicoTestConfig.reportDir;
 		return "bin/report";
 	}
 
@@ -49,7 +49,7 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function flashPlayer():String {
-		if (Context.defined(PicoTestConfig.PICOTEST_FP)) return Context.definedValue(PicoTestConfig.PICOTEST_FP);
+		if (PicoTestConfig.fp != null) return PicoTestConfig.fp;
 
 		switch (PicoTestExternalCommand.systemName()) {
 			case "Windows":
@@ -64,7 +64,7 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function flashLog():String {
-		if (Context.defined(PicoTestConfig.PICOTEST_FLOG)) return Context.definedValue(PicoTestConfig.PICOTEST_FLOG);
+		if (PicoTestConfig.flog != null) return PicoTestConfig.flog;
 
 		switch (PicoTestExternalCommand.systemName()) {
 			case "Windows":
@@ -110,12 +110,12 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function browser():String {
-		if (Context.defined(PicoTestConfig.PICOTEST_BROWSER)) return selectBrowser(Context.definedValue(PicoTestConfig.PICOTEST_BROWSER));
+		if (PicoTestConfig.browser != null) return PicoTestConfig.browser;
 		return selectBrowser(null);
 	}
 
 	private function remotePort():Int {
-		if (Context.defined(PicoTestConfig.PICOTEST_REPORT_REMOTE_PORT)) return Std.parseInt(Context.definedValue(PicoTestConfig.PICOTEST_REPORT_REMOTE_PORT));
+		if (PicoTestConfig.remotePort != null) return Std.parseInt(PicoTestConfig.remotePort);
 		return 8001;
 	}
 

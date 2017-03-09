@@ -1,8 +1,10 @@
-package picotest.out;
+package picotest.out.impl;
 
 import haxe.io.Bytes;
 import sys.net.Host;
 import sys.net.Socket;
+
+#if sys
 
 class PicoTestSysRemoteOutput implements IPicoTestOutput {
 
@@ -30,3 +32,6 @@ class PicoTestSysRemoteOutput implements IPicoTestOutput {
 		socket.close();
 	}
 }
+
+#end
+

@@ -162,7 +162,7 @@ class PicoTestRunner {
 
 	public dynamic function onComplete():Void {
 		#if flash
-		if (PicoTestConfig.report == PicoTestConfig.PICOTEST_REPORT_JSON) {
+		if (PicoTestConfig.reportJson) {
 			try { System.exit(0); } catch (d:Dynamic) {}
 		}
 		#elseif (sys && !macro)

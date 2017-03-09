@@ -1,15 +1,45 @@
 package picotest.out;
 
+import picotest.out.impl.PicoTestOutputUnavailable;
+import picotest.macros.PicoTestConfig;
+
 #if macro
-typedef PicoTestOutput = PicoTestMacroOutput;
-#elseif (sys && picotest_remote)
-typedef PicoTestOutput = PicoTestSysRemoteOutput;
-#elseif (js && picotest_remote)
-typedef PicoTestOutput = PicoTestJsRemoteOutput;
+import picotest.out.impl.PicoTestMacroOutput;
 #elseif flash
-typedef PicoTestOutput = PicoTestFlashOutput;
+import picotest.out.impl.PicoTestFlashOutput;
 #elseif js
-typedef PicoTestOutput = PicoTestJsOutput;
+import picotest.out.impl.PicoTestJsOutput;
+import picotest.out.impl.PicoTestJsRemoteOutput;
 #elseif sys
-typedef PicoTestOutput = PicoTestSysOutput;
+import picotest.out.impl.PicoTestSysOutput;
+import picotest.out.impl.PicoTestSysRemoteOutput;
 #end
+
+
+class PicoTestOutput implements IPicoTestOutput {
+
+	private var impl:IPicoTestOutput;
+
+	public function new() this.impl = selectImpl();
+
+	public function stdout(value:String):Void this.impl.stdout(value);
+	public function close():Void this.impl.close();
+
+	private static function selectImpl():IPicoTestOutput {
+		#if macro
+		// remote not available
+		return new PicoTestMacroOutput();
+		#elseif flash
+		if (PicoTestConfig.remote) return new PicoTestOutputUnavailable();
+		return new PicoTestFlashOutput();
+		#elseif js
+		if (PicoTestConfig.remote) return new PicoTestJsRemoteOutput();
+		return new PicoTestJsOutput();
+		#elseif sys
+		if (PicoTestConfig.remote) return new PicoTestSysRemoteOutput();
+		return new PicoTestSysOutput();
+		#end
+		return null;
+	}
+}
+

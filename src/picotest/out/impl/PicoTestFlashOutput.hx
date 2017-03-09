@@ -1,10 +1,10 @@
-package picotest.out;
+package picotest.out.impl;
+
+#if flash
 
 import flash.Lib;
 
 class PicoTestFlashOutput implements IPicoTestOutput {
-
-	private static var _currentLine:String = "";
 
 	public function new() {
 	}
@@ -17,3 +17,6 @@ class PicoTestFlashOutput implements IPicoTestOutput {
 		// do nothing
 	}
 }
+
+#end
+

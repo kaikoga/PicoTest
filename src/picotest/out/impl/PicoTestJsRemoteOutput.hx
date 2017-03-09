@@ -1,4 +1,6 @@
-package picotest.out;
+package picotest.out.impl;
+
+#if js
 
 import haxe.Timer;
 import js.html.XMLHttpRequest;
@@ -45,3 +47,5 @@ class PicoTestJsRemoteOutput implements IPicoTestOutput {
 		xhr.send(a[0]);
 	}
 }
+
+#end

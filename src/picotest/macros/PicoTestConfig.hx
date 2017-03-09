@@ -1,41 +1,95 @@
 package picotest.macros;
 
+import haxe.macro.Context;
 import haxe.macro.Compiler;
+import haxe.macro.Expr;
 
 class PicoTestConfig {
 
-	inline public static var PICOTEST_DRYRUN:String = "picotest_dryrun";
-	inline public static var PICOTEST_REPORT:String = "picotest_report";
-	inline public static var PICOTEST_REPORT_JSON:String = "json";
-	inline public static var PICOTEST_REPORT_DIR:String = "picotest_report_dir";
-	inline public static var PICOTEST_REPORT_REMOTE:String = "picotest_remote";
-	inline public static var PICOTEST_REPORT_REMOTE_PORT:String = "picotest_remote_port";
-	inline public static var PICOTEST_BROWSER:String = "picotest_browser";
-	inline public static var PICOTEST_SAFE_MODE:String = "picotest_safe_mode";
-	inline public static var PICOTEST_SHOW_TRACE:String = "picotest_show_trace";
-	inline public static var PICOTEST_SHOW_IGNORE:String = "picotest_show_ignore";
-	inline public static var PICOTEST_SHOW_STACK:String = "picotest_show_stack";
+	#if !macro
+	private static var defines:Map<String, String> = createDefines();
+	private static function createDefines():Map<String, String> {
+		getDefines();
+	}
+	#end
 
-	inline public static var PICOTEST_THREAD:String = "picotest_thread";
+	macro private static function getDefines() {
+		var initMap:Array<Expr> = [];
+		var defines:Map<String, String> = Context.getDefines();
+		for (key in defines.keys()) {
+			initMap.push(macro { map.set($v{key}, $v{defines.get(key)}); });
+		}
+		return macro {
+			var map:Map<String, String> = new haxe.ds.StringMap();
+			$b{initMap};
+			return map;
+		}
+	}
 
-	inline public static var PICOTEST_FP:String = "picotest_fp";
-	inline public static var PICOTEST_FLOG:String = "picotest_flog";
+	inline private static function getDefine(name:String):String {
+		#if macro
+		return Context.definedValue(name);
+		#else
+		return defines.get(name);
+		#end
+	}
+	inline private static function getFlag(name:String):Bool {
+		return getDefine(name) != null;
+	}
 
-	public static var dryRun:Bool = Compiler.getDefine("picotest_dryrun") != null;
-	public static var report:String = Compiler.getDefine("picotest_report");
-	public static var reportDir:String = Compiler.getDefine("picotest_report_dir");
-	public static var remote:Bool = Compiler.getDefine("picotest_remote") != null;
-	public static var remotePort:String = Compiler.getDefine("picotest_remote_port");
-	public static var browser:String = Compiler.getDefine("picotest_browser");
-	public static var safeMode:Bool = Compiler.getDefine("picotest_safe_mode") != null;
-	public static var showTrace:Bool = Compiler.getDefine("picotest_show_trace") != null;
-	public static var showIgnore:Bool = Compiler.getDefine("picotest_show_ignore") != null;
-	public static var showStack:Bool = Compiler.getDefine("picotest_show_stack") != null;
+	inline private static function setDefine(name:String, value:String):String {
+		#if macro
+		Compiler.define(name, value);
+		return value;
+		#else
+		throw "PicoTestConfig.setDefine()";
+		#end
+	}
+	inline private static function setFlag(name:String, value:Bool):Bool {
+		setDefine(name, value ? "1" : null);
+		return value;
+	}
 
-	public static var thread:Bool = Compiler.getDefine("picotest_thread") != null;
+	public static var dryRun(get, never):Bool;
+	private static function get_dryRun():Bool return getFlag("picotest_dryrun");
 
-	public static var fp:String = Compiler.getDefine("picotest_fp");
-	public static var flog:String = Compiler.getDefine("picotest_flog");
+	public static var reportJson(get, set):Bool;
+	private static function get_reportJson():Bool return getFlag("picotest_report_json");
+	private static function set_reportJson(value:Bool):Bool return setFlag("picotest_report_json", value);
+
+	public static var reportDir(get, never):String;
+	private static function get_reportDir():String return getDefine("picotest_report_dir");
+
+	public static var remote(get, set):Bool;
+	private static function get_remote():Bool return getFlag("picotest_remote");
+	private static function set_remote(value:Bool):Bool return setFlag("picotest_remote", value);
+
+	public static var remotePort(get, never):String;
+	private static function get_remotePort():String return getDefine("picotest_remote_port");
+
+	public static var browser(get, never):String;
+	private static function get_browser():String return getDefine("picotest_browser");
+
+	public static var safeMode(get, never):Bool;
+	private static function get_safeMode():Bool return getFlag("picotest_safe_mode");
+
+	public static var showTrace(get, never):Bool;
+	private static function get_showTrace():Bool return getFlag("picotest_show_trace");
+
+	public static var showIgnore(get, never):Bool;
+	private static function get_showIgnore():Bool return getFlag("picotest_show_ignore");
+
+	public static var showStack(get, never):Bool;
+	private static function get_showStack():Bool return getFlag("picotest_show_stack");
+
+	public static var thread(get, never):Bool;
+	private static function get_thread():Bool return getFlag("picotest_thread");
+
+	public static var fp(get, never):String;
+	private static function get_fp():String return getDefine("picotest_fp");
+
+	public static var flog(get, never):String;
+	private static function get_flog():String return getDefine("picotest_flog");
 
 	public static var timerAvailable(get, never):Bool;
 	private static function get_timerAvailable():Bool {
@@ -47,7 +101,6 @@ class PicoTestConfig {
 		return false;
 		#end
 	}
-
 
 	private function new() {
 

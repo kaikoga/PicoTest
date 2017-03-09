@@ -2,7 +2,6 @@ package picotest.macros;
 
 #if (macro || macro_doc_gen)
 
-import haxe.macro.Compiler;
 import haxe.macro.Context;
 import picotest.readers.PicoTestResultReader;
 import picotest.reporters.WarnReporter;
@@ -32,9 +31,7 @@ class PicoTestMacros {
 	public static var spawner(default, set):TestSpawner;
 	private static function set_spawner(value:TestSpawner):TestSpawner {
 		spawner = value;
-		if (spawner.forceRemote) {
-			Compiler.define(PicoTestConfig.PICOTEST_REPORT_REMOTE, "1");
-		}
+		if (spawner.forceRemote) PicoTestConfig.remote = true;
 		return value;
 	}
 
@@ -51,9 +48,9 @@ class PicoTestMacros {
 	}
 
 	public static function setup(spawnerVariant:String = null):Void {
-		Compiler.define(PicoTestConfig.PICOTEST_REPORT, PicoTestConfig.PICOTEST_REPORT_JSON);
+		PicoTestConfig.reportJson = true;
 		if (spawner == null) spawner = guessSpawner(spawnerVariant);
-		if (spawner.forceRemote) Compiler.define(PicoTestConfig.PICOTEST_REPORT_REMOTE, "1");
+		if (spawner.forceRemote) PicoTestConfig.remote = true;
 	}
 
 	public static function warn(spawnerVariant:String = null):Void {

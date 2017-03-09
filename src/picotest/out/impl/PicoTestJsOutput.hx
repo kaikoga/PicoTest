@@ -1,8 +1,8 @@
-package picotest.out;
+package picotest.out.impl;
+
+#if js
 
 class PicoTestJsOutput implements IPicoTestOutput {
-
-	private static var _currentLine:String = "";
 
 	public function new() {
 	}
@@ -15,10 +15,12 @@ class PicoTestJsOutput implements IPicoTestOutput {
 			// fallback to haxe std trace
 			PicoTestOutputUtils.cachedOutput(value, function(line:String) untyped js.Boot.__trace(cast line, null));
 		}
-
 	}
 
 	public function close():Void {
 		// do nothing
 	}
 }
+
+#end
+

@@ -1,4 +1,6 @@
-package picotest.out;
+package picotest.out.impl;
+
+#if sys
 
 import haxe.io.Output;
 import haxe.io.Bytes;
@@ -20,3 +22,5 @@ class PicoTestSysOutput implements IPicoTestOutput {
 		_stdout.close();
 	}
 }
+
+#end
