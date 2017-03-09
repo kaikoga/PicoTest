@@ -1,10 +1,10 @@
 package picotest.thread;
 
-import picotest.thread.threadImpl.IPicoTestThreadImpl;
-import picotest.thread.threadImpl.PicoTestCsThread;
-import picotest.thread.threadImpl.PicoTestHaxeThread;
-import picotest.thread.threadImpl.PicoTestJavaThread;
-import picotest.thread.threadImpl.PicoTestPythonThread;
+import picotest.thread.impl.IPicoTestThreadImpl;
+import picotest.thread.impl.PicoTestCsThread;
+import picotest.thread.impl.PicoTestHaxeThread;
+import picotest.thread.impl.PicoTestJavaThread;
+import picotest.thread.impl.PicoTestPythonThread;
 
 class PicoTestThread implements IPicoTestThreadImpl {
 

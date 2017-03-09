@@ -1,4 +1,4 @@
-package picotest.thread.threadImpl;
+package picotest.thread.impl;
 
 @:noDoc
 interface IPicoTestThreadImpl {
