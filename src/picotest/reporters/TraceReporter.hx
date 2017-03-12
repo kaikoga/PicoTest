@@ -1,6 +1,7 @@
 package picotest.reporters;
 
 import picotest.macros.PicoTestConfig;
+import picotest.out.IPicoTestOutput;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestCallInfo;
 import picotest.result.PicoTestResult;
@@ -9,12 +10,14 @@ import picotest.result.PicoTestResultSummary;
 
 class TraceReporter implements IPicoTestReporter {
 
-	public function new():Void {
+	private var stdout:IPicoTestOutput;
 
+	public function new(stdout:IPicoTestOutput):Void {
+		this.stdout = stdout;
 	}
 
 	public function report(results:Array<PicoTestResult>):Void {
-		PicoTest.stdout("\nreport:\n");
+		this.stdout.stdout("\nreport:\n");
 		var map:Map<String, Array<PicoTestResult>> = new Map();
 		for (result in results) {
 			if (!map.exists(result.className)) map[result.className] = [];
@@ -69,12 +72,14 @@ class TraceReporter implements IPicoTestReporter {
 				}
 				if (resultText.length > 2) text = text.concat(resultText);
 			}
-			PicoTest.stdout(row + "\n");
-			if (text.length > 0) for(row in text) PicoTest.stdout(row + "\n");
-			PicoTest.stdout("\n\n");
+			this.stdout.stdout(row + "\n");
+			if (text.length > 0) for(row in text) this.stdout.stdout(row + "\n");
+			this.stdout.stdout("\n\n");
 		}
-		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
+		this.stdout.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
 
-
+	public function close():Void {
+		this.stdout.close();
+	}
 }

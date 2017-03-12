@@ -1,37 +1,44 @@
 package picotest.printers;
 
+import picotest.out.IPicoTestOutput;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestResult;
 
 class SimpleTracePrinter implements IPicoTestPrinter {
 
-	public function new():Void {
+	private var stdout:IPicoTestOutput;
 
+	public function new(stdout:IPicoTestOutput):Void {
+		this.stdout = stdout;
 	}
 
 	public function printTestCase(result:PicoTestResult, firstTime:Bool):Void {
-		// PicoTest.stdout("\n");
+		// this.stdout.stdout("\n");
 	}
 
 	public function printAssertResult(result:PicoTestResult, assertResult:PicoTestAssertResult):Void {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
-				PicoTest.stdout(".");
+				this.stdout.stdout(".");
 			case PicoTestAssertResult.Skip:
-				PicoTest.stdout("S");
+				this.stdout.stdout("S");
 			case PicoTestAssertResult.Failure(_,_):
-				PicoTest.stdout("F");
+				this.stdout.stdout("F");
 			case PicoTestAssertResult.Error(_,_):
-				PicoTest.stdout("E");
+				this.stdout.stdout("E");
 			case PicoTestAssertResult.Trace(_,_):
 			case PicoTestAssertResult.Ignore(_,_):
-				PicoTest.stdout("I");
+				this.stdout.stdout("I");
 			case PicoTestAssertResult.Invalid(_,_):
-				PicoTest.stdout("X");
+				this.stdout.stdout("X");
 		}
 	}
 
 	public function printTestResult(result:PicoTestResult):Void {
-		// PicoTest.stdout("\n");
+		// this.stdout.stdout("\n");
+	}
+
+	public function close():Void {
+		this.stdout.close();
 	}
 }

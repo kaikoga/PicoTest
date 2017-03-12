@@ -1,8 +1,9 @@
 package picotest.reporters;
 
-import picotest.macros.PicoTestConfig;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+import picotest.out.IPicoTestOutput;
+import picotest.macros.PicoTestConfig;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestCallInfo;
 import picotest.result.PicoTestCallInfo.PicoTestCallPosition;
@@ -17,8 +18,10 @@ import sys.FileSystem;
 
 class WarnReporter implements IPicoTestReporter {
 
-	public function new():Void {
+	private var stdout:IPicoTestOutput;
 
+	public function new(stdout:IPicoTestOutput):Void {
+		this.stdout = stdout;
 	}
 
 	private function showHeader(result:PicoTestResult):Bool {
@@ -53,7 +56,7 @@ class WarnReporter implements IPicoTestReporter {
 				case _:
 			}
 		}
-		PicoTest.stdout(new PicoTestResultSummary().read(results).summarize());
+		this.stdout.stdout(new PicoTestResultSummary().read(results).summarize());
 	}
 
 	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo, printOrigin:Bool = false):Void {
@@ -89,7 +92,7 @@ class WarnReporter implements IPicoTestReporter {
 		#if macro
 		Context.warning('${callInfo.printCallTarget()}${callInfo.printCallType()}$p: ${message.split("\n").join("\n "+callInfo.printCallTarget())}', callPositionToPosition(callInfo.position));
 		#else
-		PicoTest.stdout('${callInfo.print()}$p: $message\n');
+		this.stdout.stdout('${callInfo.print()}$p: $message\n');
 		#end
 	}
 
@@ -138,9 +141,9 @@ class WarnReporter implements IPicoTestReporter {
 		if (notFoundFileNames.indexOf(fileName) >= 0) return;
 		notFoundFileNames.push(fileName);
 		if (notFoundFileNames.length == 0) {
-			PicoTest.stdout('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
+			this.stdout.stdout('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
 		} else {
-			PicoTest.stdout('($fileName: file not found in classpaths)\n');
+			this.stdout.stdout('($fileName: file not found in classpaths)\n');
 		}
 	}
 
@@ -194,4 +197,7 @@ class WarnReporter implements IPicoTestReporter {
 		#end
 	}
 
+	public function close():Void {
+		this.stdout.close();
+	}
 }

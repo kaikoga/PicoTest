@@ -156,6 +156,8 @@ class PicoTestRunner {
 		}
 
 		this.onComplete();
+		for (reporter in this.reporters) reporter.close();
+		for (printer in this.printers) printer.close();
 		this.completed = true;
 		return false;
 	}

@@ -1,5 +1,6 @@
 package picotest.reporters;
 
+import picotest.out.IPicoTestOutput;
 import haxe.Json;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestCallInfo;
@@ -9,8 +10,10 @@ class JsonReporter implements IPicoTestReporter {
 
 	inline public static var PICOTEST_RESULT_HEADER:String = "__picotest_result__:";
 
-	public function new():Void {
+	private var stdout:IPicoTestOutput;
 
+	public function new(stdout:IPicoTestOutput):Void {
+		this.stdout = stdout;
 	}
 
 	public function report(results:Array<PicoTestResult>):Void {
@@ -19,7 +22,11 @@ class JsonReporter implements IPicoTestReporter {
 			json.push(hashResult(result));
 		}
 
-		PicoTest.stdout('\n${PICOTEST_RESULT_HEADER}${Json.stringify(json, null, "  ")}\n');
+		this.stdout.stdout('\n${PICOTEST_RESULT_HEADER}${Json.stringify(json, null, "  ")}\n');
+	}
+
+	public function close():Void {
+		this.stdout.close();
 	}
 
 	public static function hashResult(result:PicoTestResult):HashedResult {

@@ -3,7 +3,6 @@ package picotest;
 import picotest.macros.PicoTestConfig;
 import picotest.printers.VerboseTracePrinter;
 import picotest.out.PicoTestOutput;
-import picotest.out.IPicoTestOutput;
 import picotest.macros.PicoTestMacros;
 import picotest.reporters.JsonReporter;
 import haxe.PosInfos;
@@ -22,8 +21,6 @@ class PicoTest {
 	@:allow(picotest.PicoTestRunner)
 	public static var currentRunner(default, null):PicoTestRunner;
 
-	private static var output:IPicoTestOutput;
-
 	private function new() {
 	}
 
@@ -33,23 +30,22 @@ class PicoTest {
 	public static function runner():PicoTestRunner {
 		var runner = new PicoTestRunner();
 
-		output = new PicoTestOutput();
+		var output = new PicoTestOutput();
 
 		if (PicoTestConfig.remote) {
 			var onComplete = runner.onComplete;
 			runner.onComplete = function() {
-				output.close();
 				onComplete();
 			}
 		}
 
 		if (PicoTestConfig.reportJson) {
 			haxe.Log.trace = emptyTrace;
-			runner.printers = [new VerboseTracePrinter()];
-			runner.reporters = [new JsonReporter()];
+			runner.printers = [new VerboseTracePrinter(output)];
+			runner.reporters = [new JsonReporter(output)];
 		} else {
-			runner.printers = [new VerboseTracePrinter()];
-			runner.reporters = [new TraceReporter()];
+			runner.printers = [new VerboseTracePrinter(output)];
+			runner.reporters = [new TraceReporter(output)];
 		}
 
 		return runner;
@@ -91,10 +87,6 @@ class PicoTest {
 	}
 
 	#end
-
-	public static function stdout(value:String):Void {
-		output.stdout(value);
-	}
 
 }
 
