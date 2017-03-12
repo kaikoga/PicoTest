@@ -22,7 +22,7 @@ class PicoTestOutput implements IPicoTestOutput {
 
 	public function new() this.impl = selectImpl();
 
-	public function stdout(value:String):Void this.impl.stdout(value);
+	public function output(value:String):Void this.impl.output(value);
 	public function close():Void this.impl.close();
 
 	private static function selectImpl():IPicoTestOutput {

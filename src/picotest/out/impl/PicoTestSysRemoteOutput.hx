@@ -13,7 +13,7 @@ class PicoTestSysRemoteOutput implements IPicoTestOutput {
 	public function new() {
 	}
 
-	public function stdout(value:String):Void {
+	public function output(value:String):Void {
 		sendRemote(value, '/result/$remoteRequestIndex');
 		remoteRequestIndex++;
 	}

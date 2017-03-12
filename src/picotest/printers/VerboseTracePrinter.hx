@@ -13,29 +13,29 @@ class VerboseTracePrinter implements IPicoTestPrinter {
 	}
 
 	public function printTestCase(result:PicoTestResult, firstTime:Bool):Void {
-		this.stdout.stdout('\n${result.className}.${result.methodName}${result.printParameters()}${firstTime ? ":\n" : " (async):\n  "}');
+		this.stdout.output('\n${result.className}.${result.methodName}${result.printParameters()}${firstTime ? ":\n" : " (async):\n  "}');
 	}
 
 	public function printAssertResult(result:PicoTestResult, assertResult:PicoTestAssertResult):Void {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
-				this.stdout.stdout(".");
+				this.stdout.output(".");
 			case PicoTestAssertResult.Skip:
-				this.stdout.stdout("S");
+				this.stdout.output("S");
 			case PicoTestAssertResult.Failure(_,_):
-				this.stdout.stdout("F");
+				this.stdout.output("F");
 			case PicoTestAssertResult.Error(_,_):
-				this.stdout.stdout("E");
+				this.stdout.output("E");
 			case PicoTestAssertResult.Trace(_,_):
 			case PicoTestAssertResult.Ignore(_,_):
-				this.stdout.stdout("I");
+				this.stdout.output("I");
 			case PicoTestAssertResult.Invalid(_,_):
-				this.stdout.stdout("X");
+				this.stdout.output("X");
 		}
 	}
 
 	public function printTestResult(result:PicoTestResult):Void {
-		this.stdout.stdout('\n');
+		this.stdout.output('\n');
 	}
 
 	public function close():Void {

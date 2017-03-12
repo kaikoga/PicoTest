@@ -19,18 +19,18 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 	public function printAssertResult(result:PicoTestResult, assertResult:PicoTestAssertResult):Void {
 		switch (assertResult) {
 			case PicoTestAssertResult.Success:
-				this.stdout.stdout(".");
+				this.stdout.output(".");
 			case PicoTestAssertResult.Skip:
-				this.stdout.stdout("S");
+				this.stdout.output("S");
 			case PicoTestAssertResult.Failure(_,_):
-				this.stdout.stdout("F");
+				this.stdout.output("F");
 			case PicoTestAssertResult.Error(_,_):
-				this.stdout.stdout("E");
+				this.stdout.output("E");
 			case PicoTestAssertResult.Trace(_,_):
 			case PicoTestAssertResult.Ignore(_,_):
-				this.stdout.stdout("I");
+				this.stdout.output("I");
 			case PicoTestAssertResult.Invalid(_,_):
-				this.stdout.stdout("X");
+				this.stdout.output("X");
 		}
 	}
 

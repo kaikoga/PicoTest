@@ -56,7 +56,7 @@ class WarnReporter implements IPicoTestReporter {
 				case _:
 			}
 		}
-		this.stdout.stdout(new PicoTestResultSummary().read(results).summarize());
+		this.stdout.output(new PicoTestResultSummary().read(results).summarize());
 	}
 
 	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo, printOrigin:Bool = false):Void {
@@ -92,7 +92,7 @@ class WarnReporter implements IPicoTestReporter {
 		#if macro
 		Context.warning('${callInfo.printCallTarget()}${callInfo.printCallType()}$p: ${message.split("\n").join("\n "+callInfo.printCallTarget())}', callPositionToPosition(callInfo.position));
 		#else
-		this.stdout.stdout('${callInfo.print()}$p: $message\n');
+		this.stdout.output('${callInfo.print()}$p: $message\n');
 		#end
 	}
 
@@ -141,9 +141,9 @@ class WarnReporter implements IPicoTestReporter {
 		if (notFoundFileNames.indexOf(fileName) >= 0) return;
 		notFoundFileNames.push(fileName);
 		if (notFoundFileNames.length == 0) {
-			this.stdout.stdout('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
+			this.stdout.output('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
 		} else {
-			this.stdout.stdout('($fileName: file not found in classpaths)\n');
+			this.stdout.output('($fileName: file not found in classpaths)\n');
 		}
 	}
 

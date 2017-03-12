@@ -17,7 +17,7 @@ class TraceReporter implements IPicoTestReporter {
 	}
 
 	public function report(results:Array<PicoTestResult>):Void {
-		this.stdout.stdout("\nreport:\n");
+		this.stdout.output("\nreport:\n");
 		var map:Map<String, Array<PicoTestResult>> = new Map();
 		for (result in results) {
 			if (!map.exists(result.className)) map[result.className] = [];
@@ -72,11 +72,11 @@ class TraceReporter implements IPicoTestReporter {
 				}
 				if (resultText.length > 2) text = text.concat(resultText);
 			}
-			this.stdout.stdout(row + "\n");
-			if (text.length > 0) for(row in text) this.stdout.stdout(row + "\n");
-			this.stdout.stdout("\n\n");
+			this.stdout.output(row + "\n");
+			if (text.length > 0) for(row in text) this.stdout.output(row + "\n");
+			this.stdout.output("\n\n");
 		}
-		this.stdout.stdout(new PicoTestResultSummary().read(results).summarize());
+		this.stdout.output(new PicoTestResultSummary().read(results).summarize());
 	}
 
 	public function close():Void {

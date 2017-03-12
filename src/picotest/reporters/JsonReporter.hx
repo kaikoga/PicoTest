@@ -22,7 +22,7 @@ class JsonReporter implements IPicoTestReporter {
 			json.push(hashResult(result));
 		}
 
-		this.stdout.stdout('\n${PICOTEST_RESULT_HEADER}${Json.stringify(json, null, "  ")}\n');
+		this.stdout.output('\n${PICOTEST_RESULT_HEADER}${Json.stringify(json, null, "  ")}\n');
 	}
 
 	public function close():Void {

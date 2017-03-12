@@ -6,13 +6,14 @@ import picotest.macros.PicoTestMacros;
 
 class PicoTestMacroOutput implements IPicoTestOutput {
 
-	private static var _currentLine:String = "";
+	private var buffer:PicoTestOutputBuffer;
 
 	public function new() {
+		this.buffer = new PicoTestOutputBuffer();
 	}
 
-	public function stdout(value:String):Void {
-		PicoTestOutputUtils.cachedOutput(value, function(line:String) PicoTestMacros.println(line));
+	public function output(value:String):Void {
+		this.buffer.output(value, function(line:String) PicoTestMacros.println(line));
 	}
 
 	public function close():Void {

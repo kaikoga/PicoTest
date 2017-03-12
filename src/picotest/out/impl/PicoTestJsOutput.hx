@@ -4,16 +4,19 @@ package picotest.out.impl;
 
 class PicoTestJsOutput implements IPicoTestOutput {
 
+	private var buffer:PicoTestOutputBuffer;
+
 	public function new() {
+		this.buffer = new PicoTestOutputBuffer();
 	}
 
-	public function stdout(value:String):Void {
+	public function output(value:String):Void {
 		try {
 			// try node
 			untyped process.stdout.write(value);
 		} catch (e:Dynamic) {
 			// fallback to haxe std trace
-			PicoTestOutputUtils.cachedOutput(value, function(line:String) untyped js.Boot.__trace(cast line, null));
+			this.buffer.output(value, function(line:String) untyped js.Boot.__trace(cast line, null));
 		}
 	}
 

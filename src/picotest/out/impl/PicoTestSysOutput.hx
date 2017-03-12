@@ -13,7 +13,7 @@ class PicoTestSysOutput implements IPicoTestOutput {
 		_stdout = Sys.stdout();
 	}
 
-	public function stdout(value:String):Void {
+	public function output(value:String):Void {
 		_stdout.write(Bytes.ofString(value));
 		_stdout.flush();
 	}

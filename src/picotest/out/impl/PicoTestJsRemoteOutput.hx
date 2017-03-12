@@ -18,7 +18,7 @@ class PicoTestJsRemoteOutput implements IPicoTestOutput {
 		this.timer.run = this.onInterval;
 	}
 
-	public function stdout(value:String):Void {
+	public function output(value:String):Void {
 		sendRemote(value, '/result/$remoteRequestIndex');
 		remoteRequestIndex++;
 	}

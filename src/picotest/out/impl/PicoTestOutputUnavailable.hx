@@ -5,7 +5,7 @@ class PicoTestOutputUnavailable implements IPicoTestOutput {
 	public function new() {
 	}
 
-	public function stdout(value:String):Void {
+	public function output(value:String):Void {
 		throw "unavailable";
 	}
 
