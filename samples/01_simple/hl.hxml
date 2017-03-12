@@ -1,0 +1,11 @@
+-cp src
+-cp ../../src
+-lib hamcrest
+-debug
+-main picotest.SampleTest
+--macro picotest.PicoTest.warn()
+-hl bin/test.hl
+-D picotest_safe_mode
+-D picotest_show_stack
+-D picotest_show_ignore
+-D picotest_show_trace

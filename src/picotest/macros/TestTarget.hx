@@ -13,6 +13,8 @@ package picotest.macros;
 	public var Java = "java";
 	public var Cs = "cs";
 	public var Python = "python";
+	public var Lua = "lua";
+	public var Hl = "hl";
 
 	public static var allTargets(get, never):Array<TestTarget>;
 	public static function get_allTargets():Array<TestTarget> {
@@ -25,7 +27,9 @@ package picotest.macros;
 			TestTarget.Cpp,
 			TestTarget.Java,
 			TestTarget.Cs,
-			TestTarget.Python
+			TestTarget.Python,
+			TestTarget.Lua,
+			TestTarget.Hl
 		];
 	}
 	public function toString():String return this;

@@ -65,7 +65,8 @@ class BasicAssertionSampleTestCase {
 
 	public function testAssertNull() {
 		assertNull(null);
-		assertNull([][0]);
+		var empty = [];
+		assertNull(empty[0]);
 	}
 
 	public function testAssertNullFail() {
@@ -80,7 +81,8 @@ class BasicAssertionSampleTestCase {
 
 	public function testAssertNotNullFail() {
 		assertNotNull(null);
-		assertNotNull([][0]);
+		var empty = [];
+		assertNotNull(empty[0]);
 	}
 
 }

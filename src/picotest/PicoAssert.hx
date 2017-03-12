@@ -81,7 +81,7 @@ class PicoAssert {
 	}
 
 	inline private static function equals<T>(expected:T, actual:T):Bool {
-		if (Reflect.isEnumValue(expected) && Reflect.isEnumValue(actual)) return Type.enumEq(expected, actual);
+		if (Reflect.isEnumValue(expected) && Reflect.isEnumValue(actual)) return Type.enumEq(cast expected, cast actual);
 		return expected == actual;
 	}
 

@@ -7,8 +7,10 @@ import picotest.spawners.common.TestSpawner;
 
 class PhpSpawner extends TestSpawner {
 
-	public function new():Void {
-		super('php');
+	private var php7:Bool;
+
+	public function new(php7:Bool = false):Void {
+		super(php7 ? 'php7' : 'php');
 	}
 
 	override public function execute():Void {

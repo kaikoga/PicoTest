@@ -10,12 +10,14 @@ import picotest.spawners.CppSpawner;
 import picotest.spawners.CsMonoSpawner;
 import picotest.spawners.CsSpawner;
 import picotest.spawners.FlashStandaloneSpawner;
+import picotest.spawners.HlSpawner;
 import picotest.spawners.JavaSpawner;
 import picotest.spawners.JsBrowserSpawner;
 import picotest.spawners.JsNodeSpawner;
 import picotest.spawners.LimeFlashSpawner;
 import picotest.spawners.LimeJsBrowserSpawner;
 import picotest.spawners.LimeSpawner;
+import picotest.spawners.LuaSpawner;
 import picotest.spawners.NekoSpawner;
 import picotest.spawners.PhpSpawner;
 import picotest.spawners.PythonSpawner;
@@ -86,11 +88,16 @@ class PicoTestMacros {
 					case TestTarget.Js:
 						spawnerVariant = "node";
 					case TestTarget.Php:
+						if (Context.defined("php7")) {
+							spawnerVariant = "php7";
+						}
 					case TestTarget.Cpp:
 					case TestTarget.Java:
 					case TestTarget.Cs:
 						if (Sys.systemName() != "Windows") spawnerVariant = "mono";
 					case TestTarget.Python:
+					case TestTarget.Lua:
+					case TestTarget.Hl:
 					default:
 						throw 'target ${testTarget.toString()} not supported';
 				}
@@ -114,6 +121,8 @@ class PicoTestMacros {
 				return new JsBrowserSpawner();
 			case ["js", "node"]:
 				return new JsNodeSpawner();
+			case ["php", "php7"]:
+				return new PhpSpawner(true);
 			case ["php", _]:
 				return new PhpSpawner();
 			case ["cpp", _]:
@@ -126,6 +135,10 @@ class PicoTestMacros {
 				return new CsSpawner();
 			case ["python", _]:
 				return new PythonSpawner();
+			case ["lua", _]:
+				return new LuaSpawner();
+			case ["hl", _]:
+				return new HlSpawner();
 			default:
 				throw 'spawner ${spawnerVariant} not found for target ${testTarget.toString()}';
 		}
