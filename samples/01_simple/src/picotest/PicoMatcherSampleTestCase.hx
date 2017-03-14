@@ -1,6 +1,7 @@
 package picotest;
 
 import picotest.PicoAssert.*;
+import picotest.matcher.PicoMatcher;
 
 /**
 	Example using PicoMatcher.

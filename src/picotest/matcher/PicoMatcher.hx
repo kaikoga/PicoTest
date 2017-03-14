@@ -1,4 +1,4 @@
-package picotest;
+package picotest.matcher;
 
 #if !picotest_nodep
 import org.hamcrest.Matcher;

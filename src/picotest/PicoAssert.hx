@@ -3,7 +3,7 @@ package picotest;
 import haxe.Json;
 import haxe.PosInfos;
 import picotest.macros.PicoTestConfig;
-import picotest.PicoMatcher.MatchResult;
+import picotest.matcher.PicoMatcher;
 
 #if !picotest_nodep
 import org.hamcrest.AssertionException;
@@ -16,6 +16,9 @@ import org.hamcrest.MatcherAssert;
 	Static class containing assertions of PicoTest.
 **/
 class PicoAssert {
+
+	private static var currentMatcher:PicoMatcher = PicoMatcher.standard();
+	private static var matchers:Array<PicoMatcher> = [];
 
 	public static function string<T>(d:Dynamic, other:Dynamic = null):String {
 		var result:String =
@@ -137,7 +140,7 @@ class PicoAssert {
 		Assert that `expected` and `actual` matches using `PicoMatcher`.
 	**/
 	public static function assertMatch(expected:Dynamic, actual:Dynamic, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
-		if (matcher == null) matcher = PicoMatcher.standard();
+		if (matcher == null) matcher = currentMatcher;
 		if (message == null) message = 'Structure mismatch:';
 		var result:String = PicoMatcher.printMatchResult(matcher.match(expected, actual));
 		if (result == null) PicoTest.currentRunner.success();
@@ -148,11 +151,23 @@ class PicoAssert {
 		Assert that `expected` and `actual`, parsed as JSON respectively, matches using `PicoMatcher`.
 	**/
 	public static function assertJsonMatch<T>(expected:String, actual:String, message:String = null, matcher:PicoMatcher = null, ?p:PosInfos):Void {
-		if (matcher == null) matcher = PicoMatcher.standard();
+		if (matcher == null) matcher = currentMatcher;
 		if (message == null) message = 'JSON structure mismatch:';
 		var result:String =  PicoMatcher.printMatchResult(matcher.match(Json.parse(expected), Json.parse(actual)));
 		if (result == null) PicoTest.currentRunner.success();
 		else PicoTest.currentRunner.failure('$message\n$result', p);
+	}
+
+	public static function pushMatcher(matcher:PicoMatcher):Void {
+		matchers.push(currentMatcher);
+		currentMatcher = matcher;
+	}
+
+	public static function popMatcher():PicoMatcher {
+		if (matchers.length == 0) return currentMatcher;
+		var old = currentMatcher;
+		currentMatcher = matchers.pop();
+		return old;
 	}
 
 	#if !picotest_nodep
