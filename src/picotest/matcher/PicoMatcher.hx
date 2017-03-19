@@ -1,176 +1,76 @@
 package picotest.matcher;
 
-#if !picotest_nodep
-import org.hamcrest.Matcher;
-import org.hamcrest.StringDescription;
-#end
+import picotest.matcher.patterns.PicoMatchCustom;
+import picotest.matcher.patterns.PicoMatchMany;
+import picotest.matcher.patterns.PicoMatchStandard;
+import picotest.matcher.PicoMatchResult.PicoMatchComponent;
 
 /**
 	Does structure based matching.
 **/
-class PicoMatcher {
+class PicoMatcher implements IPicoMatcherComponent {
 
-	private var matchers:Array<PicoMatcher->Array<Dynamic>->Dynamic->Dynamic->MatchResult>;
+	private var matcher:PicoMatchMany;
 
 	public function new():Void {
-		this.matchers = [];
+		this.matcher = new PicoMatchMany();
 	}
 
 	/**
 		Adds a matching rule to this `PicoMatcher`.
 	**/
-	public function addMatcher(matcher:PicoMatcher->Array<Dynamic>->Dynamic->Dynamic->MatchResult):Void {
-		this.matchers.push(matcher);
+	public function prepend(matcher:IPicoMatcherComponent):Void {
+		this.matcher.prepend(matcher);
 	}
 
 	/**
-		Executes structure based matching using this `PicoMatcher`.
+		Adds a matching rule to this `PicoMatcher`.
 	**/
-	public function match(expected:Dynamic, actual:Dynamic):MatchResult {
-		return matchInternal([], expected, actual);
+	public function append(matcher:IPicoMatcherComponent):Void {
+		this.matcher.append(matcher);
 	}
 
-	private function matchInternal(matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		for (matcher in this.matchers) {
-			var match:MatchResult = matcher(this, matched, expected, actual);
-			switch (match) {
-				case MatchResult.Unknown:
-					continue;
-				case MatchResult.Match, MatchResult.Mismatch(_,_), MatchResult.MismatchDesc(_,_), MatchResult.Complex(_):
-					return match;
-			}
-		}
-		return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
+	/**
+		Adds a matching rule to this `PicoMatcher`.
+	**/
+	public function prependMatcher(matcher:PicoMatcherContext->Dynamic->Dynamic->PicoMatchResult):Void {
+		this.matcher.prepend(new PicoMatchCustom(matcher));
 	}
 
-	public static function matchNull(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (expected == null || actual == null) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-		}
-		return MatchResult.Unknown;
+	/**
+		Adds a matching rule to this `PicoMatcher`.
+	**/
+	public function appendMatcher(matcher:PicoMatcherContext->Dynamic->Dynamic->PicoMatchResult):Void {
+		this.matcher.append(new PicoMatchCustom(matcher));
 	}
 
-	public static function matchInt(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Std.is(expected, Int) && Std.is(actual, Int)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-		}
-		return MatchResult.Unknown;
+	/**
+		Executes structure based matching using this `PicoMatcher`. Result is guaranteed to be not Unknown.
+	**/
+	public function match(expected:Dynamic, actual:Dynamic):PicoMatchResult {
+		return new PicoMatcherContext(this).match(expected, actual);
 	}
 
-	public static function matchFloat(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Std.is(expected, Float) && Std.is(actual, Float)) {
-			return (expected == actual || (Math.isNaN(expected) && Math.isNaN(actual))) ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-		}
-		return MatchResult.Unknown;
+	/**
+		Attempts structure based matching using this `PicoMatcher`.
+	**/
+	@:noDoc
+	public function tryMatch(context:PicoMatcherContext, expected:Dynamic, actual:Dynamic):PicoMatchResult {
+		return this.matcher.tryMatch(context, expected, actual);
 	}
-
-	public static function matchBool(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Std.is(expected, Bool) && Std.is(actual, Bool)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-		}
-		return MatchResult.Unknown;
-	}
-
-	public static function matchString(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Std.is(expected, String) && Std.is(actual, String)) {
-			return expected == actual ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-		}
-		return MatchResult.Unknown;
-	}
-
-	public static function matchEnum(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Reflect.isEnumValue(expected) && Reflect.isEnumValue(actual)) {
-			return Type.enumEq(expected, actual) ? MatchResult.Match : MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-		}
-		return MatchResult.Unknown;
-	}
-
-	public static function matchCircular(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		for (ea in matched) {
-			var e:Dynamic = ea[0];
-			var a:Dynamic = ea[1];
-			if (expected == e && actual == a) {
-				return MatchResult.Match;
-			} else if (expected == e || actual == a) {
-				return MatchResult.Mismatch(PicoAssert.string(expected), PicoAssert.string(actual));
-			}
-		}
-		matched.push([expected, actual]);
-		return MatchResult.Unknown;
-	}
-
-	public static function matchArray(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Std.is(expected, Array) && Std.is(actual, Array)) {
-			var e:Array<Dynamic> = cast expected;
-			var a:Array<Dynamic> = cast actual;
-			var mismatches:Array<MatchComponent> = [];
-			if (e.length != a.length) mismatches.push(MatchComponent.MismatchAt('[]', '[${e.length}]', '[${a.length}]'));
-			var c:Int = e.length > a.length ? e.length : a.length;
-			for (i in 0...c) {
-				switch (matcher.matchInternal(matched, e[i], a[i])) {
-					case MatchResult.Unknown, MatchResult.Match:
-					case MatchResult.Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('[$i]', e, a));
-					case MatchResult.MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('[$i]', e, d));
-					case MatchResult.Complex(a): mismatches.push(MatchComponent.ComplexAt('[$i]', a));
-				}
-			}
-			return mismatches.length == 0 ? MatchResult.Match : MatchResult.Complex(mismatches);
-		}
-		return MatchResult.Unknown;
-	}
-
-	public static function matchStruct(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		var eFields:Array<String> = Reflect.fields(expected);
-		var aFields:Array<String> = Reflect.fields(actual);
-		eFields.sort(Reflect.compare);
-		aFields.sort(Reflect.compare);
-		var mismatches:Array<MatchComponent> = [];
-		var eJoin:String = eFields.join(",");
-		var aJoin:String = aFields.join(",");
-		if (eJoin != aJoin) mismatches.push(MatchComponent.MismatchAt('[]', '{${eJoin}}', '{${aJoin}}'));
-		for (field in eFields) {
-			var e:Dynamic = Reflect.field(expected, field);
-			var a:Dynamic = Reflect.field(actual, field);
-			switch (matcher.matchInternal(matched, e, a)) {
-				case MatchResult.Unknown, MatchResult.Match:
-				case MatchResult.Mismatch(e, a): mismatches.push(MatchComponent.MismatchAt('.$field', e, a));
-				case MatchResult.MismatchDesc(e, d): mismatches.push(MatchComponent.MismatchDescAt('.$field', e, d));
-				case MatchResult.Complex(a): mismatches.push(MatchComponent.ComplexAt('.$field', a));
-			}
-		}
-		return mismatches.length == 0 ? MatchResult.Match : MatchResult.Complex(mismatches);
-	}
-
-	#if !picotest_nodep
-	public static function matchMatcher<T>(matcher:PicoMatcher, matched:Array<Dynamic>, expected:Dynamic, actual:Dynamic):MatchResult {
-		if (Std.is(expected, Matcher))  {
-			var matcher:Matcher<T> = expected;
-			if (!matcher.matches(actual))
-			{
-				var e:StringDescription = new StringDescription();
-				e.appendDescriptionOf(matcher);
-				var a:StringDescription = new StringDescription();
-				matcher.describeMismatch(actual, a);
-				return MatchResult.MismatchDesc(e.toString(), a.toString());
-			}
-			return MatchResult.Match;
-		}
-		return MatchResult.Unknown;
-	}
-	#end
 
 	/**
 		Print a `MatchResult` as String.
 	**/
-	public static function printMatchResult(result:MatchResult):String {
+	public static function printMatchResult(result:PicoMatchResult):String {
 		switch (result) {
-			case MatchResult.Unknown, MatchResult.Match:
+			case PicoMatchResult.Unknown, PicoMatchResult.Match:
 				return null;
-			case MatchResult.Mismatch(e, a):
+			case PicoMatchResult.Mismatch(e, a):
 				return '  - expected ${e} but was ${a}';
-			case MatchResult.MismatchDesc(e, d):
+			case PicoMatchResult.MismatchDesc(e, d):
 				return '  - expected ${e} but ${d}';
-			case MatchResult.Complex(a):
+			case PicoMatchResult.Complex(a):
 				var m:Array<String> = [];
 				for (comp in a) m.push(printMatchComponent(comp, "*"));
 				return m.join('\n');
@@ -180,13 +80,13 @@ class PicoMatcher {
 	/**
 		Print a `MatchComponent` which is at given `path` as String.
 	**/
-	public static function printMatchComponent(comp:MatchComponent, path:String = ""):String {
+	private static function printMatchComponent(comp:PicoMatchComponent, path:String = ""):String {
 		switch (comp) {
-			case MatchComponent.MismatchAt(p, e, a):
+			case PicoMatchComponent.MismatchAt(p, e, a):
 				return '  - ${path + p} expected ${e} but was ${a}';
-			case MatchComponent.MismatchDescAt(p, e, d):
+			case PicoMatchComponent.MismatchDescAt(p, e, d):
 				return '  - ${path + p} expected ${e} but ${d}';
-			case MatchComponent.ComplexAt(p, a):
+			case PicoMatchComponent.ComplexAt(p, a):
 				var m:Array<String> = [];
 				for (comp in a) m.push(printMatchComponent(comp, '${path + p}'));
 				return m.join('\n');
@@ -194,43 +94,12 @@ class PicoMatcher {
 	}
 
 	/**
-		Populate this `PicoMatcher` instance with standard matching rules.
-		Note that any matching rules added after call to this method is ignored.
-	**/
-	public function withStandard():PicoMatcher {
-		#if !picotest_nodep
-		this.addMatcher(PicoMatcher.matchMatcher);
-		#end
-		this.addMatcher(PicoMatcher.matchNull);
-		this.addMatcher(PicoMatcher.matchInt);
-		this.addMatcher(PicoMatcher.matchFloat);
-		this.addMatcher(PicoMatcher.matchBool);
-		this.addMatcher(PicoMatcher.matchString);
-		this.addMatcher(PicoMatcher.matchEnum);
-		this.addMatcher(PicoMatcher.matchCircular);
-		this.addMatcher(PicoMatcher.matchArray);
-		this.addMatcher(PicoMatcher.matchStruct);
-		return this;
-	}
-
-	/**
 		Constructs a `PicoMatcher` instance with standard matching rules.
 	**/
 	public static function standard():PicoMatcher {
-		return new PicoMatcher().withStandard();
+		var result:PicoMatcher = new PicoMatcher();
+		result.matcher.append(new PicoMatchStandard());
+		return result;
 	}
 }
 
-enum MatchResult {
-	Unknown;
-	Match;
-	Mismatch(expected:String, actual:String);
-	MismatchDesc(expected:String, description:String);
-	Complex(array:Array<MatchComponent>);
-}
-
-enum MatchComponent {
-	MismatchAt(path:String, expected:String, actual:String);
-	MismatchDescAt(path:String, expected:String, description:String);
-	ComplexAt(path:String, array:Array<MatchComponent>);
-}
