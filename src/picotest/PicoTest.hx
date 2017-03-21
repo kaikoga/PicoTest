@@ -13,7 +13,7 @@ class PicoTest {
 	/**
 		Version of PicoTest.
 	**/
-	inline public static var VERSION:String = "0.7.7";
+	inline public static var VERSION:String = "0.8.0";
 
 	/**
 		Current target runner which assertions are run against.
