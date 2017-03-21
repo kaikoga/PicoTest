@@ -28,6 +28,7 @@ class PicoTestExternalCommand {
 			// assume Windows is great
 			this.process = new Process(cmd, args);
 		} else {
+			// use sh to have shell expansion and escapes
 			this.process = new Process("sh", []);
 			this.process.stdin.writeString('$cmd ${args.join(" ")}');
 			this.process.stdin.close();
@@ -35,17 +36,25 @@ class PicoTestExternalCommand {
 	}
 
 	private function joinProcess(writeStdout:Bool):Void {
+		var stdout:Bytes;
+		var stderr:Bytes;
+		var err:Int;
 		try {
-			var stdout:Bytes = process.stdout.readAll();
-			var err:Int = this.process.exitCode();
-			if (err != 0) {
-				throw 'Command $cmd ${args.join(" ")} returned $err: $stdout';
-			}
-			if (writeStdout) {
-				PicoTestExternalCommandHelper.writeFile(stdout, this.outFile);
-			}
+			err = this.process.exitCode();
+			stdout = process.stdout.readAll();
+			stderr = process.stderr.readAll();
 		} catch (d:Dynamic) {
-			throw 'Command $cmd ${args.join(" ")} failed';
+			throw 'Command $cmd ${args.join(" ")} failed ($d)';
+		}
+		if (err != 0) {
+			// dump output
+			Sys.stdout().writeString("Process output:");
+			Sys.stdout().write(stdout);
+			Sys.stderr().write(stderr);
+			throw 'Command $cmd ${args.join(" ")} returned $err:';
+		}
+		if (writeStdout) {
+			PicoTestExternalCommandHelper.writeFile(stdout, this.outFile);
 		}
 	}
 
