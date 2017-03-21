@@ -109,6 +109,7 @@ class WarnReporter implements IPicoTestReporter {
 		#if macro
 		var text:String = File.read(file).readAll().toString();
 
+		line -= 1;
 		while (line > 0) {
 			var bulk = line;
 			if (bulk > BULK_LINES) bulk = BULK_LINES;
