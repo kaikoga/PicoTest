@@ -165,7 +165,11 @@ class PicoTestRunner {
 	public dynamic function onComplete():Void {
 		#if flash
 		if (PicoTestConfig.reportJson) {
-			try { System.exit(0); } catch (d:Dynamic) {}
+			try {
+				System.exit(0);
+			} catch (d:Dynamic) {
+				throw "System.exit() failed. This PicoTest instance should run on standalone Flash Player, and local swf must be trusted.";
+			}
 		}
 		#elseif (sys && !macro)
 		Sys.exit(0);
