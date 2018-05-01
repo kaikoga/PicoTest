@@ -1,19 +1,19 @@
 package picotest.reporters;
 
-import picotest.formats.PicoTestJsonTraceResultFormat;
+import picotest.formats.PicoTestJsonResultFormat;
 import picotest.out.IPicoTestOutput;
 import picotest.result.PicoTestResult;
 
-class JsonTraceReporter implements IPicoTestReporter {
+class JsonReporter implements IPicoTestReporter {
 
 	private var stdout:IPicoTestOutput;
 
-	public function new(stdout:IPicoTestOutput):Void {
+	public function JsonReporter(stdout:IPicoTestOutput):Void {
 		this.stdout = stdout;
 	}
 
 	public function report(results:Array<PicoTestResult>):Void {
-		this.stdout.output(PicoTestJsonTraceResultFormat.serialize(results));
+		this.stdout.output(PicoTestJsonResultFormat.serialize(results));
 	}
 
 	public function close():Void {
