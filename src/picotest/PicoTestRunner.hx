@@ -192,7 +192,7 @@ class PicoTestRunner {
 		PicoTest.currentRunner = this;
 		this.currentTask = task;
 		var oldTrace:Dynamic->?PosInfos->Void = haxe.Log.trace;
-		haxe.Log.trace = function(v:Dynamic, ?p:PosInfos):Void { this.trace(v, p); };
+		haxe.Log.trace = this.trace;
 		switch [this.currentTask.status, this.currentTask.result] {
 			case [PicoTestTaskStatus.Initial, Option.Some(result)]:
 				for (printer in this.printers) printer.printTestCase(result, true);
