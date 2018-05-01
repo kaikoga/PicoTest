@@ -212,6 +212,7 @@ As a downside, test output will likely lose some readablility.
 - ```-D picotest_nodep``` Remove hamcrest supports
 - ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
 - ```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)
+- ```-D picotest_junit``` Path to output JUnit XML file
 
 
 ## Internal
@@ -249,6 +250,7 @@ As a downside, test output will likely lose some readablility.
   - breaking changes to progress output: test method name is now printed BEFORE invocation and resumes  
   - rewritten many components
   - made even faster
+  - output JUnit XML
 - Version 0.7.7
   - made a lot faster
 - Version 0.7.6

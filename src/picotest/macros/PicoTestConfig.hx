@@ -60,6 +60,9 @@ class PicoTestConfig {
 	public static var reportDir(get, never):String;
 	private static function get_reportDir():String return getDefine("picotest_report_dir");
 
+	public static var junit(get, never):String;
+	private static function get_junit():String return getDefine("picotest_junit");
+
 	public static var remote(get, set):Bool;
 	private static function get_remote():Bool return getFlag("picotest_remote");
 	private static function set_remote(value:Bool):Bool return setFlag("picotest_remote", value);

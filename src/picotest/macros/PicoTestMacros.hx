@@ -2,6 +2,8 @@ package picotest.macros;
 
 #if (macro || macro_doc_gen)
 
+import picotest.out.PicoTestFileOutput;
+import picotest.reporters.JUnitReporter;
 import picotest.out.PicoTestOutput;
 import haxe.macro.Context;
 import picotest.readers.PicoTestResultReader;
@@ -71,7 +73,11 @@ class PicoTestMacros {
 
 	public static function readResult(report:String, header:String):Void {
 		var runner:PicoTestRunner = PicoTest.runner();
-		runner.reporters = [new WarnReporter(new PicoTestOutput())];
+		runner.reporters = [];
+		runner.reporters.push(new WarnReporter(new PicoTestOutput()));
+		if (PicoTestConfig.junit != null) {
+			runner.reporters.push(new JUnitReporter(new PicoTestFileOutput(PicoTestConfig.junit)));
+		}
 		new PicoTestResultReader().read(runner, report, header);
 		runner.run();
 	}

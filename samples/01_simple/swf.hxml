@@ -11,4 +11,5 @@
 -D picotest_show_ignore
 -D picotest_show_trace
 -D picotest_fp="Flash Player Debugger"
+-D picotest_junit=TestResult_swf.xml
 -D picotest_flog=~/Library/Preferences/Macromedia/Flash\ Player/Logs/flashlog.txt

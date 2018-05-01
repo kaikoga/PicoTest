@@ -2,17 +2,19 @@ package picotest.result;
 
 class PicoTestResultSummary {
 
-	private var testsEmpty:Int = 0;
-	private var testsSuccess:Int = 0;
-	private var testsSkip:Int = 0;
-	private var testsFailure:Int = 0;
-	private var testsError:Int = 0;
-	private var testsIgnore:Int = 0;
-	private var testsInvalid:Int = 0;
+	public var testsTotal(default, null):Int = 0;
+	public var testsEmpty(default, null):Int = 0;
+	public var testsSuccess(default, null):Int = 0;
+	public var testsSkip(default, null):Int = 0;
+	public var testsFailure(default, null):Int = 0;
+	public var testsError(default, null):Int = 0;
+	public var testsIgnore(default, null):Int = 0;
+	public var testsInvalid(default, null):Int = 0;
 
-	private var assertsSuccess:Int = 0;
-	private var assertsFailure:Int = 0;
-	private var assertsError:Int = 0;
+	public var assertsTotal(default, null):Int = 0;
+	public var assertsSuccess(default, null):Int = 0;
+	public var assertsFailure(default, null):Int = 0;
+	public var assertsError(default, null):Int = 0;
 
 	public function new() {
 	}
@@ -23,11 +25,14 @@ class PicoTestResultSummary {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
 						this.assertsSuccess++;
+						this.assertsTotal++;
 					case PicoTestAssertResult.Skip:
 					case PicoTestAssertResult.Failure(message,callInfo):
 						this.assertsFailure++;
+						this.assertsTotal++;
 					case PicoTestAssertResult.Error(message,callInfo):
 						this.assertsError++;
+						this.assertsTotal++;
 					case PicoTestAssertResult.Trace(message,callInfo):
 					case PicoTestAssertResult.Ignore(message,callInfo):
 					case PicoTestAssertResult.Invalid(message,callInfo):
@@ -49,6 +54,7 @@ class PicoTestResultSummary {
 				case PicoTestResultMark.Invalid:
 					this.testsInvalid++;
 			}
+			this.testsTotal++;
 		}
 		return this;
 	}
@@ -69,8 +75,8 @@ class PicoTestResultSummary {
 
 		var s:Array<String> = [];
 		s.push('----------------------------------------');
-		if (tests.length > 0) s.push('Tests: ${tests.join(', ')}');
-		if (asserts.length > 0) s.push('asserts: ${asserts.join(', ')}');
+		if (tests.length > 0) s.push('Tests ${testsTotal}: ${tests.join(', ')}');
+		if (asserts.length > 0) s.push('asserts ${testsTotal}: ${asserts.join(', ')}');
 		s.push('----------------------------------------\n');
 		return s.join('\n');
 	}
