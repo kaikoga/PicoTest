@@ -26,7 +26,8 @@ class VerboseTracePrinter implements IPicoTestPrinter {
 				this.stdout.output("F");
 			case PicoTestAssertResult.Error(_,_):
 				this.stdout.output("E");
-			case PicoTestAssertResult.Trace(_,_):
+			case PicoTestAssertResult.Trace(m,_):
+				this.stdout.output(m);
 			case PicoTestAssertResult.Ignore(_,_):
 				this.stdout.output("I");
 			case PicoTestAssertResult.Invalid(_,_):
