@@ -1,5 +1,5 @@
 PicoTest, based on [NanoTest](https://github.com/shohei909/NanoTest),
-is a (to-be) very versatile unit testing framework for Haxe.
+is a very versatile unit testing framework for Haxe.
 It attempts to be customizable to fit various use cases, without meddling.
 
 PicoTest can run tests and display failures as compiler warnings.
@@ -221,19 +221,19 @@ As a downside, test output will likely lose some readablility.
 - ```-D picotest_report_json``` output report file (used internally by ```PicoTest.warn()```)
 
 
-##Flash
+## Flash
 
 - ```-D picotest_fp``` Path to executable of Flash Player (default per OS)
 - ```-D picotest_flog``` Path to flashlog.txt (default per OS)
 
 
-##JavaScript
+## JavaScript
 
 - ```-D picotest_browser``` Specify browser to run tests in (TODO)
 - ```-D picotest_remote_port``` A local port to receive test result from browser (default ```8001```)
 
 
-#Planned Features
+# Planned Features
 
 - Find out the standards of Flash Player executable path (well, I'll stop using "Flash Player Debugger" before 1.0...)
 - Setting path to executables of ```neko```, ```node```, ```java```, ```mono```, etc... 
@@ -242,7 +242,7 @@ As a downside, test output will likely lose some readablility.
 - More async testing.
 
 
-#Release Notes
+# Release Notes
 
 - Version 0.8.0
   - breaking changes to macro API
@@ -307,6 +307,6 @@ As a downside, test output will likely lose some readablility.
   - Initial release
 
 
-#License
+# License
 
 The MIT License
