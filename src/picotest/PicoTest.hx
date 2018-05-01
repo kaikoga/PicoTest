@@ -4,7 +4,7 @@ import picotest.macros.PicoTestConfig;
 import picotest.printers.VerboseTracePrinter;
 import picotest.out.PicoTestOutput;
 import picotest.macros.PicoTestMacros;
-import picotest.reporters.JsonReporter;
+import picotest.reporters.JsonTraceReporter;
 import haxe.PosInfos;
 import picotest.reporters.TraceReporter;
 
@@ -42,7 +42,7 @@ class PicoTest {
 		if (PicoTestConfig.reportJson) {
 			haxe.Log.trace = emptyTrace;
 			runner.printers = [new VerboseTracePrinter(output)];
-			runner.reporters = [new JsonReporter(output)];
+			runner.reporters = [new JsonTraceReporter(output)];
 		} else {
 			runner.printers = [new VerboseTracePrinter(output)];
 			runner.reporters = [new TraceReporter(output)];

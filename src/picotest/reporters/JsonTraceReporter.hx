@@ -6,13 +6,13 @@ import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestCallInfo;
 import picotest.result.PicoTestResult;
 
-class JsonReporter implements IPicoTestReporter {
+class JsonTraceReporter implements IPicoTestReporter {
 
 	inline public static var PICOTEST_RESULT_HEADER:String = "__picotest_result__:";
 
 	private var stdout:IPicoTestOutput;
 
-	public function new(stdout:IPicoTestOutput):Void {
+	public function JsonTraceReporter(stdout:IPicoTestOutput):Void {
 		this.stdout = stdout;
 	}
 
