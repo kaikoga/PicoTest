@@ -1,6 +1,7 @@
 package picotest;
 
 import picotest.matcher.predicates.HexPredicate;
+import picotest.matcher.predicates.RoughlyPredicate;
 import picotest.PicoAssert.*;
 
 using picotest.PicoPredicates;
@@ -19,6 +20,14 @@ class PicoMatcherPredicateSampleTestCase {
 	public function testHexFail() {
 		assertMatch(new HexPredicate(0x1234), 1234);
 		assertMatch({a: new HexPredicate(0x1234)}, {a: 1234});
+	}
+
+	public function testRoughly() {
+		assertMatch(new RoughlyPredicate(1.0, 0.1), 1.01);
+	}
+
+	public function testRoughlyFail() {
+		assertMatch(new RoughlyPredicate(1.0, 0.01), 1.1);
 	}
 
 	public function testActualValueIsPredicate() {
