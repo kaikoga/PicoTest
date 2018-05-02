@@ -13,6 +13,7 @@ class PicoMatchStandard extends PicoMatchMany {
 		this.append(new PicoMatchHamcrest());
 		#end
 
+		this.append(new PicoMatchPredicate());
 		this.append(new PicoMatchPrimitive());
 
 		this.append(new PicoMatchCircular());

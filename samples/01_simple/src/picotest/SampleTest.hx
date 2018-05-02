@@ -36,6 +36,7 @@ class SampleTest {
 		runner.load(ParametrizedSampleTestCase, [[1, 1], [2, 2]]);
 		runner.load(ParametrizedSetupSampleTestCase);
 		runner.load(PicoMatcherSampleTestCase);
+		runner.load(PicoMatcherPredicateSampleTestCase);
 		#if !picotest_nodep
 		runner.load(HamcrestSampleTestCase);
 		runner.load(PicoMatcherHamcrestSampleTestCase);
