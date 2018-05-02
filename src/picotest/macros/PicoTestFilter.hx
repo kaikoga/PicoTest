@@ -20,7 +20,10 @@ class PicoTestFilter {
 	inline public static function addPattern(pattern:String):Void patterns.push(pattern);
 
 	public static function readFromFile(fileName:String):Void {
-		for (line in ~/[\r\n]/g.split(sys.io.File.getContent(fileName))) if (line != "") addPattern(line);
+		for (line in ~/[\r\n]/g.split(sys.io.File.getContent(fileName))) {
+			var l:String = StringTools.trim(line);
+			if (l != "" && line.charAt(0) != "#") addPattern(line);
+		}
 	}
 
 	inline private static function loadPatterns():Array<String> return patterns;
