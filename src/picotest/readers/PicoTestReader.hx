@@ -1,5 +1,6 @@
 package picotest.readers;
 
+import picotest.macros.PicoTestFilter;
 import haxe.Constraints.Function;
 import picotest.tasks.IPicoTestTask;
 import picotest.tasks.PicoTestIgnoreTestTask;
@@ -15,6 +16,8 @@ class PicoTestReader implements IPicoTestReader {
 
 	public function load(runner:PicoTestRunner, testCaseClass:Class<Dynamic>, defaultParameters:Iterable<Array<Dynamic>> = null):Void {
 		var className:String = Type.getClassName(testCaseClass);
+		if (!PicoTestFilter.filter(className)) return;
+
 		var allMeta:Dynamic<Dynamic<Array<Dynamic>>> = haxe.rtti.Meta.getFields(testCaseClass);
 
 		var tests:Array<TestType> = [];

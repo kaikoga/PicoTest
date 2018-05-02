@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.macros.PicoTestFilter;
 import picotest.macros.PicoTestConfig;
 import picotest.printers.VerboseTracePrinter;
 import picotest.out.PicoTestOutput;
@@ -84,6 +85,24 @@ class PicoTest {
 	**/
 	public static function readResult(report:String, header:String = null):Void {
 		PicoTestMacros.readResult(report, header = null);
+	}
+
+	/**
+		Add test filter.
+	**/
+	public static function filter(pattern:Dynamic):Void {
+		if (Std.is(pattern, String)) {
+			PicoTestFilter.addPattern(pattern);
+		} else if (Std.is(pattern, Class)) {
+			PicoTestFilter.addPattern(Type.getClassName(pattern));
+		}
+	}
+
+	/**
+		Add test filters from file.
+	**/
+	public static function filterFile(fileName:String = "picofilter.txt"):Void {
+		PicoTestFilter.readFromFile(fileName);
 	}
 
 	#end
