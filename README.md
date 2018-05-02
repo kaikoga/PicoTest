@@ -198,6 +198,14 @@ Windows, Linux, and BSD are not tested but maybe work.
 Supposed to work, as long as executables such as ```neko```, ```node```, ```java```, ```mono```, etc. are accessible from IDEA. 
 
 
+## Test Class Filters
+
+- ```--macro "picotest.PicoTest.filter('package.TestCaseClass')"``` will only run specified test class.
+  - Test class name pattern accepts regex.
+  - Multiple patterns could be provided. All test classes matching any of the provided patterns are selected.
+- ```--macro "picotest.PicoTest.filterFile('picofilter.txt')"``` reads class name patterns from ```picofilter.txt```. 
+  - ```"picofilter.txt"``` is default argument, so could be omitted.
+
 # Compiler Defines
 
 ## Cross
