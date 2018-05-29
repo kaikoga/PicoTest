@@ -3,21 +3,23 @@ package picotest.out.impl;
 #if flash
 
 import flash.Lib;
+import picotest.out.buffer.PicoTestOutputLineBuffer;
 
 class PicoTestFlashOutput implements IPicoTestOutput {
 
-	private var buffer:PicoTestOutputBuffer;
+	private var buffer:PicoTestOutputLineBuffer;
 
-	public function new() {
-		this.buffer = new PicoTestOutputBuffer();
-	}
+	private function println(line:String):Void Lib.trace(line);
+
+	public function new() this.buffer = new PicoTestOutputLineBuffer(println);
 
 	public function output(value:String):Void {
-		this.buffer.output(value, function(line:String) Lib.trace(line));
+		this.buffer.output(value);
+		this.buffer.emit();
 	}
 
 	public function close():Void {
-		// do nothing
+		this.buffer.close();
 	}
 }
 

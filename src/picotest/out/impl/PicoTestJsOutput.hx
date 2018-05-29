@@ -2,12 +2,16 @@ package picotest.out.impl;
 
 #if js
 
+import picotest.out.buffer.PicoTestOutputLineBuffer;
+
 class PicoTestJsOutput implements IPicoTestOutput {
 
-	private var buffer:PicoTestOutputBuffer;
+	private var buffer:PicoTestOutputLineBuffer;
+
+	private function println(line:String):Void untyped js.Boot.__trace(cast line, null);
 
 	public function new() {
-		this.buffer = new PicoTestOutputBuffer();
+		this.buffer = new PicoTestOutputLineBuffer(println);
 	}
 
 	public function output(value:String):Void {
@@ -16,12 +20,13 @@ class PicoTestJsOutput implements IPicoTestOutput {
 			untyped process.stdout.write(value);
 		} catch (e:Dynamic) {
 			// fallback to haxe std trace
-			this.buffer.output(value, function(line:String) untyped js.Boot.__trace(cast line, null));
+			this.buffer.output(value);
+			this.buffer.emit();
 		}
 	}
 
 	public function close():Void {
-		// do nothing
+		this.buffer.close();
 	}
 }
 

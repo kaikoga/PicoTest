@@ -90,11 +90,12 @@ class PicoTestExternalCommand {
 				case ["", "eof", num] if (Std.parseInt(num) != null):
 					var index:Int = Std.parseInt(num);
 					eof = index;
-					dataCount++;
 				case ["", "result", num] if (Std.parseInt(num) != null):
 					var index:Int = Std.parseInt(num);
-					result[index] = request.body.toString();
-					dataCount++;
+					if (result[index] == null) {
+						result[index] = (request.body != null) ? request.body.toString() : "";
+						dataCount++;
+					}
 				case _:
 					return null;
 			}
@@ -102,7 +103,7 @@ class PicoTestExternalCommand {
 		}));
 		picoServer.open();
 
-		while (dataCount != eof) try { picoServer.listen(); } catch(e:Dynamic) {}
+		while (dataCount != eof) picoServer.listen();
 
 		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result.join("")), this.outFile);
 		picoServer.close();
