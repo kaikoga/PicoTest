@@ -2,15 +2,11 @@ package picotest.spawners.http;
 
 #if sys
 
-import picotest.spawners.http.routes.PicoHttpInvalidRoute;
 import haxe.io.Bytes;
-import haxe.io.Input;
 import picotest.spawners.http.connections.IPicoHttpConnection;
 import picotest.spawners.http.connections.PicoHttpRequestConnection;
-import picotest.spawners.http.connections.PicoHttpResponseConnection;
 import picotest.spawners.http.routes.IPicoHttpRoute;
-import sys.FileSystem;
-import sys.io.File;
+import picotest.spawners.http.routes.PicoHttpInvalidRoute;
 import sys.net.Host;
 import sys.net.Socket;
 
@@ -56,11 +52,21 @@ class PicoHttpServer {
 	}
 
 	public function listen():Void {
-		var select:{ read: Array<Socket>,write: Array<Socket>,others: Array<Socket> } = Socket.select(this.clientSockets, this.clientSockets, []);
-		for (read in select.read) {
-			if (read == this.server) this.accept() else this.tickSocket(read);
+		if (false) {
+			var select:{ read: Array<Socket>,write: Array<Socket>,others: Array<Socket> } = Socket.select(this.clientSockets, this.clientSockets, [], 1.0);
+			for (read in select.read) {
+				if (read == this.server) this.accept() else this.tickSocket(read);
+			}
+			for (write in select.write) this.tickSocket(write);
+			for (others in select.others) this.tickSocket(others);
+			Sys.exit(1);
+		} else {
+			this.server.listen(1);
+			var socket:Socket = this.server.accept();
+			var connection:IPicoHttpConnection = new PicoHttpRequestConnection(socket, this);
+			while (connection != null) connection = connection.tick();
+			socket.close();
 		}
-		for (write in select.write) this.tickSocket(write);
 	}
 
 	private function accept():Void {
