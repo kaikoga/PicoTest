@@ -2,6 +2,12 @@ package picotest.spawners.common;
 
 #if (sys || macro || macro_doc_gen)
 
+import picotest.spawners.http.connections.PicoHttpResponseConnection;
+import picotest.spawners.http.PicoHttpRequest;
+import picotest.spawners.http.connections.IPicoHttpConnection;
+import sys.net.Socket;
+import picotest.spawners.http.routes.PicoHttpCallbackRoute;
+import picotest.spawners.http.routes.PicoHttpLocalFileRoute;
 import haxe.io.Bytes;
 import picotest.spawners.common.PicoTestExternalCommandHelper;
 import picotest.spawners.http.PicoHttpServer;
@@ -73,28 +79,30 @@ class PicoTestExternalCommand {
 	public function executeRemote(httpServerSetting:PicoHttpServerSetting = null):Void {
 		this.startProcess();
 
-		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting).open();
-
 		var result:Array<String> = [];
 		var dataCount:Int = 0;
 		var eof:Int = -1;
-		while (dataCount != eof) {
-			try {
-				picoServer.listen();
-				switch (picoServer.postUri.split("/")) {
-					case ["", "eof", num] if (Std.parseInt(num) != null):
-						var index:Int = Std.parseInt(num);
-						eof = index;
-						dataCount++;
-					case ["", "result", num] if (Std.parseInt(num) != null):
-						var index:Int = Std.parseInt(num);
-						result[index] = picoServer.postData.toString();
-						dataCount++;
-					case _:
-						break;
-				}
-			} catch(e:Dynamic) {}
-		}
+
+		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting);
+		picoServer.route(new PicoHttpLocalFileRoute(httpServerSetting));
+		picoServer.route(new PicoHttpCallbackRoute(function (socket:Socket, request:PicoHttpRequest):IPicoHttpConnection {
+			switch (request.uri.split("/")) {
+				case ["", "eof", num] if (Std.parseInt(num) != null):
+					var index:Int = Std.parseInt(num);
+					eof = index;
+					dataCount++;
+				case ["", "result", num] if (Std.parseInt(num) != null):
+					var index:Int = Std.parseInt(num);
+					result[index] = request.body.toString();
+					dataCount++;
+				case _:
+					return null;
+			}
+			return new PicoHttpResponseConnection(socket, "HTTP/1.0 200 OK\r\n\r\n", null);
+		}));
+		picoServer.open();
+
+		while (dataCount != eof) try { picoServer.listen(); } catch(e:Dynamic) {}
 
 		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result.join("")), this.outFile);
 		picoServer.close();

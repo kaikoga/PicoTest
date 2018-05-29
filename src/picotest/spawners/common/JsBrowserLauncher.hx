@@ -1,12 +1,11 @@
 package picotest.spawners.common;
 
-import picotest.spawners.http.PicoHttpServerSetting;
-
 #if neko
 
-import picotest.spawners.common.PicoTestExternalCommandHelper;
 import picotest.spawners.common.ITestExecuter;
 import picotest.spawners.common.PicoTestExternalCommand;
+import picotest.spawners.common.PicoTestExternalCommandHelper;
+import picotest.spawners.http.PicoHttpServerSetting;
 
 class JsBrowserLauncher implements ITestExecuter {
 

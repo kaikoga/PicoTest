@@ -2,11 +2,13 @@ package picotest.spawners.http;
 
 #if sys
 
-import picotest.spawners.http.connections.PicoHttpRequestConnection;
+import picotest.spawners.http.routes.PicoHttpInvalidRoute;
 import haxe.io.Bytes;
 import haxe.io.Input;
 import picotest.spawners.http.connections.IPicoHttpConnection;
+import picotest.spawners.http.connections.PicoHttpRequestConnection;
 import picotest.spawners.http.connections.PicoHttpResponseConnection;
+import picotest.spawners.http.routes.IPicoHttpRoute;
 import sys.FileSystem;
 import sys.io.File;
 import sys.net.Host;
@@ -22,41 +24,48 @@ class PicoHttpServer {
 	private var server:Socket;
 	private var setting:PicoHttpServerSetting;
 
+	private var routes:Array<IPicoHttpRoute>;
 	private var connections:Map<Socket, IPicoHttpConnection>;
-	private var readSockets:Array<Socket>;
+	private var clientSockets:Array<Socket>;
 
 	public function new(setting:PicoHttpServerSetting) {
 		this.setting = setting;
 		this.connections = new Map();
-		this.readSockets = [];
+		this.clientSockets = [];
+		this.routes = [];
+	}
+
+	inline public function route(route:IPicoHttpRoute):PicoHttpServer {
+		this.routes.push(route);
+		return this;
 	}
 
 	public function open():PicoHttpServer {
 		this.server = new Socket();
 		this.server.bind(new Host("localhost"), this.setting.port);
-		this.readSockets.push(this.server);
+		this.clientSockets.push(this.server);
 		this.available = true;
 		return this;
 	}
 
 	public function close():PicoHttpServer {
-		this.readSockets.remove(this.server);
+		this.clientSockets.remove(this.server);
 		this.server.close();
 		this.available = false;
 		return this;
 	}
 
 	public function listen():Void {
-		var select:{ read: Array<Socket>,write: Array<Socket>,others: Array<Socket> } = Socket.select(this.readSockets, this.readSockets, []);
+		var select:{ read: Array<Socket>,write: Array<Socket>,others: Array<Socket> } = Socket.select(this.clientSockets, this.clientSockets, []);
 		for (read in select.read) {
 			if (read == this.server) this.accept() else this.tickSocket(read);
 		}
 		for (write in select.write) this.tickSocket(write);
-		for (others in select.others) this.tickSocket(others);
 	}
 
 	private function accept():Void {
 		var socket:Socket = this.server.accept();
+		this.clientSockets.push(socket);
 		this.connections.set(socket, new PicoHttpRequestConnection(socket, this));
 	}
 
@@ -67,41 +76,17 @@ class PicoHttpServer {
 		} else {
 			socket.close();
 			this.connections.remove(socket);
-			this.readSockets.remove(socket);
+			this.clientSockets.remove(socket);
 		}
 	}
 
 	public function request(socket:Socket, request:PicoHttpRequest):IPicoHttpConnection {
-		var responseHeader:String = "HTTP/1.0 200 OK\r\n\r\n";
-		var responseBody:Bytes = null;
-		switch (request.method) {
-			case PicoHttpMethod.GET:
-				var localFile:String = null;
-				if (localFile == null) {
-					if ((setting.files != null) && setting.files.exists(request.uri)) {
-						localFile = setting.files.get(request.uri);
-					}
-				}
-				if (localFile == null) {
-					if (setting.docRoot != null) {
-						var path:String = setting.docRoot + request.uri;
-						if (path.indexOf("..") < 0 && FileSystem.exists(path)) {
-							localFile = path;
-						}
-					}
-				}
-				if (localFile != null) {
-					var input:Input = File.read(localFile);
-					responseBody = input.readAll();
-					input.close();
-				}
-			case PicoHttpMethod.POST:
-				this.postUri = request.uri;
-				this.postData = request.body;
-			case PicoHttpMethod.INVALID:
-				responseHeader = "HTTP/1.0 500 Internal Error\r\n\r\n";
+		for (route in this.routes) {
+			var result:IPicoHttpConnection = route.upgrade(socket, request);
+			if (result != null) return result;
 		}
-		return new PicoHttpResponseConnection(socket, responseHeader, responseBody);
+
+		return new PicoHttpInvalidRoute().upgrade(socket, request);
 	}
 }
 
