@@ -1,6 +1,6 @@
 package picotest.spawners.common;
 
-import picotest.spawners.http.PicoHttpServer.PicoHttpServerSetting;
+import picotest.spawners.http.PicoHttpServerSetting;
 
 #if neko
 

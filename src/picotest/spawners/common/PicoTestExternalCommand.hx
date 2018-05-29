@@ -2,9 +2,10 @@ package picotest.spawners.common;
 
 #if (sys || macro || macro_doc_gen)
 
-import picotest.spawners.common.PicoTestExternalCommandHelper;
 import haxe.io.Bytes;
+import picotest.spawners.common.PicoTestExternalCommandHelper;
 import picotest.spawners.http.PicoHttpServer;
+import picotest.spawners.http.PicoHttpServerSetting;
 import sys.io.Process;
 
 //TODO
