@@ -28,7 +28,7 @@ class PicoTestResult {
 	public function new(className:String, methodName:String, parameters:Array<Dynamic> = null, assertResults:Array<PicoTestAssertResult> = null, setup:Void->Void = null, tearDown:Void->Void = null) {
 		this.className = className;
 		this.methodName = methodName;
-		this.parameters = if (parameters != null) parameters.map(function(d:Dynamic) return Std.string(d)); else null;
+		this.parameters = if (parameters != null) parameters.map(function(d:Dynamic) return @:privateAccess PicoAssert.shortName(d)); else null;
 		this.assertResults = if (assertResults != null) assertResults; else [];
 		this._setup = setup;
 		this._tearDown = tearDown;

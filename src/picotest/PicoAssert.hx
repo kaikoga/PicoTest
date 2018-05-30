@@ -43,11 +43,32 @@ class PicoAssert {
 		else if (Std.is(d, Int)) '$d'
 		else if (Std.is(d, Bool)) '$d'
 		else {
-			var klass:Class<T> = Type.getClass(d);
-			if (klass != null) '[object ${Type.getClassName(klass)}]'
-			else '{anon}';
+			var className:String = className(d);
+			if (className != null) '[${className}]' else '{anon}';
 		}
 		return result;
+	}
+
+	inline private static function shortName<T>(d:Dynamic):String {
+		var result:String =
+		if (d == null) '$null';
+		else if (Std.is(d, String)) '$d'
+		else if (Std.is(d, Float)) '$d'
+		else if (Std.is(d, Int)) '$d'
+		else if (Std.is(d, Bool)) '$d'
+		else {
+			var className:String = className(d);
+			if (className != null) '${className.split(".").pop()}' else 'anon';
+		}
+		return result;
+	}
+
+	inline private static function className<T>(d:Dynamic):String {
+		var klass:Class<T> = if (Std.is(d, Class)) d else Type.getClass(d);
+		if (klass == null) return null;
+		var fqn:String = Type.getClassName(klass);
+		if (fqn == null) return null;
+		return fqn;
 	}
 
 	/**
