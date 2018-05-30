@@ -9,6 +9,14 @@ import picotest.reporters.JsonTraceReporter;
 import haxe.PosInfos;
 import picotest.reporters.TraceReporter;
 
+#if flash
+import picotest.out.impl.display.PicoTestFlashDisplayOutput;
+#end
+
+#if js
+import picotest.out.impl.display.PicoTestJsDisplayOutput;
+#end
+
 class PicoTest {
 
 	/**
@@ -32,6 +40,7 @@ class PicoTest {
 		var runner = new PicoTestRunner();
 
 		var output = new PicoTestOutput();
+		var displayOutput = #if flash new PicoTestFlashDisplayOutput(output) #elseif js new PicoTestJsDisplayOutput(output) #else output #end ;
 
 		if (PicoTestConfig.remote) {
 			var onComplete = runner.onComplete;
@@ -42,10 +51,10 @@ class PicoTest {
 
 		if (PicoTestConfig.reportJson) {
 			haxe.Log.trace = emptyTrace;
-			runner.printers = [new VerboseTracePrinter(output)];
+			runner.printers = [new VerboseTracePrinter(displayOutput)];
 			runner.reporters = [new JsonTraceReporter(output)];
 		} else {
-			runner.printers = [new VerboseTracePrinter(output)];
+			runner.printers = [new VerboseTracePrinter(displayOutput)];
 			runner.reporters = [new TraceReporter(output)];
 		}
 

@@ -116,7 +116,7 @@ class TestSpawner implements ITestExecuter {
 
 	private function remotePort():Int {
 		if (PicoTestConfig.remotePort != null) return Std.parseInt(PicoTestConfig.remotePort);
-		return 58001;
+		return 38001;
 	}
 
 	private function runInAnotherNeko(out:String, main:String, anotherNekoArgs:Dynamic):Void {
