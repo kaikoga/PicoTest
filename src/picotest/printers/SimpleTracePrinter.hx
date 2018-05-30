@@ -12,7 +12,7 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 		this.stdout = stdout;
 	}
 
-	public function printTestCase(result:PicoTestResult, firstTime:Bool):Void {
+	public function printTestCase(result:PicoTestResult, firstTime:Bool, progress:Float):Void {
 		// this.stdout.stdout("\n");
 	}
 

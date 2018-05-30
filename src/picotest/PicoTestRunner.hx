@@ -47,6 +47,10 @@ class PicoTestRunner {
 		}
 	}
 
+	@:noDoc
+	public var progress(get, never):Float;
+	private function get_progress():Float return this.results.length / (this.results.length + this.tasks.length + this.waitingTasks.length);
+
 	private var mainLoopThreads:Array<PicoTestThread>;
 
 	public function new() {
@@ -195,7 +199,7 @@ class PicoTestRunner {
 		haxe.Log.trace = this.trace;
 		switch [this.currentTask.status, this.currentTask.result] {
 			case [PicoTestTaskStatus.Initial, Option.Some(result)]:
-				for (printer in this.printers) printer.printTestCase(result, true);
+				for (printer in this.printers) printer.printTestCase(result, true, this.progress);
 				this.resumeShowHeader = false;
 			case [_, Option.Some(result)]:
 				this.resumeShowHeader = true;
@@ -226,7 +230,7 @@ class PicoTestRunner {
 		var currentTaskResult = this.currentTaskResult;
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) {
-			if (resumeShowHeader) printer.printTestCase(currentTaskResult, false);
+			if (resumeShowHeader) printer.printTestCase(currentTaskResult, false, this.progress);
 			printer.printAssertResult(currentTaskResult, assertResult);
 		}
 	}
