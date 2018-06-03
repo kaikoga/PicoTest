@@ -14,7 +14,7 @@ haxelib git picotest https://github.com/kaikoga/PicoTest.git develop src
 haxelib install hamcrest
 ```
 
-PicoTest is developed using Haxe 3.4.0.
+PicoTest is developed using Haxe 4.0.0-preview.3, but is supposed to run with Haxe 3.4.0 or over. 
 
 
 # Writing tests
@@ -238,7 +238,7 @@ As a downside, test output will likely lose some readablility.
 ## JavaScript
 
 - ```-D picotest_browser``` Specify browser to run tests in (TODO)
-- ```-D picotest_remote_port``` A local port to receive test result from browser (default ```8001```)
+- ```-D picotest_remote_port``` Local port range to receive test result from browser (default ```49152-61000```)
 
 
 # Planned Features
@@ -252,6 +252,8 @@ As a downside, test output will likely lose some readablility.
 
 # Release Notes
 
+- Version 0.9.0
+  - improved progress output for browsers 
 - Version 0.8.0
   - breaking changes to macro API
   - breaking changes to PicoMatcher API
