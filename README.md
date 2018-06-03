@@ -253,6 +253,8 @@ As a downside, test output will likely lose some readablility.
 # Release Notes
 
 - Version 0.9.0
+  - introducing test filters (```picotest.PicoTest.filter```, ```picofilter.txt```)
+  - introducing ```PicoPredicates``` 
   - improved progress output for browsers 
 - Version 0.8.0
   - breaking changes to macro API
