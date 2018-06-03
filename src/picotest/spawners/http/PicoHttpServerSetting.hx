@@ -1,7 +1,7 @@
 package picotest.spawners.http;
 
 typedef PicoHttpServerSetting = {
-	port:Int,
+	port:String,
 	?files:Map<String, String>,
 	?docRoot:String
 }

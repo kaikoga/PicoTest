@@ -5,6 +5,7 @@ package picotest.spawners.common;
 import picotest.spawners.common.ITestExecuter;
 import picotest.spawners.common.PicoTestExternalCommand;
 import picotest.spawners.common.PicoTestExternalCommandHelper;
+import picotest.spawners.http.PicoHttpServer;
 import picotest.spawners.http.PicoHttpServerSetting;
 
 class JsBrowserLauncher implements ITestExecuter {
@@ -14,7 +15,9 @@ class JsBrowserLauncher implements ITestExecuter {
 
 	public function execute():Void {
 		var args:JsBrowserLauncherParams = PicoTestExternalCommandHelper.anotherNekoArgs();
-		PicoTestExternalCommand.open(args.browser, 'http://localhost:${args.httpServerSetting.port}/', false, args.reportFile).executeRemote(args.httpServerSetting);
+		var picoServer:PicoHttpServer = PicoTestExternalCommandHelper.startServer(args.httpServerSetting);
+
+		PicoTestExternalCommand.open(args.browser, 'http://localhost:${picoServer.port}/', false, args.reportFile).executeRemote(picoServer);
 	}
 
 	public static function main():Void {

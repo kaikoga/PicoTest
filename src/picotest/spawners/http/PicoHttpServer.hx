@@ -2,7 +2,6 @@ package picotest.spawners.http;
 
 #if sys
 
-import haxe.io.Bytes;
 import picotest.spawners.http.connections.IPicoHttpConnection;
 import picotest.spawners.http.connections.PicoHttpRequestConnection;
 import picotest.spawners.http.routes.IPicoHttpRoute;
@@ -13,12 +12,10 @@ import sys.net.Socket;
 class PicoHttpServer {
 
 	public var available(default, null):Bool;
-
-	public var postUri:String;
-	public var postData:Bytes;
+	public var setting(default, null):PicoHttpServerSetting;
+	public var port:Int = -1;
 
 	private var server:Socket;
-	private var setting:PicoHttpServerSetting;
 
 	private var routes:Array<IPicoHttpRoute>;
 	private var connections:Map<Socket, IPicoHttpConnection>;
@@ -37,8 +34,20 @@ class PicoHttpServer {
 	}
 
 	public function open():PicoHttpServer {
-		this.server = new Socket();
-		this.server.bind(new Host("localhost"), this.setting.port);
+		var ports:Array<Int> = this.setting.port.split("-").map(Std.parseInt);
+		var port:Int = ports[0];
+		var portsMax:Int =  ports[if (ports.length > 1) 1 else 0];
+		while (port <= portsMax) {
+			try {
+				this.server = new Socket();
+				this.server.bind(new Host("localhost"), port);
+				break;
+			} catch (d:Dynamic) {
+				port++;
+			}
+		}
+		if (port > portsMax) throw "Server port allocation failed.";
+		this.port = port;
 		this.clientSockets.push(this.server);
 		this.available = true;
 		return this;

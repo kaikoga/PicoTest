@@ -76,36 +76,11 @@ class PicoTestExternalCommand {
 	/**
 		Execute a command, hosting a short living local HTTP server while execution.
 	**/
-	public function executeRemote(httpServerSetting:PicoHttpServerSetting = null):Void {
+	public function executeRemote(picoServer:PicoHttpServer):Void {
 		this.startProcess();
 
-		var result:Array<String> = [];
-		var dataCount:Int = 0;
-		var eof:Int = -1;
-
-		var picoServer:PicoHttpServer = new PicoHttpServer(httpServerSetting);
-		picoServer.route(new PicoHttpLocalFileRoute(httpServerSetting));
-		picoServer.route(new PicoHttpCallbackRoute(function (socket:Socket, request:PicoHttpRequest):IPicoHttpConnection {
-			switch (request.uri.split("/")) {
-				case ["", "eof", num] if (Std.parseInt(num) != null):
-					var index:Int = Std.parseInt(num);
-					eof = index;
-				case ["", "result", num] if (Std.parseInt(num) != null):
-					var index:Int = Std.parseInt(num);
-					if (result[index] == null) {
-						result[index] = (request.body != null) ? request.body.toString() : "";
-						dataCount++;
-					}
-				case _:
-					return null;
-			}
-			return new PicoHttpResponseConnection(socket, "HTTP/1.0 200 OK\r\n\r\n", null);
-		}));
-		picoServer.open();
-
-		while (dataCount != eof) picoServer.listen();
-
-		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result.join("")), this.outFile);
+		var result:String = PicoTestExternalCommandHelper.joinServer(picoServer);
+		PicoTestExternalCommandHelper.writeFile(Bytes.ofString(result), this.outFile);
 		picoServer.close();
 
 		this.joinProcess(false);
