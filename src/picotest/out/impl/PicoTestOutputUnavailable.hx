@@ -1,9 +1,8 @@
 package picotest.out.impl;
 
-class PicoTestOutputUnavailable implements IPicoTestOutput {
+class PicoTestOutputUnavailable extends PicoTestTextOutputBase implements IPicoTestOutput {
 
-	public function new() {
-	}
+	public function new() super();
 
 	public function output(value:String):Void {
 		throw "unavailable";

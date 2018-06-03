@@ -5,13 +5,16 @@ package picotest.out.impl;
 import picotest.macros.PicoTestMacros;
 import picotest.out.buffer.PicoTestOutputLineBuffer;
 
-class PicoTestMacroOutput implements IPicoTestOutput {
+class PicoTestMacroOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var buffer:PicoTestOutputLineBuffer;
 
 	private function println(line:String):Void PicoTestMacros.println(line);
 
-	public function new() this.buffer = new PicoTestOutputLineBuffer(println);
+	public function new() {
+		super();
+		this.buffer = new PicoTestOutputLineBuffer(println);
+	}
 
 	public function output(value:String):Void {
 		this.buffer.output(value);

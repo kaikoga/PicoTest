@@ -6,7 +6,7 @@ import picotest.out.buffer.PicoTestOutputStringBuffer;
 import haxe.Timer;
 import js.html.XMLHttpRequest;
 
-class PicoTestJsRemoteOutput implements IPicoTestOutput {
+class PicoTestJsRemoteOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var buffer:PicoTestOutputStringBuffer;
 
@@ -18,6 +18,7 @@ class PicoTestJsRemoteOutput implements IPicoTestOutput {
 	private var closed:Bool = false;
 
 	public function new() {
+		super();
 		this.requests = [];
 		this.buffer = new PicoTestOutputStringBuffer(print);
 		this.timer = new Timer(1);

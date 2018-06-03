@@ -3,6 +3,7 @@ package picotest.printers;
 import picotest.out.IPicoTestOutput;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestResult;
+import picotest.result.PicoTestResultSummary;
 
 class VerboseTracePrinter implements IPicoTestPrinter {
 
@@ -12,7 +13,8 @@ class VerboseTracePrinter implements IPicoTestPrinter {
 		this.stdout = stdout;
 	}
 
-	public function printTestCase(result:PicoTestResult, firstTime:Bool, progress:Float):Void {
+	public function printTestCase(result:PicoTestResult, firstTime:Bool, progress:Float, completed:Int, total:Int):Void {
+		this.stdout.progress(progress, completed, total);
 		var p:String = '${Std.string(Math.round(progress * 100))}%';
 		var testFullName:String = '${result.className}.${result.methodName}${result.printParameters()}';
 		if (firstTime) {
@@ -43,6 +45,10 @@ class VerboseTracePrinter implements IPicoTestPrinter {
 
 	public function printTestResult(result:PicoTestResult):Void {
 		this.stdout.output('\n');
+	}
+
+	public function printComplete(summary:PicoTestResultSummary):Void {
+		this.stdout.complete(summary.mark);
 	}
 
 	public function close():Void {

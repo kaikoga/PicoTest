@@ -2,7 +2,7 @@ package picotest.reporters;
 
 import picotest.formats.PicoTestJsonTraceResultFormat;
 import picotest.out.IPicoTestOutput;
-import picotest.result.PicoTestResult;
+import picotest.result.PicoTestResultSummary;
 
 class JsonTraceReporter implements IPicoTestReporter {
 
@@ -12,8 +12,8 @@ class JsonTraceReporter implements IPicoTestReporter {
 		this.stdout = stdout;
 	}
 
-	public function report(results:Array<PicoTestResult>):Void {
-		this.stdout.output(PicoTestJsonTraceResultFormat.serialize(results));
+	public function report(summary:PicoTestResultSummary):Void {
+		this.stdout.output(PicoTestJsonTraceResultFormat.serialize(summary.results));
 	}
 
 	public function close():Void {

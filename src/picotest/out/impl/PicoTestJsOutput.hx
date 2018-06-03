@@ -4,13 +4,14 @@ package picotest.out.impl;
 
 import picotest.out.buffer.PicoTestOutputLineBuffer;
 
-class PicoTestJsOutput implements IPicoTestOutput {
+class PicoTestJsOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var buffer:PicoTestOutputLineBuffer;
 
 	private function println(line:String):Void untyped js.Boot.__trace(cast line, null);
 
 	public function new() {
+		super();
 		this.buffer = new PicoTestOutputLineBuffer(println);
 	}
 

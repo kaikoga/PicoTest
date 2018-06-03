@@ -5,13 +5,16 @@ package picotest.out.impl;
 import flash.Lib;
 import picotest.out.buffer.PicoTestOutputLineBuffer;
 
-class PicoTestFlashOutput implements IPicoTestOutput {
+class PicoTestFlashOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var buffer:PicoTestOutputLineBuffer;
 
 	private function println(line:String):Void Lib.trace(line);
 
-	public function new() this.buffer = new PicoTestOutputLineBuffer(println);
+	public function new() {
+		super();
+		this.buffer = new PicoTestOutputLineBuffer(println);
+	}
 
 	public function output(value:String):Void {
 		this.buffer.output(value);

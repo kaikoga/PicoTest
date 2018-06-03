@@ -5,11 +5,12 @@ package picotest.out.impl;
 import haxe.io.Output;
 import haxe.io.Bytes;
 
-class PicoTestSysOutput implements IPicoTestOutput {
+class PicoTestSysOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var _stdout:Output;
 
 	public function new() {
+		super();
 		_stdout = Sys.stdout();
 	}
 

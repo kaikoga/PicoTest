@@ -7,7 +7,7 @@ import sys.net.Socket;
 
 #if sys
 
-class PicoTestSysRemoteOutput implements IPicoTestOutput {
+class PicoTestSysRemoteOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var buffer:PicoTestOutputStringBuffer;
 
@@ -16,6 +16,7 @@ class PicoTestSysRemoteOutput implements IPicoTestOutput {
 	private var closed:Bool = false;
 
 	public function new() {
+		super();
 		this.buffer = new PicoTestOutputStringBuffer(print);
 	}
 

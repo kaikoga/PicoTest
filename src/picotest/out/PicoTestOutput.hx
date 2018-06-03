@@ -1,5 +1,6 @@
 package picotest.out;
 
+import picotest.result.PicoTestResultMark;
 import picotest.out.impl.PicoTestOutputUnavailable;
 import picotest.macros.PicoTestConfig;
 
@@ -23,6 +24,8 @@ class PicoTestOutput implements IPicoTestOutput {
 	public function new() this.impl = selectImpl();
 
 	public function output(value:String):Void this.impl.output(value);
+	public function progress(rate:Float, completed:Int, total:Int):Void this.impl.progress(rate, completed, total);
+	public function complete(status:PicoTestResultMark):Void this.impl.complete(status);
 	public function close():Void this.impl.close();
 
 	private static function selectImpl():IPicoTestOutput {
@@ -38,8 +41,9 @@ class PicoTestOutput implements IPicoTestOutput {
 		#elseif sys
 		if (PicoTestConfig.remote) return new PicoTestSysRemoteOutput();
 		return new PicoTestSysOutput();
-		#end
+		#else
 		return null;
+		#end
 	}
 }
 

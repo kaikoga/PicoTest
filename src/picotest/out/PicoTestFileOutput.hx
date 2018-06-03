@@ -6,11 +6,12 @@ import sys.io.File;
 import haxe.io.Output;
 import haxe.io.Bytes;
 
-class PicoTestFileOutput implements IPicoTestOutput {
+class PicoTestFileOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 
 	private var _out:Output;
 
 	public function new(path:String) {
+		super();
 		_out = File.write(path, false);
 	}
 

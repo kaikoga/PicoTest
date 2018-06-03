@@ -2,6 +2,8 @@ package picotest.result;
 
 class PicoTestResultSummary {
 
+	public var results(default, null):Array<PicoTestResult> = [];
+
 	public var testsTotal(default, null):Int = 0;
 	public var testsEmpty(default, null):Int = 0;
 	public var testsSuccess(default, null):Int = 0;
@@ -16,10 +18,22 @@ class PicoTestResultSummary {
 	public var assertsFailure(default, null):Int = 0;
 	public var assertsError(default, null):Int = 0;
 
+	public var mark(get, never):PicoTestResultMark;
+	private function get_mark():PicoTestResultMark {
+		if (testsInvalid > 0) return PicoTestResultMark.Invalid;
+		if (testsError > 0) return PicoTestResultMark.Error;
+		if (testsFailure > 0) return PicoTestResultMark.Failure;
+		if (testsIgnore > 0) return PicoTestResultMark.Ignore;
+		if (testsSkip > 0) return PicoTestResultMark.Skip;
+		if (testsSuccess > 0) return PicoTestResultMark.Success;
+		return PicoTestResultMark.Empty;
+	}
+
 	public function new() {
 	}
 
 	public function read(results:Array<PicoTestResult>):PicoTestResultSummary {
+		this.results = this.results.concat(results);
 		for (result in results) {
 			for (assertResult in result.assertResults) {
 				switch (assertResult) {

@@ -1,8 +1,8 @@
 package picotest.out.impl.display;
 
-//#if js
+#if js
 
-import js.html.Text;
+import picotest.result.PicoTestResultMark;
 import js.html.DivElement;
 import js.html.Window;
 import js.html.HTMLDocument;
@@ -13,6 +13,8 @@ class PicoTestJsDisplayOutput implements IPicoTestOutput {
 	private var parent:IPicoTestOutput;
 	private var document:HTMLDocument = null;
 	private var window:Window = null;
+	private var header:DivElement = null;
+	private var status:DivElement = null;
 	private var main:DivElement = null;
 	private var log:DivElement = null;
 	private var logline:DivElement = null;
@@ -28,8 +30,11 @@ class PicoTestJsDisplayOutput implements IPicoTestOutput {
 <head><title>PicoTest result</title></head>
 <style>
 html, body { margin:0; padding:0; height:100%; }
-.green { background: #0f0; }
-.red { background: #f00; }
+.gray { background: #ccc; color: #999; }
+.green { background: #3c3; color: #303; }
+.yellow { background: #cc3; color: #003; }
+.red { background: #c33; color: #fff; }
+.darkred { background: #903; color: #300; }
 .container {
 	height:100%;
 	display: flex;
@@ -38,11 +43,17 @@ html, body { margin:0; padding:0; height:100%; }
 .header {
 	flex:none;
 }
+.status {
+	font-size: 10px;
+	margin-bottom:1em;
+}
 .main {
 	flex:1;
 	overflow-y:scroll;
 }
 .log {
+	font-family: sans;
+	font-size: 12px;
 	overflow-wrap:break-word;
 	word-wrap:break-word;
 	white-space:pre-wrap;
@@ -50,21 +61,20 @@ html, body { margin:0; padding:0; height:100%; }
 </style>
 <body>
 <div class="container">
-	<div class="header">
-		<div>
-			PicoTest result
-		</div>
+	<div id="header" class="header">
+		<h1>PicoTest result</h1>
+		<div id="status" class="status"></div>
 	</div>
 	<div id="main" class="main">
-		<div id="log" class="log">
-		</div>
-		<div id="logline" class="log">
-		</div>
+		<div id="log" class="log"></div>
+		<div id="logline" class="log"></div>
 	</div>
 </div>
 </body>
 </html>
 ');
+			this.header = cast this.document.getElementById("header");
+			this.status = cast this.document.getElementById("status");
 			this.main = cast this.document.getElementById("main");
 			this.log = cast this.document.getElementById("log");
 			this.logline = cast this.document.getElementById("logline");
@@ -88,7 +98,30 @@ html, body { margin:0; padding:0; height:100%; }
 		}
 	}
 
+	public function progress(rate:Float, completed:Int, total:Int):Void {
+		this.status.textContent = '${untyped (rate * 100).toFixed(2)}% ($completed/$total)';
+		this.parent.progress(rate, completed, total);
+		return;
+	}
+
+	public function complete(status:PicoTestResultMark):Void {
+		switch (status) {
+			case PicoTestResultMark.Error | PicoTestResultMark.Invalid:
+				this.header.classList.add("darkred");
+			case PicoTestResultMark.Failure:
+				this.header.classList.add("red");
+			case PicoTestResultMark.Skip | PicoTestResultMark.Ignore:
+				this.header.classList.add("yellow");
+			case PicoTestResultMark.Success:
+				this.header.classList.add("green");
+			case _:
+				this.header.classList.add("gray");
+		}
+		this.parent.complete(status);
+		return;
+	}
+
 	public function close():Void this.parent.close();
 }
 
-//#end
+#end

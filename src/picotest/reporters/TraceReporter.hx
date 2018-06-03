@@ -16,10 +16,10 @@ class TraceReporter implements IPicoTestReporter {
 		this.stdout = stdout;
 	}
 
-	public function report(results:Array<PicoTestResult>):Void {
+	public function report(summary:PicoTestResultSummary):Void {
 		this.stdout.output("\nreport:\n");
 		var map:Map<String, Array<PicoTestResult>> = new Map();
-		for (result in results) {
+		for (result in summary.results) {
 			if (!map.exists(result.className)) map[result.className] = [];
 			var a:Array<PicoTestResult> = map[result.className];
 			a.push(result);
@@ -76,7 +76,7 @@ class TraceReporter implements IPicoTestReporter {
 			if (text.length > 0) for(row in text) this.stdout.output(row + "\n");
 			this.stdout.output("\n\n");
 		}
-		this.stdout.output(new PicoTestResultSummary().read(results).summarize());
+		this.stdout.output(summary.summarize());
 	}
 
 	public function close():Void {

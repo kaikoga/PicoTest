@@ -1,5 +1,6 @@
 package picotest;
 
+import picotest.result.PicoTestResultSummary;
 import picotest.macros.PicoTestConfig;
 import haxe.ds.Option;
 import haxe.CallStack;
@@ -49,7 +50,13 @@ class PicoTestRunner {
 
 	@:noDoc
 	public var progress(get, never):Float;
-	private function get_progress():Float return this.results.length / (this.results.length + this.tasks.length + this.waitingTasks.length);
+	inline private function get_progress():Float return this.completedCount / this.totalCount;
+	@:noDoc
+	public var completedCount(get, never):Int;
+	inline private function get_completedCount():Int return this.results.length;
+	@:noDoc
+	public var totalCount(get, never):Int;
+	inline private function get_totalCount():Int return this.results.length + this.tasks.length + this.waitingTasks.length;
 
 	private var mainLoopThreads:Array<PicoTestThread>;
 
@@ -152,7 +159,9 @@ class PicoTestRunner {
 			return true;
 		}
 
-		for (reporter in this.reporters) reporter.report(this.results);
+		var summary:PicoTestResultSummary = new PicoTestResultSummary().read(this.results);
+		for (printer in this.printers) printer.printComplete(summary);
+		for (reporter in this.reporters) reporter.report(summary);
 
 		for (thread in this.mainLoopThreads) thread.kill();
 		while (this.mainLoopThreads.length > 0) {
@@ -199,7 +208,7 @@ class PicoTestRunner {
 		haxe.Log.trace = this.trace;
 		switch [this.currentTask.status, this.currentTask.result] {
 			case [PicoTestTaskStatus.Initial, Option.Some(result)]:
-				for (printer in this.printers) printer.printTestCase(result, true, this.progress);
+				for (printer in this.printers) printer.printTestCase(result, true, this.progress, this.completedCount, this.totalCount);
 				this.resumeShowHeader = false;
 			case [_, Option.Some(result)]:
 				this.resumeShowHeader = true;
@@ -230,7 +239,7 @@ class PicoTestRunner {
 		var currentTaskResult = this.currentTaskResult;
 		currentTaskResult.assertResults.push(assertResult);
 		for (printer in this.printers) {
-			if (resumeShowHeader) printer.printTestCase(currentTaskResult, false, this.progress);
+			if (resumeShowHeader) printer.printTestCase(currentTaskResult, false, this.progress, this.completedCount, this.totalCount);
 			printer.printAssertResult(currentTaskResult, assertResult);
 		}
 	}

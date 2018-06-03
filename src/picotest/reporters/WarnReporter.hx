@@ -28,8 +28,8 @@ class WarnReporter implements IPicoTestReporter {
 		return true;
 	}
 
-	public function report(results:Array<PicoTestResult>):Void {
-		for (result in results) {
+	public function report(summary:PicoTestResultSummary):Void {
+		for (result in summary.results) {
 			for (assertResult in result.assertResults) {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
@@ -56,7 +56,7 @@ class WarnReporter implements IPicoTestReporter {
 				case _:
 			}
 		}
-		this.stdout.output(new PicoTestResultSummary().read(results).summarize());
+		this.stdout.output(summary.summarize());
 	}
 
 	private function warn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo, printOrigin:Bool = false):Void {

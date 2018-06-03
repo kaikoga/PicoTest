@@ -1,8 +1,8 @@
 package picotest.reporters;
 
-import picotest.result.PicoTestResult;
+import picotest.result.PicoTestResultSummary;
 
 interface IPicoTestReporter {
-	function report(results:Array<PicoTestResult>):Void;
+	function report(summary:PicoTestResultSummary):Void;
 	function close():Void;
 }

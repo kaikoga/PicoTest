@@ -3,6 +3,7 @@ package picotest.printers;
 import picotest.out.IPicoTestOutput;
 import picotest.result.PicoTestAssertResult;
 import picotest.result.PicoTestResult;
+import picotest.result.PicoTestResultSummary;
 
 class SimpleTracePrinter implements IPicoTestPrinter {
 
@@ -12,7 +13,7 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 		this.stdout = stdout;
 	}
 
-	public function printTestCase(result:PicoTestResult, firstTime:Bool, progress:Float):Void {
+	public function printTestCase(result:PicoTestResult, firstTime:Bool, progress:Float, completed:Int, total:Int):Void {
 		// this.stdout.stdout("\n");
 	}
 
@@ -36,6 +37,10 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 
 	public function printTestResult(result:PicoTestResult):Void {
 		// this.stdout.stdout("\n");
+	}
+
+	public function printComplete(summary:PicoTestResultSummary):Void {
+		this.stdout.complete(summary.mark);
 	}
 
 	public function close():Void {
