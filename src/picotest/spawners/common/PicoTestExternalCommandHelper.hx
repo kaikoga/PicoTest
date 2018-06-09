@@ -67,10 +67,8 @@ class PicoTestExternalCommandHelper {
 					eof = index;
 				case ["", "result", num] if (Std.parseInt(num) != null):
 					var index:Int = Std.parseInt(num);
-					if (result[index] == null) {
-						result[index] = (request.body != null) ? request.body.toString() : "";
-						dataCount++;
-					}
+					if (result[index] == null) dataCount++;
+					result[index] = (request.body != null) ? request.body.toString() : "";
 				case _:
 					return null;
 			}
