@@ -45,6 +45,7 @@ class TestSpawner implements ITestExecuter {
 	private function mainClass():String {
 		var args:Array<String> = Sys.args();
 		var main:String = args[args.indexOf("-main") + 1];
+		if (main == null) return null;
 		return main.split(".").pop();
 	}
 

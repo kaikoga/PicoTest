@@ -2,9 +2,11 @@ package picotest.spawners;
 
 #if (macro || macro_doc_gen)
 
+import picotest.macros.PicoTestMacros;
 import picotest.spawners.common.PicoTestExternalCommand;
-import picotest.spawners.common.TestSpawner;
 import picotest.spawners.common.PicoTestExternalCommandHelper;
+import picotest.spawners.common.TestSpawner;
+import sys.FileSystem;
 
 class CppSpawner extends TestSpawner {
 
@@ -13,7 +15,9 @@ class CppSpawner extends TestSpawner {
 	}
 
 	override public function execute():Void {
-		new PicoTestExternalCommand('./${bin()}/${mainClass()}-debug', [], reportFile()).execute();
+		var realBin:String = PicoTestExternalCommandHelper.globOne('${bin()}/*-debug', mainClass());
+		PicoTestMacros.println('Executable path: ${realBin}');
+		new PicoTestExternalCommand(realBin, [], reportFile()).execute();
 	}
 }
 

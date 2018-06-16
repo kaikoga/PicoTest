@@ -26,6 +26,42 @@ class PicoTestExternalCommandHelper {
 	private function new():Void {
 	}
 
+	public static function globOne(pattern:String, hint:String = null):String {
+		var g:Array<String> = glob(pattern);
+		if (g.length == 0) {
+			throw 'Executable not found, pattern: ${pattern}';
+		}
+		if (hint != null) {
+			for (s in g) if (s.indexOf(hint) >= 0) return s;
+		}
+		return g[0];
+	}
+
+	public static function glob(pattern:String):Array<String> {
+		return globRec(".", pattern.split("/").map(function(s:String) return new EReg(StringTools.replace(s, "*", ".*"), "")));
+	}
+
+	private static function globRec(path:String, pattern:Array<EReg>, index:Int = 0):Array<String> {
+		var result:Array<String> = [];
+		var ereg:EReg = pattern[index];
+		for (entry in FileSystem.readDirectory(path)) {
+			switch (entry) {
+				case ".", "..": continue;
+				case _:
+			}
+			if (ereg.match(entry)) {
+				var entryPath:String = path + "/" + entry;
+				var j:Int = index + 1;
+				if (j == pattern.length) {
+					result.push(entryPath);
+				} else {
+					for (child in globRec(entryPath, pattern, j)) result.push(child);
+				}
+			}
+		}
+		return result;
+	}
+
 	public static function serializeBase64(value:Dynamic):String {
 		return Base64.encode(Bytes.ofString(Serializer.run(value)), false);
 	}
