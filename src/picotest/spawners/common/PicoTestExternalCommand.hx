@@ -2,16 +2,9 @@ package picotest.spawners.common;
 
 #if (sys || macro || macro_doc_gen)
 
-import picotest.spawners.http.connections.PicoHttpResponseConnection;
-import picotest.spawners.http.PicoHttpRequest;
-import picotest.spawners.http.connections.IPicoHttpConnection;
-import sys.net.Socket;
-import picotest.spawners.http.routes.PicoHttpCallbackRoute;
-import picotest.spawners.http.routes.PicoHttpLocalFileRoute;
 import haxe.io.Bytes;
 import picotest.spawners.common.PicoTestExternalCommandHelper;
 import picotest.spawners.http.PicoHttpServer;
-import picotest.spawners.http.PicoHttpServerSetting;
 import sys.io.Process;
 
 //TODO
@@ -47,9 +40,9 @@ class PicoTestExternalCommand {
 		var stderr:Bytes;
 		var err:Int;
 		try {
-			err = this.process.exitCode();
 			stdout = process.stdout.readAll();
 			stderr = process.stderr.readAll();
+			err = this.process.exitCode();
 		} catch (d:Dynamic) {
 			throw 'Command $cmd ${args.join(" ")} failed ($d)';
 		}
