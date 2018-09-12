@@ -34,6 +34,7 @@ class TraceReporter implements IPicoTestReporter {
 					switch (assertResult) {
 						case PicoTestAssertResult.Success:
 						case PicoTestAssertResult.Skip:
+						case PicoTestAssertResult.DryRun:
 						case PicoTestAssertResult.Failure(message, callInfo):
 							resultText.push('${callInfo.print()}${result.printParameters()}: ${message}');
 						case PicoTestAssertResult.Error(message, callInfo):
@@ -57,6 +58,10 @@ class TraceReporter implements IPicoTestReporter {
 						row += "0";
 						var callInfo:PicoTestCallInfo = PicoTestCallInfo.fromReflect(result.className, result.methodName);
 						resultText.push('${callInfo.print()}${result.printParameters()}: [Empty] Test is empty');
+					case PicoTestResultMark.DryRun:
+						row += "N";
+						var callInfo:PicoTestCallInfo = PicoTestCallInfo.fromReflect(result.className, result.methodName);
+						resultText.push('${callInfo.print()}${result.printParameters()}: [DryRun] Test is to be run');
 					case PicoTestResultMark.Success:
 						row += ".";
 					case PicoTestResultMark.Skip:

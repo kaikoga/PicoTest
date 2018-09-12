@@ -34,6 +34,7 @@ class WarnReporter implements IPicoTestReporter {
 				switch (assertResult) {
 					case PicoTestAssertResult.Success:
 					case PicoTestAssertResult.Skip:
+					case PicoTestAssertResult.DryRun:
 					case PicoTestAssertResult.Failure(message,callInfo):
 						warn(message, result, callInfo, true);
 					case PicoTestAssertResult.Error(message,callInfo):
@@ -53,6 +54,8 @@ class WarnReporter implements IPicoTestReporter {
 			switch (result.mark()) {
 				case PicoTestResultMark.Empty:
 					warn('[Empty] Test is empty', result, PicoTestCallInfo.fromReflect(result.className, result.methodName));
+				case PicoTestResultMark.DryRun:
+					warn('[DryRun] Test is to be run', result, PicoTestCallInfo.fromReflect(result.className, result.methodName));
 				case _:
 			}
 		}

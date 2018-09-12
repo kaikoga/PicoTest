@@ -49,6 +49,8 @@ class PicoTestJsonResultFormat {
 				return {assertResult: "."};
 			case PicoTestAssertResult.Skip:
 				return {assertResult: "S"};
+			case PicoTestAssertResult.DryRun:
+				return {assertResult: "N"};
 			case PicoTestAssertResult.Failure(message, callInfo):
 				return {assertResult: "F", message: message, callInfo: hashCallInfo(callInfo)};
 			case PicoTestAssertResult.Error(message, callInfo):
@@ -68,6 +70,8 @@ class PicoTestJsonResultFormat {
 				return PicoTestAssertResult.Success;
 			case "S":
 				return PicoTestAssertResult.Skip;
+			case "N":
+				return PicoTestAssertResult.DryRun;
 			case "F":
 				return PicoTestAssertResult.Failure(hashed.message, unhashCallInfo(hashed.callInfo, header));
 			case "E":

@@ -192,7 +192,7 @@ class PicoTestRunner {
 	private function runTask(task:IPicoTestTask):Void {
 		if (PicoTestConfig.dryRun) {
 			this.currentTask = task;
-			addAssertResult(PicoTestAssertResult.Skip);
+			addAssertResult(PicoTestAssertResult.DryRun);
 			for (printer in this.printers) printer.printTestResult(currentTaskResult);
 			this.results.push(currentTaskResult);
 			this.currentTask = null;

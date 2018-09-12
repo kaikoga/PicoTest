@@ -53,6 +53,9 @@ class PicoTestConfig {
 	public static var dryRun(get, never):Bool;
 	private static function get_dryRun():Bool return getFlag("picotest_dryrun");
 
+	public static var filter(get, never):String;
+	private static function get_filter():String return getDefine("picotest_filter");
+
 	public static var reportJson(get, set):Bool;
 	private static function get_reportJson():Bool return getFlag("picotest_report_json");
 	private static function set_reportJson(value:Bool):Bool return setFlag("picotest_report_json", value);

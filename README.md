@@ -205,12 +205,13 @@ Supposed to work, as long as executables such as ```neko```, ```node```, ```java
   - Multiple patterns could be provided. All test classes matching any of the provided patterns are selected.
 - ```--macro "picotest.PicoTest.filterFile('picofilter.txt')"``` reads class name patterns from ```picofilter.txt```. 
   - ```"picofilter.txt"``` is default argument, so could be omitted.
+- ```-D picotest_filter=package.TestCaseClass,anotherPack.AnotherTestCaseClass``` is an alternate way to set filters. 
 
 # Compiler Defines
 
 ## Cross
 
-- ```-D picotest_dryrun``` mark every test method as "skipped"
+- ```-D picotest_dryrun``` marks every test method as "dry run" and log which tests were to be run.
 - ```-D picotest_safe_mode``` treats test target objects "dangerous",
 and avoid calling methods of test object (like ```toString()```) to prevent infinite loops (Yes, they will happen! see [https://github.com/HaxeFoundation/haxe/issues/4398](https://github.com/HaxeFoundation/haxe/issues/4398)).
 As a downside, test output will likely lose some readablility.
@@ -221,6 +222,7 @@ As a downside, test output will likely lose some readablility.
 - ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
 - ```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)
 - ```-D picotest_junit``` Path to output JUnit XML file
+- ```-D picotest_filter``` Set test filter
 
 
 ## Internal
@@ -252,6 +254,9 @@ As a downside, test output will likely lose some readablility.
 
 # Release Notes
 
+- Version 0.10.0
+  - more user friendly test filter API (```-D picotest_filter="Foo,Bar"```)
+  - ```-D picotest_dryrun``` will now mark tests as ```DryRun``` instead of ```Skip```
 - Version 0.9.0
   - introducing test filters (```picotest.PicoTest.filter```, ```picofilter.txt```)
   - introducing ```PicoPredicates``` 

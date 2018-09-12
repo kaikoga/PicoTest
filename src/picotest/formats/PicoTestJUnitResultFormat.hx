@@ -46,6 +46,8 @@ class PicoTestJUnitResultFormat {
 				return null;
 			case PicoTestAssertResult.Skip:
 				xml = Xml.createElement("skipped");
+			case PicoTestAssertResult.DryRun:
+				xml = Xml.createElement("skipped");
 			case PicoTestAssertResult.Failure(message, callInfo):
 				xml = Xml.createElement("failure");
 				xml.set("type", "");

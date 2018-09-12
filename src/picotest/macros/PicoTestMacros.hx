@@ -53,6 +53,12 @@ class PicoTestMacros {
 	}
 
 	public static function setup(spawnerVariant:String = null):Void {
+		if (PicoTestConfig.filter != null) {
+			for (filter in PicoTestConfig.filter.split(",")) {
+				PicoTestFilter.addPattern(filter);
+			}
+		}
+
 		PicoTestConfig.reportJson = true;
 		if (spawner == null) spawner = guessSpawner(spawnerVariant);
 		if (spawner.forceRemote) PicoTestConfig.remote = true;

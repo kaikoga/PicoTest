@@ -6,6 +6,7 @@ class PicoTestResultSummary {
 
 	public var testsTotal(default, null):Int = 0;
 	public var testsEmpty(default, null):Int = 0;
+	public var testsDryRun(default, null):Int = 0;
 	public var testsSuccess(default, null):Int = 0;
 	public var testsSkip(default, null):Int = 0;
 	public var testsFailure(default, null):Int = 0;
@@ -26,6 +27,7 @@ class PicoTestResultSummary {
 		if (testsIgnore > 0) return PicoTestResultMark.Ignore;
 		if (testsSkip > 0) return PicoTestResultMark.Skip;
 		if (testsSuccess > 0) return PicoTestResultMark.Success;
+		if (testsDryRun > 0) return PicoTestResultMark.DryRun;
 		return PicoTestResultMark.Empty;
 	}
 
@@ -41,6 +43,7 @@ class PicoTestResultSummary {
 						this.assertsSuccess++;
 						this.assertsTotal++;
 					case PicoTestAssertResult.Skip:
+					case PicoTestAssertResult.DryRun:
 					case PicoTestAssertResult.Failure(message,callInfo):
 						this.assertsFailure++;
 						this.assertsTotal++;
@@ -55,6 +58,8 @@ class PicoTestResultSummary {
 			switch (result.mark()) {
 				case PicoTestResultMark.Empty:
 					this.testsEmpty++;
+				case PicoTestResultMark.DryRun:
+					this.testsDryRun++;
 				case PicoTestResultMark.Success:
 					this.testsSuccess++;
 				case PicoTestResultMark.Skip:
@@ -82,6 +87,7 @@ class PicoTestResultSummary {
 		if (testsError > 0) tests.push('Error: $testsError');
 		if (testsIgnore > 0) tests.push('Ignore: $testsIgnore');
 		if (testsEmpty > 0) tests.push('Empty: $testsEmpty');
+		if (testsDryRun> 0) tests.push('DryRun: $testsDryRun');
 		if (testsInvalid > 0) tests.push('Invalid: $testsInvalid');
 		if (assertsSuccess > 0) asserts.push('success: $assertsSuccess');
 		if (assertsFailure > 0) asserts.push('failure: $assertsFailure');
