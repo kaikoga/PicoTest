@@ -168,7 +168,6 @@ class WarnReporter implements IPicoTestReporter {
 					callPos = PicoTestCallPosition.Absolute(file, lineNumber);
 				} catch (d:Dynamic) {
 					file = "";
-					fileNotFoundWarning(fileName);
 				}
 			case PicoTestCallPosition.Absolute(fileName, lineNumber):
 				file = fileName;
