@@ -156,9 +156,9 @@ class PicoTestMacros {
 		}
 	}
 
-	private static var _lineNum:Int = 1;
+	private static var _lineNum:Int = 0;
 	public static function println(line:String):Void {
-		Context.warning(line, Context.makePosition({ file : "_", min : _lineNum, max : _lineNum }));
+		Context.warning(line, Context.makePosition({ file : "_", min : _lineNum, max : _lineNum + 1 }));
 		_lineNum++;
 	}
 }
