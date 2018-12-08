@@ -63,7 +63,8 @@ class PicoTestCallInfo {
 	}
 
 	public function readPosInfos(posInfos:PosInfos) {
-		var filePath:String = posInfos.className.split(".").join("/").split(posInfos.fileName.split(".")[0])[0] + posInfos.fileName;
+		// var filePath:String = posInfos.className.split(".").join("/").split(posInfos.fileName.split(".")[0])[0] + posInfos.fileName;
+		var filePath:String = posInfos.fileName;
 		this.position = PicoTestCallPosition.ClassPath(filePath, posInfos.lineNumber);
 		this.callType = PicoTestCallType.Method(posInfos.className, posInfos.methodName);
 		this.from = null;
