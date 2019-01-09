@@ -20,7 +20,7 @@ class PicoTestJsRemoteOutput extends PicoTestTextOutputBase implements IPicoTest
 	public function new() {
 		super();
 		this.requests = [];
-		this.buffer = new PicoTestOutputStringBuffer(print);
+		this.buffer = new PicoTestOutputStringBuffer(onProgress);
 		this.timer = new Timer(1);
 		this.timer.run = this.onInterval;
 	}
@@ -29,18 +29,17 @@ class PicoTestJsRemoteOutput extends PicoTestTextOutputBase implements IPicoTest
 		this.buffer.output(value);
 	}
 
-	public function print(message:String):Void {
+	public function onProgress(message:String):Void {
 		if (message == "") return;
-		sendRemote(message, '/result/$remoteRequestIndex');
+		sendRemote(message, '/progress/$remoteRequestIndex');
 		remoteRequestIndex++;
 	}
 
 	public function close():Void {
 		if (this.closed) return;
-		this.buffer.close();
-		sendRemote("", '/eof/$remoteRequestIndex');
-		remoteRequestIndex++;
 		this.closed = true;
+		this.buffer.close();
+		sendRemote(this.buffer.value, '/result');
 	}
 
 	public function sendRemote(value:String, name:String):Void {

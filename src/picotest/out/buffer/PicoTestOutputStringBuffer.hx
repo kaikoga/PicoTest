@@ -2,19 +2,24 @@ package picotest.out.buffer;
 
 class PicoTestOutputStringBuffer extends PicoTestOutputBuffer {
 
-	dynamic private function print(message:String):Void return;
+	public var value(default, null):String;
 
-	public function new(print:String->Void) {
+	dynamic private function progress(fragment:String):Void return;
+
+	public function new(progress:String->Void) {
 		super();
-		this.print = print;
+		this.progress = progress;
+		this.value = "";
 	}
 
 	override public function emit():Void {
-		this.print(this.buffer);
+		this.progress(this.buffer);
+		this.value += this.buffer;
 		this.buffer = "";
 	}
 
 	override public function close():Void {
-		this.emit();
+		this.value += this.buffer;
+		this.buffer = "";
 	}
 }

@@ -91,29 +91,26 @@ class PicoTestExternalCommandHelper {
 	}
 
 	public static function joinServer(picoServer:PicoHttpServer):String {
-		var result:Array<String> = [];
-		var dataCount:Int = 0;
-		var eof:Int = -1;
+		// var progress:Array<String> = [];
+		var result:String = null;
 
 		picoServer.route(new PicoHttpLocalFileRoute(picoServer.setting));
 		picoServer.route(new PicoHttpCallbackRoute(function (socket:Socket, request:PicoHttpRequest):IPicoHttpConnection {
 			switch (request.uri.split("/")) {
-				case ["", "eof", num] if (Std.parseInt(num) != null):
+				case ["", "progress", num] if (Std.parseInt(num) != null):
 					var index:Int = Std.parseInt(num);
-					eof = index;
-				case ["", "result", num] if (Std.parseInt(num) != null):
-					var index:Int = Std.parseInt(num);
-					if (result[index] == null) dataCount++;
-					result[index] = (request.body != null) ? request.body.toString() : "";
+					// progress[index] = request.body.toString();
+				case ["", "result"]:
+					result = if (request.body == null) "" else request.body.toString();
 				case _:
 					return null;
 			}
 			return new PicoHttpResponseConnection(socket, "HTTP/1.0 200 OK\r\n\r\n", null);
 		}));
 
-		while (dataCount != eof) picoServer.listen();
+		while (result == null) picoServer.listen();
 		picoServer.close();
-		return result.join("");
+		return result;
 	}
 }
 

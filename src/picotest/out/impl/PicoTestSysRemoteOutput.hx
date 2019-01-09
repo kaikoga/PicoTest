@@ -17,25 +17,24 @@ class PicoTestSysRemoteOutput extends PicoTestTextOutputBase implements IPicoTes
 
 	public function new() {
 		super();
-		this.buffer = new PicoTestOutputStringBuffer(print);
+		this.buffer = new PicoTestOutputStringBuffer(onProgress);
 	}
 
 	public function output(value:String):Void {
 		this.buffer.output(value);
 	}
 
-	public function print(message:String):Void {
+	public function onProgress(message:String):Void {
 		if (message == "") return;
-		sendRemote(message, '/result/$remoteRequestIndex');
+		sendRemote(message, '/progress/$remoteRequestIndex');
 		remoteRequestIndex++;
 	}
 
 	public function close():Void {
 		if (this.closed) return;
-		this.buffer.close();
-		sendRemote("", '/eof/$remoteRequestIndex');
-		remoteRequestIndex++;
 		this.closed = true;
+		this.buffer.close();
+		sendRemote(this.buffer.value, '/result');
 	}
 
 	public static function sendRemote(value:String, name:String):Void {
