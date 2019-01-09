@@ -24,9 +24,10 @@ class JsBrowserSpawner extends TestSpawner {
 <head>
 <meta charset="UTF-8">
 <title></title>
-<script src="/test.js"></script>
 </head>
-<body></body>
+<body>
+<script src="/test.js"></script>
+</body>
 </html>
 ';
 		return Bytes.ofString(html);
