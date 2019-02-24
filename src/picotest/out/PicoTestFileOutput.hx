@@ -2,6 +2,8 @@ package picotest.out;
 
 #if (sys || macro)
 
+import haxe.io.Path;
+import sys.FileSystem;
 import sys.io.File;
 import haxe.io.Output;
 import haxe.io.Bytes;
@@ -12,6 +14,7 @@ class PicoTestFileOutput extends PicoTestTextOutputBase implements IPicoTestOutp
 
 	public function new(path:String) {
 		super();
+		FileSystem.createDirectory(new Path(path).dir);
 		_out = File.write(path, false);
 	}
 
