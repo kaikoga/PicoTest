@@ -257,6 +257,7 @@ As a downside, test output will likely lose some readablility.
 - Version 0.10.0
   - more user friendly test filter API (```-D picotest_filter="Foo,Bar"```)
   - ```-D picotest_dryrun``` will now mark tests as ```DryRun``` instead of ```Skip```
+  - ```picotest.PicoTest.warn()``` emits exit status 2 if tests failed, 1 if tests had errors
 - Version 0.9.0
   - introducing test filters (```picotest.PicoTest.filter```, ```picofilter.txt```)
   - introducing ```PicoPredicates``` 

@@ -19,6 +19,8 @@ import sys.FileSystem;
 class WarnReporter implements IPicoTestReporter {
 
 	private var stdout:IPicoTestOutput;
+	private var isError:Bool;
+	private var isFailed:Bool;
 
 	public function new(stdout:IPicoTestOutput):Void {
 		this.stdout = stdout;
@@ -37,8 +39,10 @@ class WarnReporter implements IPicoTestReporter {
 					case PicoTestAssertResult.DryRun:
 					case PicoTestAssertResult.Failure(message,callInfo):
 						warn(message, result, callInfo, true);
+						isFailed = true;
 					case PicoTestAssertResult.Error(message,callInfo):
 						warn('[Error] ${message}', result, callInfo, true);
+						isError = true;
 					case PicoTestAssertResult.Trace(message,callInfo):
 						if (PicoTestConfig.showTrace) {
 							warn('[Trace] ${message}', result, callInfo);
@@ -49,6 +53,7 @@ class WarnReporter implements IPicoTestReporter {
 						}
 					case PicoTestAssertResult.Invalid(message,callInfo):
 						warn('[Invalid] ${message}', result, callInfo);
+						isError = true;
 				}
 			}
 			switch (result.mark()) {
@@ -202,5 +207,7 @@ class WarnReporter implements IPicoTestReporter {
 
 	public function close():Void {
 		this.stdout.close();
+		if (this.isError) Sys.exit(1);
+		if (this.isFailed) Sys.exit(2);
 	}
 }
