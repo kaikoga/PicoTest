@@ -9,6 +9,7 @@ class PicoTestResult {
 
 	public var className(default, null):String;
 	public var methodName(default, null):String;
+	public var tag:String;
 	public var parameters:Array<String>;
 	public var assertResults(default, null):Array<PicoTestAssertResult>;
 	private var tasks:Array<IPicoTestTask>;
@@ -25,10 +26,11 @@ class PicoTestResult {
 		this._tearDown = null;
 	}
 
-	public function new(className:String, methodName:String, parameters:Array<Dynamic> = null, assertResults:Array<PicoTestAssertResult> = null, setup:Void->Void = null, tearDown:Void->Void = null) {
+	public function new(className:String, methodName:String, tag:String = null, parameters:Array<Dynamic> = null, assertResults:Array<PicoTestAssertResult> = null, setup:Void->Void = null, tearDown:Void->Void = null) {
 		this.className = className;
 		this.methodName = methodName;
 		this.parameters = if (parameters != null) parameters.map(function(d:Dynamic) return @:privateAccess PicoAssert.shortName(d)); else null;
+		this.tag = tag;
 		this.assertResults = if (assertResults != null) assertResults; else [];
 		this._setup = setup;
 		this._tearDown = tearDown;
@@ -116,10 +118,11 @@ class PicoTestResult {
 		return this.tasks.length == 0;
 	}
 
-	public function printParameters():String {
+	public function printExecInfo():String {
+		var t = tag != null ? '+${tag}' : "";
 		if (parameters == null || parameters.length == 0) {
-			return '';
+			return '${t}';
 		}
-		return '[${parameters.join(', ').split("\n").join("\\n")}]';
+		return '[${parameters.join(', ').split("\n").join("\\n")}]${t}';
 	}
 }

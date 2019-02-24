@@ -22,7 +22,7 @@ class JsBrowserSpawner extends TestSpawner {
 		var html:String = '<!doctype html>
 <html>
 <head>
-<meta charset="UTF-8">
+<tag charset="UTF-8">
 <title></title>
 </head>
 <body>

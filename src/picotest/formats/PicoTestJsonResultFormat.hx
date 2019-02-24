@@ -31,7 +31,7 @@ class PicoTestJsonResultFormat {
 		for (assertResult in result.assertResults) {
 			a.push(hashAssertResult(assertResult));
 		}
-		return {className:result.className, methodName:result.methodName, parameters:result.parameters, assertResults:a}
+		return {className:result.className, methodName:result.methodName, tag:result.tag, parameters:result.parameters, assertResults:a}
 	}
 
 	public static function unhashResult(hashed:HashedResult, header:String = null):PicoTestResult {
@@ -39,7 +39,7 @@ class PicoTestJsonResultFormat {
 		for (hashedAssertResult in hashed.assertResults) {
 			a.push(unhashAssertResult(hashedAssertResult, header));
 		}
-		return new PicoTestResult(hashed.className, hashed.methodName, hashed.parameters, a);
+		return new PicoTestResult(hashed.className, hashed.methodName, hashed.tag, hashed.parameters, a);
 
 	}
 
@@ -145,6 +145,7 @@ class PicoTestJsonResultFormat {
 typedef HashedResult = {
 	className:String,
 	methodName:String,
+	?tag:String,
 	?parameters:Array<String>,
 	assertResults:Array<HashedAssertResult>
 }

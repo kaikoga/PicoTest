@@ -96,7 +96,7 @@ class WarnReporter implements IPicoTestReporter {
 	}
 
 	private function printWarn(message:String, result:PicoTestResult, callInfo:PicoTestCallInfo):Void {
-		var p:String = if (result == null) '' else result.printParameters();
+		var p:String = if (result == null) '' else result.printExecInfo();
 		#if macro
 		Context.warning('${callInfo.printCallTarget()}${callInfo.printCallType()}$p: ${message.split("\n").join("\n "+callInfo.printCallTarget())}', callPositionToPosition(callInfo.position));
 		#else

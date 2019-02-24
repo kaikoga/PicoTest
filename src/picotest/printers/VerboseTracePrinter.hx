@@ -16,7 +16,7 @@ class VerboseTracePrinter implements IPicoTestPrinter {
 	public function printTestCase(result:PicoTestResult, firstTime:Bool, progress:Float, completed:Int, total:Int):Void {
 		this.stdout.progress(progress, completed, total);
 		var p:String = '${Std.string(Math.round(progress * 100))}%';
-		var testFullName:String = '${result.className}.${result.methodName}${result.printParameters()}';
+		var testFullName:String = '${result.className}.${result.methodName}${result.printExecInfo()}';
 		if (firstTime) {
 			this.stdout.output('\n${testFullName}:${p}\n');
 		} else {

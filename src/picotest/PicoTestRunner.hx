@@ -58,6 +58,8 @@ class PicoTestRunner {
 	public var totalCount(get, never):Int;
 	inline private function get_totalCount():Int return this.results.length + this.tasks.length + this.waitingTasks.length;
 
+	public var tag(default, null):String;
+
 	private var mainLoopThreads:Array<PicoTestThread>;
 
 	public function new() {
@@ -68,6 +70,7 @@ class PicoTestRunner {
 		this.waitingTasks = [];
 		this.results = [];
 		this.mainLoopThreads = [];
+		this.tag = PicoTestConfig.tag;
 	}
 
 	@:noDoc

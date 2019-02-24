@@ -16,6 +16,7 @@ class PicoTestReader implements IPicoTestReader {
 
 	public function load(runner:PicoTestRunner, testCaseClass:Class<Dynamic>, defaultParameters:Iterable<Array<Dynamic>> = null):Void {
 		var className:String = Type.getClassName(testCaseClass);
+		var tag:String = runner.tag;
 		if (!PicoTestFilter.filter(className)) return;
 
 		var allMeta:Dynamic<Dynamic<Array<Dynamic>>> = haxe.rtti.Meta.getFields(testCaseClass);
@@ -48,7 +49,7 @@ class PicoTestReader implements IPicoTestReader {
 					try {
 						parameters = bind(createInstance(testCaseClass), parameterProviderName, [])();
 					} catch (message:String) {
-						task = new PicoTestInvalidTestTask(new PicoTestResult(className, field), message);
+						task = new PicoTestInvalidTestTask(new PicoTestResult(className, field, tag), message);
 						runner.add(task);
 						continue;
 					}
@@ -94,16 +95,16 @@ class PicoTestReader implements IPicoTestReader {
 								var func:Void->Void = bind(testCase, field, arguments);
 								var setup:Void->Void = hasSetup ? bind(testCase, "setup", setupArguments) : null;
 								var tearDown:Void->Void = hasTearDown ? bind(testCase, "tearDown", []) : null;
-								task = new PicoTestTestTask(new PicoTestResult(className, field, resultArguments, null, setup, tearDown), func);
+								task = new PicoTestTestTask(new PicoTestResult(className, field, tag, resultArguments, null, setup, tearDown), func);
 								runner.add(task);
 							} catch (message:String) {
-								task = new PicoTestInvalidTestTask(new PicoTestResult(className, field, resultArguments), message);
+								task = new PicoTestInvalidTestTask(new PicoTestResult(className, field, tag, resultArguments), message);
 								runner.add(task);
 							}
 						}
 					}
 				case TestType.Ignore(field, message):
-					var task = new PicoTestIgnoreTestTask(new PicoTestResult(className, field), message);
+					var task = new PicoTestIgnoreTestTask(new PicoTestResult(className, field, tag), message);
 					runner.add(task);
 			}
 		}

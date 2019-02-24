@@ -30,7 +30,7 @@ class PicoTestJUnitResultFormat {
 	public static function convertResult(result:PicoTestResult, testsuite:Xml):Xml {
 		var xml:Xml = Xml.createElement("testcase");
 		xml.set("classname", result.className);
-		xml.set("name", '${result.methodName}${result.printParameters()}');
+		xml.set("name", '${result.methodName}${result.printExecInfo()}');
 
 		for (assertResult in result.assertResults) {
 			var assertResultXml:Xml = convertAssertResult(assertResult, testsuite);

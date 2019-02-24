@@ -222,6 +222,7 @@ As a downside, test output will likely lose some readablility.
 - ```-D picotest_thread``` Tries to use multithread version of PicoTestAsync in sys platforms
 - ```-D picotest_report_dir``` Path to output test report file (default ```bin/report```)
 - ```-D picotest_junit``` Path to output JUnit XML file
+- ```-D picotest_tag``` Identifier to distinguish multiple invocations of PicoTest, especially useful with JUnit output
 - ```-D picotest_filter``` Set test filter
 
 
@@ -258,6 +259,7 @@ As a downside, test output will likely lose some readablility.
   - more user friendly test filter API (```-D picotest_filter="Foo,Bar"```)
   - ```-D picotest_dryrun``` will now mark tests as ```DryRun``` instead of ```Skip```
   - ```picotest.PicoTest.warn()``` emits exit status 2 if tests failed, 1 if tests had errors
+  - Added ```-D picotest_tag``` 
 - Version 0.9.0
   - introducing test filters (```picotest.PicoTest.filter```, ```picofilter.txt```)
   - introducing ```PicoPredicates``` 
