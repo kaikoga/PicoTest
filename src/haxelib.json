@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": ["cross", "utility","unittest","testing"],
   "description": "A very versatile unit testing framework",
-  "version": "0.7.7",
+  "version": "0.10.0",
   "releasenote": "made a lot faster",
   "contributors": ["kaikoga"],
   "dependencies": {

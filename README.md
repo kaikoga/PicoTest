@@ -14,7 +14,7 @@ haxelib git picotest https://github.com/kaikoga/PicoTest.git develop src
 haxelib install hamcrest
 ```
 
-PicoTest is developed using Haxe 4.0.0-preview.3, but is supposed to run with Haxe 3.4.0 or over. 
+PicoTest is developed using Haxe 4.0.0-preview.5, but is supposed to run with Haxe 3.4.0 or over. 
 
 
 # Writing tests
