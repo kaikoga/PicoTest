@@ -36,7 +36,7 @@ Basic assertions are defined in ```picotest.PicoAssert```.
 PicoTest assertion failure will continue running the test
 and tries to output as much failures as possible, as NanoTest does. 
 
-```
+```haxe
 public function test() {
     assertTrue(false);
     assertTrue(false);
@@ -73,7 +73,7 @@ When hamcrest support is enabled, hamcrest ```Matcher```s in ```expected``` are 
 
 For example,
 
-```
+```haxe
 assertMatch([1, 2], [3, 4, 5]);
 ```
 
