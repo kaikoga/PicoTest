@@ -1,11 +1,11 @@
 package picotest.out.impl;
 
+#if sys
+
 import picotest.out.buffer.PicoTestOutputStringBuffer;
 import haxe.io.Bytes;
 import sys.net.Host;
 import sys.net.Socket;
-
-#if sys
 
 class PicoTestSysRemoteOutput extends PicoTestTextOutputBase implements IPicoTestOutput {
 

@@ -1,88 +1,88 @@
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--xml bin/xml/swf.xml
+-D picotest_nodep
+-xml build/xml/swf.xml
 -swf dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--D picotest-thread
--xml bin/xml/neko.xml
+-D picotest_nodep
+-D picotest_thread
+-xml build/xml/neko.xml
 -neko dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--xml bin/xml/js.xml
+-D picotest_nodep
+-xml build/xml/js.xml
 -js dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--D picotest-thread
--xml bin/xml/cpp.xml
+-D picotest_nodep
+-D picotest_thread
+-xml build/xml/cpp.xml
 -cpp dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--D picotest-thread
--xml bin/xml/java.xml
+-D picotest_nodep
+-D picotest_thread
+-xml build/xml/java.xml
 -java dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--D picotest-thread
--xml bin/xml/cs.xml
+-D picotest_nodep
+-D picotest_thread
+-xml build/xml/cs.xml
 -cs dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--xml bin/xml/php.xml
+-D picotest_nodep
+-xml build/xml/php.xml
 -php dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--D picotest-thread
--xml bin/xml/python.xml
+-D picotest_nodep
+-D picotest_thread
+-xml build/xml/python.xml
 -python dummy
 --next
 
 -cp ../src
--lib hamcrest
 --macro haxe.macro.Compiler.include("picotest")
 -D doc-gen
 --no-output
--xml bin/xml/macro.xml
+-D picotest_nodep
+-xml build/xml/macro.xml
 --interp
--D macro-doc-gen
+-D macro_doc_gen
 --next
 
--cmd haxelib run dox -i bin/xml -o bin/html --title PicoTest -in picotest
+-cmd haxelib run dox -i build/xml -o api --title PicoTest -in picotest

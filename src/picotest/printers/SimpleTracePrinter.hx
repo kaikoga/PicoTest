@@ -23,6 +23,8 @@ class SimpleTracePrinter implements IPicoTestPrinter {
 				this.stdout.output(".");
 			case PicoTestAssertResult.Skip:
 				this.stdout.output("S");
+			case PicoTestAssertResult.DryRun:
+				this.stdout.output("S");
 			case PicoTestAssertResult.Failure(_,_):
 				this.stdout.output("F");
 			case PicoTestAssertResult.Error(_,_):

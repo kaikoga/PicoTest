@@ -149,11 +149,11 @@ class WarnReporter implements IPicoTestReporter {
 	private function fileNotFoundWarning(fileName:String):Void {
 		if (notFoundFileNames.indexOf(fileName) >= 0) return;
 		notFoundFileNames.push(fileName);
-		if (notFoundFileNames.length == 0) {
-			this.stdout.output('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
-		} else {
-			this.stdout.output('($fileName: file not found in classpaths)\n');
-		}
+		#if macro
+		this.stdout.output('($fileName: file not found in classpaths ${Context.getClassPath()})\n');
+		#else
+		this.stdout.output('($fileName: file not found in classpaths)\n');
+		#end
 	}
 
 	private function callPositionToPosition(callPos:PicoTestCallPosition):Position {
@@ -207,7 +207,9 @@ class WarnReporter implements IPicoTestReporter {
 
 	public function close():Void {
 		this.stdout.close();
+		#if sys
 		if (this.isError) Sys.exit(1);
 		if (this.isFailed) Sys.exit(2);
+		#end
 	}
 }

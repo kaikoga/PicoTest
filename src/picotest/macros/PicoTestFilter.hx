@@ -14,7 +14,7 @@ class PicoTestFilter {
 
 	private static var filters:Array<PicoTestFilter>;
 
-	#if macro
+	#if (macro || macro_doc_gen)
 	private static var patterns:Array<String> = [];
 
 	inline public static function addPattern(pattern:String):Void patterns.push(pattern);

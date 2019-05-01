@@ -1,5 +1,7 @@
 package picotest.spawners.common;
 
+#if (sys || macro || macro_doc_gen)
+
 import haxe.crypto.Base64;
 import haxe.io.Bytes;
 import haxe.io.Path;
@@ -16,8 +18,6 @@ import picotest.spawners.http.routes.PicoHttpLocalFileRoute;
 import sys.FileSystem;
 import sys.io.File;
 import sys.net.Socket;
-
-#if (sys || macro || macro_doc_gen)
 
 class PicoTestExternalCommandHelper {
 

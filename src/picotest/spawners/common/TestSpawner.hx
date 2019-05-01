@@ -39,7 +39,11 @@ class TestSpawner implements ITestExecuter {
 	}
 
 	private function bin():String {
+		#if macro
 		return Compiler.getOutput();
+		#else
+		return null;
+		#end
 	}
 
 	private function mainClass():String {

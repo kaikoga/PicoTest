@@ -26,10 +26,11 @@ class JsBrowserLauncher implements ITestExecuter {
 
 }
 
-#end
 
 typedef JsBrowserLauncherParams = {
 	browser:String,
 	httpServerSetting:PicoHttpServerSetting,
 	reportFile:String
 }
+
+#end
