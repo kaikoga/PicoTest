@@ -39,7 +39,8 @@ class JsBrowserSpawner extends TestSpawner {
 			browser: browser(),
 			httpServerSetting: {
 				port: remotePort(),
-				files: ["/" => htmlFile(), "/test.js" => bin()]
+				files: ["/" => htmlFile(), "/test.js" => bin()],
+				docRoot: "bin"
 			},
 			reportFile: reportFile()
 		});
