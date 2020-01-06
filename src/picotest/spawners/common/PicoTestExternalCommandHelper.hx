@@ -38,7 +38,7 @@ class PicoTestExternalCommandHelper {
 	}
 
 	public static function glob(pattern:String):Array<String> {
-		return globRec(".", pattern.split("/").map(function(s:String) return new EReg(StringTools.replace(s, "*", ".*"), "")));
+		return globRec(".", pattern.split("/").map(function(s:String) return new EReg("^" + StringTools.replace(s, "*", ".*") + "$", "")));
 	}
 
 	private static function globRec(path:String, pattern:Array<EReg>, index:Int = 0):Array<String> {
